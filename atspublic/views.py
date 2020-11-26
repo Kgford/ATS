@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 import datetime
 from django.contrib.auth.decorators import login_required
-from djangorocks.blog.models import Blog, Category
+from atspublic.models import Blog, Category
 from django.shortcuts import render_to_response, get_object_or_404
  
    
@@ -34,7 +34,7 @@ class BlogView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-       return render_to_response('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render_to_response('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
        
 
 class CategoryView(View):
@@ -43,9 +43,9 @@ class CategoryView(View):
     def get(self, *args, **kwargs):
         inv=-1
         try:
-           slug = request.POST.get('slug', -1)
-           category = get_object_or_404(Category, slug=slug)
-           print('in Get')
+            slug = request.POST.get('slug', -1)
+            category = get_object_or_404(Category, slug=slug)
+            print('in Get')
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -63,7 +63,7 @@ class PostView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-         return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug}) 
+        return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug)}) 
     def post(self, request, *args, **kwargs):
         inv=-1
         try: 
@@ -73,12 +73,12 @@ class PostView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-       return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug})
+        return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug)})
 
 # Create your views here.
 class PublicView(View):
     template_name = "index.html"
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('atspublic:public')
     def get(self, *args, **kwargs):
         inv=-1
         try:
@@ -102,7 +102,7 @@ class PublicView(View):
 		   
 class WorkstationView(View):
     template_name = "racks.html"
-    success_url = reverse_lazy('workstations:racks')
+    success_url = reverse_lazy('atspublic:racks')
 	
     def get(self, *args, **kwargs):
         inv=-1
@@ -127,7 +127,7 @@ class WorkstationView(View):
         
 class RobotView(View):
     template_name = "robotLab.html"
-    success_url = reverse_lazy('robot_lab:robot')
+    success_url = reverse_lazy('atspublic:robot')
 	
     def get(self, *args, **kwargs):
         inv=-1
@@ -152,7 +152,7 @@ class RobotView(View):
         
 class FieldView(View):
     template_name = "field.html"
-    success_url = reverse_lazy('field:site')
+    success_url = reverse_lazy('atspublic:site')
 	
     def get(self, *args, **kwargs):
         inv=-1
@@ -177,7 +177,7 @@ class FieldView(View):
         
 class SoftwareView(View):
     template_name = "software.html"
-    success_url = reverse_lazy('software:web')
+    success_url = reverse_lazy('atspublic:software')
 	
     def get(self, *args, **kwargs):
         inv=-1

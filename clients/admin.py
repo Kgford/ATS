@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import clients
+from .models import Clients
 
-admin.site.register(clients)
+admin.site.register(Clients)
