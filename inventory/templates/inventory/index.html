@@ -8,7 +8,7 @@
 {% block body %}
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">TCLI Inventory Manager</a>
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Inventory Manager</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -29,6 +29,12 @@
 				<li class="nav-item active">
 				<span data-feather="home"></span>
 					<a class="nav-link " href="{% url 'locations:location' %}" aria-disabled="true">  Site locations  </a>
+				</li>
+				<li class="nav-item active">
+				<span data-feather="bar-chart-2"></span>
+				<form method="post" id="monthlyReport" action="{% url 'inventory:inv_report' %}" >
+					<a class="nav-link " src="{% url 'inventory:inv_report' %}" aria-disabled="true">  Monthly Report  </a>
+				</form>
 				</li>
 				<li class="nav-item active">
 				<span data-feather="log-out"></span>
@@ -64,7 +70,7 @@
 			<img src="{% static 'inventory/images/loader.gif' %}" alt="centered image" /> 
 		</div>	
 	</div>
-	<h4 class="text-center">TCLI Inventory Search</h4>
+	<h4 class="text-center">ATS Inventory Search</h4>
         <form method="post" id="selectForm" dropdown-url="{% url 'inventory:inven' %}" action="{% url 'inventory:inven' %}" >
 			{% csrf_token %}
 			<div class="row">
@@ -87,21 +93,21 @@
 				</div>	
 				<div class="col-sm-2 col-lg-2 grid-col">
 					<div class="form-group">
-						<label>Model: <span class="k-required"></span></label>
-						<input type='hidden' name='model' data-select='model'/>
-						<select id='_model' name = "_model" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
-							{% if model != -1  and model != 'select menu'%}
-								<option selected>{{model}}</option>
-								<option data-desc = 'model', value = "select menu">select menu</option>
+						<label>Status<span class="k-required"></span></label>
+						<input type='hidden' name='site' data-select='status'/>
+						<select id='_status' name='_status' class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()" >
+							{% if status != -1 and status != 'select menu' %}
+								<option selected>{{status}}</option>
+								<option data-desc = '', value = "select menu">select menu</option>
 							{% else %}
 								<option selected>select menu</option>
 							{% endif %}	
-							{% for model in models_list %}
-								<option data-desc = 'model', value = "{{model}}">{{model}}</option>
+							{% for istatus in status_list %}
+								<option data-desc = 'status', value = "{{istatus}}">{{istatus}}</option>
 							{% endfor %}
 						</select>
-					</div>		
-				</div>	
+					</div>
+				</div>
 				<div class="col-sm-2 col-lg-3 grid-col">
 					<div class="form-group">
 						<label>Description: <span class="k-required"></span></label>
@@ -121,21 +127,21 @@
 				</div>	
 				<div class="col-sm-2 col-lg-2 grid-col">
 					<div class="form-group">
-						<label>Status<span class="k-required"></span></label>
-						<input type='hidden' name='site' data-select='status'/>
-						<select id='_status' name='_status' class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()" >
-							{% if status != -1 and status != 'select menu' %}
-								<option selected>{{status}}</option>
-								<option data-desc = '', value = "select menu">select menu</option>
+						<label>Model: <span class="k-required"></span></label>
+						<input type='hidden' name='model' data-select='model'/>
+						<select id='_model' name = "_model" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
+							{% if model != -1  and model != 'select menu'%}
+								<option selected>{{model}}</option>
+								<option data-desc = 'model', value = "select menu">select menu</option>
 							{% else %}
 								<option selected>select menu</option>
 							{% endif %}	
-							{% for istatus in status_list %}
-								<option data-desc = 'status', value = "{{istatus}}">{{istatus}}</option>
+							{% for model in models_list %}
+								<option data-desc = 'model', value = "{{model}}">{{model}}</option>
 							{% endfor %}
 						</select>
-					</div>
-				</div>
+					</div>		
+				</div>	
 				<div class="col-sm-2 col-lg-2 grid-col">
 					<div class="form-group">
 						<label>Site<span class="k-required"></span></label>
@@ -168,14 +174,6 @@
 								<option data-desc = 'shelf', value = "{{ishelf}}">{{ishelf}}</option>
 							{% endfor %}
 						</select>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-2 col-lg-4 grid-col">
-					<div class="form-group">
-						<a class="report-link" href="{% url 'inventory:inv_report' %}?category={{category}}&model={{model}}" >Monthly Report</a>
-						<a class="report-link-info" >   (Select a category first. For a single model report, select a Model)</a>
 					</div>
 				</div>
 			</div>

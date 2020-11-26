@@ -1,2 +1,3 @@
 # TCLI Inventory Management
-DJANGO Inventory Management Appliction
+
+Custom Inventory management software using Python with a Django Framework and JavaScript. 
