@@ -499,7 +499,7 @@ def item(request):
             uploaded_file_url=model.photo
         #print('model=',model)
         if uploaded_file_url==None or uploaded_file_url =="":
-            uploaded_file_url = '/tcli/media/inv1.jpg'
+            uploaded_file_url = '/ATS/media/inv1.jpg'
         #print('uploaded_file_url =',uploaded_file_url)
 
         locations_list = Location.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -536,7 +536,7 @@ def report(request):
             uploaded_file_url=model.photo
         #print('model=',model)
         if uploaded_file_url==None or uploaded_file_url =="":
-            uploaded_file_url = '/tcli/media/inv1.jpg'
+            uploaded_file_url = '/ATS/media/inv1.jpg'
         #print('uploaded_file_url =',uploaded_file_url)
         #print('model=',model)
         #print(model.image_file)

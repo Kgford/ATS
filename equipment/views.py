@@ -119,7 +119,7 @@ def loadmodel(request, model_id):
             print('mod.image_file',mod.image_file)
             uploaded_file_url=mod.photo
             if uploaded_file_url==None or uploaded_file_url =="":
-                uploaded_file_url = '/tcli/media/inv1.jpg'
+                uploaded_file_url = '/ATS/media/inv1.jpg'
             print('uploaded_file_url =',uploaded_file_url)
         except IOError as e:
             print ("load model Failure ", e)
@@ -133,7 +133,7 @@ def newmodel(request):
             mod = -1
             models=Model.objects.all()
             image_file = 'inv1.jpg'
-            uploaded_file_url = '/tcli/media/inv1.jpg'
+            uploaded_file_url = '/ATS/media/inv1.jpg'
                        
         except IOError as e:
             print ("load model Failure ", e)
@@ -224,7 +224,7 @@ def savemodel(request):
             print(image_file)
             
         if uploaded_file_url == None or uploaded_file_url =="":
-            uploaded_file_url='/tcli/media/inv1.jpg' 
+            uploaded_file_url='/ATS/media/inv1.jpg' 
             image_file='inv1.jpg'
         
         timestamp = date.today()

@@ -13,6 +13,10 @@ from django.shortcuts import render_to_response, get_object_or_404
  
    
 # Create your views here.
+def index(request):
+	return render(request,'atspublic/index.html')
+
+
 class BlogView(View):
     template_name = "blog.html"
     success_url = reverse_lazy('blog:blog')
@@ -99,6 +103,7 @@ class PublicView(View):
 
         print('inv_list',inv)
         return render (self.request,"index.html",{"inventory": inv})
+
 		   
 class WorkstationView(View):
     template_name = "racks.html"
