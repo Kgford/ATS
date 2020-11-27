@@ -56,7 +56,7 @@ img {
  </div>
 <TABLE>
 <COL/><COL span="25" style="text-align: center;" /><TBODY>
-	<TR height="20" width='600'><TD NOWRAP="" class="TTL">TCLI Monthly Inventory Report  </TD></TR>
+	<TR height="20" width='600'><TD NOWRAP="" class="TTL">ATS Monthly Inventory Report  </TD></TR>
 	<TR height="20" ><TD NOWRAP="" class="STR0"> Report Date:</TD><TD NOWRAP="" class="STR0"> {{today}}</TD></TR>
 </TBODY></TABLE>
 
@@ -73,7 +73,7 @@ img {
 <TR height="20" ><TD class="HDR"> Inventory Summary </TD></TR>
 	<TR height="20" ><TD NOWRAP="True" class="SHR"> Category </TD><TD NOWRAP="True" class="SHR"> Status </TD><TD NOWRAP="True"  class="SHR"> Description </TD><TD NOWRAP="True"  class="SHR"> location </TD><TD class="SHR"> Operator </TD><TD NOWRAP="True" class="SHR"> Model </TD><TD NOWRAP="True"  class="SHR"> serial_number </TD></TR>
 	{% for item in inv_list %}
-		<TR height="20" ><TD NOWRAP="True" class="STR0"> {{item.category} </TD><TD NOWRAP="True" class="STR0"> {{item.status}}</TD><TD NOWRAP="" class="STR0"> {{item.description}} </TD><TD NOWRAP="" class="STR0"> {{item.locationname}}</TD><TD NOWRAP="" class="STR0"> {{item.operator}} </TD><TD NOWRAP="" class="STR0"> {{item.model}} </TD><TD NOWRAP="" class="STR0"> {{item.serial_number}} </TD></TR>
+		<TR height="20" ><TD NOWRAP="True" class="STR0"> {{item.category}} </TD><TD NOWRAP="True" class="STR0"> {{item.status}}</TD><TD NOWRAP="" class="STR0"> {{item.description}} </TD><TD NOWRAP="" class="STR0"> {{item.locationname}}</TD><TD NOWRAP="" class="STR0"> {{item.operator}} </TD><TD NOWRAP="" class="STR0"> {{item.model}} </TD><TD NOWRAP="" class="STR0"> {{item.serial_number}} </TD></TR>
 	{% endfor %}
 </TBODY></TABLE>
 
