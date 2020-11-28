@@ -19,24 +19,33 @@
 				  <a class="nav-link" href="{% url 'atspublic:public' %}">&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp; <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item">
-				  <a class="nav-link" href="{% url 'atspublic:racks' %}">Custom Fixtures&nbsp;&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:software' %}"  tabindex="-1" >Software&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
-				  <a class="nav-link" href="{% url 'atspublic:robot_lab' %}" tabindex="-1" >Robot Lab&nbsp;&nbsp;&nbsp;</a>
+				  <a class="nav-link" href="{% url 'atspublic:racks' %}">Custom Fixtures&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:site' %}" tabindex="-1" >Field Support&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
+				  <a class="nav-link" href="{% url 'atspublic:robot_lab' %}" tabindex="-1" >Robot Lab&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href=""  tabindex="-1" >Testimonials&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+				  <a class="nav-link" href=""  tabindex="-1" >ATS News letter&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
 				  <a class="nav-link" href=""  tabindex="-1" >ATS Blog&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
-				  <a class="nav-link" href="{% url 'users:index' %}"  tabindex="-1" >Staff&nbsp;&nbsp;&nbsp;</a>
+				  <a class="nav-link" href=""  tabindex="-1" >Contact us&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 				</li>
-			  </ul>
+				<li class="nav-item">
+				  <a class="nav-link" href="{% url 'users:base' %}"  tabindex="-1" >Staff Site&nbsp;&nbsp;&nbsp;</a>
+				</li>
+			</ul>
 			</div>
 		</nav>
 	</header>
@@ -50,7 +59,6 @@
 		  <li data-target="#myCarousel" data-slide-to="2"></li>
 		  <li data-target="#myCarousel" data-slide-to="3"></li>
 		  <li data-target="#myCarousel" data-slide-to="4"></li>
-		  <li data-target="#myCarousel" data-slide-to="6"></li>
 		</ol>
 		<div class="carousel-inner">
 		  <div class="carousel-item active">
@@ -60,22 +68,8 @@
 			  <div class="carousel-caption text-center">
 				<p><a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></p>
 				<p>
-					<a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-					<a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-					<a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-					<a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					<button class="btn btn-lg btn-primary" href="#" role="button">Sign up today</button>
 				</p>
-			  </div>
-			</div>
-		  </div>
-		  <div class="carousel-item">
-			<svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#777"/></svg>
-			<img src ="{% static 'atspublic/images/Kayla_Fieldfox.jpg' %}">
-			<div class="container">
-			  <div class="carousel-caption text-right">
-				<h1>Automated Testing.</h1>
-				<p><a class="btn btn-lg btn-primary" href="{% url 'atspublic:public' %}"  role="button">Browse gallery</a></p>
 			  </div>
 			</div>
 		  </div>
@@ -91,7 +85,7 @@
 		  </div>
 		  <div class="carousel-item">
 			<svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#777"/></svg>
-			<img src ="{% static 'atspublic/images/Kayla.jpg' %}">
+			<img src ="{% static 'atspublic/images/kayla_front.jpg' %}">
 		   <div class="container">
 			  <div class="carousel-caption">
 				<h1>Expert System Testing.</h1>
@@ -111,7 +105,7 @@
 		  </div>
 		  <div class="carousel-item">
 			<svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#777"/></svg>
-			<img src ="{% static 'atspublic/images/software.jpg' %}">
+			<img src ="{% static 'atspublic/images/software2.jpg' %}">
 			<div class="container">
 			  <div class="carousel-caption text-center">
 				<h1>Custom Applications.</h1>
@@ -129,62 +123,56 @@
 		  <span class="sr-only">Next</span>
 		</a>
 	  </div>
-
-
 	  <!-- Marketing messaging and featurettes
 	  ================================================== -->
 	  <!-- Wrap the rest of the page in another container to center all the content. -->
 
 	  <div class="container marketing">
-
-		<!-- Three columns of text below the carousel -->
-		<div class="row">
-		  <div class="col-lg-4">
-			<img class="rounded-circle" src="{% static 'atspublic/images/Box with USB stuff.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" ><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text>
-			<h2>Custom Test Fixtures</h2>
-			<p>ATS Designs and Builds custom interfaces</p>
-			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}"  role="button">View details &raquo;</a></p>
-		  </div><!-- /.col-lg-4 -->
-		  <div class="col-lg-4">
-			<img class="bd-placeholder-img rounded-corners" src="{% static 'atspublic/images/Mike at work.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
-			<h2>Systems</h2>
-			<p>RF Systems test.</p>
-			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}" role="button">View details &raquo;</a></p>
-		  </div><!-- /.col-lg-4 -->
-		  <div class="col-lg-4">
-			<img class="bd-placeholder-img rounded-circle" src="{% static 'atspublic/images/keysite_rack.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
-			<h2> Test Equipment</h2>
-			<p>RF Test Equipment Specialist</p>
-			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}" role="button">View details &raquo;</a></p>
-		  </div><!-- /.col-lg-4 -->
-		 </div><!-- /.row -->
-
+		<section class="jumbotron text-center">
+			<div class="container-fluid">
+				<img  src ="{% static 'atspublic/images/atsrf_logo.jpg' %}">
+			 </div>
+			 <div class="container-md">
+				  <p class="lead text-muted">Automated Test Solutions is dedicated to improving the quality of your Business Environment.</p>
+				  <p class="lead text-muted"></p>
+				  <p class="lead text-muted">Our Personnel are Test Equipment Experts and we have professional and personal relationships with all major Vendor Application Engineers including Keysite, Rohde & Schwartz, Tektronics, Fluke, etc... </p>
+				  <p class="lead text-muted"></p>
+				  <p class="lead text-muted">Our Test Engineers are experienced in Coding all Major Standard Software environments and Web Frameworks including  C, LabView, LabWindows CVI, Agilent VEE, VB.NET, C#.NET, Python, Django, JavaScript, HTML, CSS, etc..</p>
+				  
+				  
+				  <p>
+					  <a href="#" class="btn btn-primary my-2">Contact Us</a>
+					  <a href="#" class="btn btn-secondary my-2">Testimonials</a>
+				  </p>
+			  </div>
+		</section>
 
 		<!-- START THE FEATURETTES -->
 		<hr class="featurette-divider">
 
 		<div class="row featurette">
 		  <div class="col-md-7 order-md-2">
-			<h2 class="featurette-heading">Custom Software Solutions. <span class="text-muted"></span></h2>
+			<h2 class="featurette-heading">Software Solutions. <span class="text-muted"></span></h2>
 			<p class="lead">Led by its flagship Database/ATE software automation framework, ATS allows testers and developers alike to thoroughly test applications from a user’s perspective. Automated Test Solutions Services are both cost-effective and based on standard programming techniques and languages, making them ideal for development teams of all sizes.  </p>
 		  </div>
 		  <div class="col-md-5 order-md-1">
-				<img  src ="{% static 'atspublic/images/software_simbaweb.jpg' %}">
+				<img  src ="{% static 'atspublic/images/Kayla_Fieldfox.jpg' %}">
 		 </div>
 		</div>
 		
 		<hr class="featurette-divider">
-		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
 		<div class="row featurette">
 		  <div class="col-md-7">
-			<h2 class="featurette-heading">Custom Database Integration <span class="text-muted"></span></h2>
-			<p class="lead">Our ATE framework includes an integration of Software and Database. All configuration and functions are derived from specific Database tables. All Data is saved and retrieved from specific Database tables. This allows for and extremely powerful flexible system that will adapt to any environment..</p>
+			<h2 class="featurette-heading">Database Integration<span class="text-muted"></span></h2>
+			<p class="lead">Our ATE framework includes an integration of Software and Database. All configuration and functions are derived from specific Database tables. All Data is saved and retrieved from specific Database tables. This allows for and extremely powerful flexible system that will adapt to any environment.</p>
 		  </div>
 		  <div class="col-md-5">
 			<img  src ="{% static 'atspublic/images/database.jpg' %}">
 		  </div>
 		</div>
+		<hr class="featurette-divider">
 
 		<div class="row featurette">
 		  <div class="col-md-7">
@@ -196,10 +184,6 @@
 		  </div>
 		  
 		
-		
-
-		<hr class="featurette-divider">
-
 		<!-- /END THE FEATURETTES -->
 
 	  </div><!-- /.container -->

@@ -16,35 +16,35 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
 					<span data-feather="home"></span>
-					<a class="nav-link" href="{% url 'index' %}">home  </a>
+					<a class="nav-link" href="{% url 'inventory:inven' %}">home  </a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 					<span data-feather="home"></span>
 					<a class="nav-link" href="{% url 'inventory:items' %}">  Inventory Items  </a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-iteme">
 					<span data-feather="file"></span>
 					<a class="nav-link " href="{% url 'equipment:equipment' %}" aria-disabled="true">  Equipment  </a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				<span data-feather="home"></span>
 					<a class="nav-link " href="{% url 'locations:location' %}" aria-disabled="true">  Site locations  </a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				<span data-feather="bar-chart-2"></span>
 				<form method="post" id="monthlyReport" action="{% url 'inventory:inv_report' %}" >
 					<a class="nav-link " src="{% url 'inventory:inv_report' %}" aria-disabled="true">  Monthly Report  </a>
 				</form>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'logout' %}" aria-disabled="true">Log out</a>
+					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">Log out</a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				<span data-feather="dummyspace"></span>
 					<a class="nav-link" href="#" aria-disabled="true">      </a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				<span data-feather="dummyspace"></span>
 					<a class="nav-link" href="#" aria-disabled="true">      </a>
 				</li>
