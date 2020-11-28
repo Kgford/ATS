@@ -140,22 +140,22 @@
 		<!-- Three columns of text below the carousel -->
 		<div class="row">
 		  <div class="col-lg-4">
-			<img class="rounded-corners" src="{% static 'atspublic/images/Box with USB stuff.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" ><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text>
+			<img class="rounded-circle" src="{% static 'atspublic/images/Box with USB stuff.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" ><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text>
 			<h2>Custom Test Fixtures</h2>
 			<p>ATS Designs and Builds custom interfaces</p>
 			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}"  role="button">View details &raquo;</a></p>
 		  </div><!-- /.col-lg-4 -->
 		  <div class="col-lg-4">
-			<img class="bd-placeholder-img rounded-corners" src="{% static 'atspublic/images/Mike at work.svg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
+			<img class="bd-placeholder-img rounded-corners" src="{% static 'atspublic/images/Mike at work.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
 			<h2>Systems</h2>
 			<p>RF Systems test.</p>
-			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %} role="button">View details &raquo;</a></p>
+			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}" role="button">View details &raquo;</a></p>
 		  </div><!-- /.col-lg-4 -->
 		  <div class="col-lg-4">
-			<img class="bd-placeholder-img rounded-corners" src="{% static 'atspublic/images/keysite_rack.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
+			<img class="bd-placeholder-img rounded-circle" src="{% static 'atspublic/images/keysite_rack.jpg' %}"  width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em"></text></img>
 			<h2> Test Equipment</h2>
 			<p>RF Test Equipment Specialist</p>
-			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}role="button">View details &raquo;</a></p>
+			<p><a class="btn btn-secondary" href="{% url 'atspublic:racks' %}" role="button">View details &raquo;</a></p>
 		  </div><!-- /.col-lg-4 -->
 		 </div><!-- /.row -->
 
@@ -174,6 +174,17 @@
 		</div>
 		
 		<hr class="featurette-divider">
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+		<div class="row featurette">
+		  <div class="col-md-7">
+			<h2 class="featurette-heading">Custom Database Integration <span class="text-muted"></span></h2>
+			<p class="lead">Our ATE framework includes an integration of Software and Database. All configuration and functions are derived from specific Database tables. All Data is saved and retrieved from specific Database tables. This allows for and extremely powerful flexible system that will adapt to any environment..</p>
+		  </div>
+		  <div class="col-md-5">
+			<img  src ="{% static 'atspublic/images/database.jpg' %}">
+		  </div>
+		</div>
 
 		<div class="row featurette">
 		  <div class="col-md-7">
@@ -185,18 +196,7 @@
 		  </div>
 		  
 		
-
-		<hr class="featurette-divider">
-
-		<div class="row featurette">
-		  <div class="col-md-7">
-			<h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-			<p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-		  </div>
-		  <div class="col-md-5">
-			<svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 500x500"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-		  </div>
-		</div>
+		
 
 		<hr class="featurette-divider">
 
