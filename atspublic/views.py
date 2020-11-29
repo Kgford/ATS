@@ -9,7 +9,7 @@ from django.views import View
 import datetime
 from django.contrib.auth.decorators import login_required
 from atspublic.models import Blog, Category
-from django.shortcuts import render_to_response, get_object_or_404
+#from django.shortcuts import render_to_response, get_object_or_404
  
    
 # Create your views here.
@@ -27,7 +27,7 @@ class BlogView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render_to_response('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -38,7 +38,7 @@ class BlogView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render_to_response('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
        
 
 class CategoryView(View):
@@ -53,7 +53,7 @@ class CategoryView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render_to_response('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
  
 
 # Create your views here.
