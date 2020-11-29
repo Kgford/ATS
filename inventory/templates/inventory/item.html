@@ -15,7 +15,7 @@
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
 		<ul class="navbar-nav px-3">
 		  <li class="nav-item text-nowrap">
-			<a class="nav-link" href="{% url 'logout' %}">Sign out</a>
+		    <a class="nav-link" href="{% url 'users:logout' %}">Sign out</a>
 		  </li>
 		</ul>
     </nav>
@@ -25,19 +25,19 @@
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
 			    <li class="nav-item">
-					<a class="nav-link" href="{% url 'users:base' %}">
+					<a class="nav-link active" href="{% url 'users:base' %}">
 					  <span data-feather="home"></span>
 					  Home <span class="sr-only">(current)</span>
 					</a>
 			    </li>
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'inventory:inven' %}">
+					<a class="nav-link active" href="{% url 'inventory:inven' %}">
 					  <span data-feather="home"></span>
 					  Search Inventory <span class="sr-only">(current)</span>
 					</a>
 			    </li>
 				  <li class="nav-item">
-					<a class="nav-link active" href="{% url 'inventory:items' %}">
+					<a class="nav-link" href="{% url 'inventory:items' %}">
 					  <span data-feather="file"></span>
 					  Create Inventory items
 					</a>
