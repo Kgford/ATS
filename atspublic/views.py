@@ -16,6 +16,28 @@ from atspublic.models import Blog, Category
 def index(request):
 	return render(request,'atspublic/index.html')
 
+class SignupView(View):
+    template_name = "signup.html"
+    success_url = reverse_lazy('atspublic:signup')
+    def get(self, *args, **kwargs):
+        inv=-1
+        try:
+            print('in Get')
+            success = True
+        except IOError as e:
+            print('error = ',e) 
+        return render(self.request,'signup.html',{"inventory": inv})
+    
+    def post(self, request, *args, **kwargs):
+        inv=-1
+        try: 
+            print("in POST")
+            success = True
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        return render(self.request,'signup.html',{"inventory": inv})
 
 class TestimonialView(View):
     template_name = "testimonial.html"

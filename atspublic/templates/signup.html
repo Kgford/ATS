@@ -39,10 +39,10 @@
 				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:news' %}"  tabindex="-1" >ATS Blog&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item active">
 				  <a class="nav-link" href="{% url 'atspublic:signup' %}"  tabindex="-1" >sign up&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				<li class="nav-item active">
+				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:contacts' %}"  tabindex="-1" >Contact us&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
@@ -60,8 +60,8 @@
 	<div class="row">
 		<div class="col-md-8 mx-auto">
 			<div class="contact-form">
-				<h1>Contact Us</h1>
-				<p class="hint-text">We'd love to hear from you, please drop us a line for anything.</p>
+				<h1>Sign up</h1>
+				<p class="hint-text">Sign up to get all the full features from ATS.</p>
 				<form action="/examples/actions/confirmation.php" method="post">
 					<div class="row">
 						<div class="col-sm-6">
@@ -82,8 +82,12 @@
 						<input type="email" class="form-control" id="inputEmail" required>
 					</div>
 					<div class="form-group">
-						<label for="inputMessage">Message</label>
-						<textarea class="form-control" id="inputMessage" rows="5" required></textarea>
+						<label for="password">Password</label>
+						<input type="password" class="form-control" id="ipassword" required>
+					</div>
+					<div class="form-group">
+						<label for="password_repeat">Repeat your Password</label>
+						<input type="password" class="form-control" id="password_repeat" required>
 					</div>
 					<input type="submit" class="btn btn-primary" value="Submit">
 				</form>

@@ -40,6 +40,9 @@
 				  <a class="nav-link" href="{% url 'atspublic:news' %}"  tabindex="-1" >ATS Blog&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
+				  <a class="nav-link" href="{% url 'atspublic:signup' %}"  tabindex="-1" >sign up&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:contacts' %}"  tabindex="-1" >Contact us&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
@@ -67,9 +70,7 @@
 			<div class="container">
 			  <div class="carousel-caption text-center">
 				<p><a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></p>
-				<p>
-					<button class="btn btn-lg btn-primary" href="#" role="button">Sign up today</button>
-				</p>
+				<p><a class="btn btn-lg btn-primary" href="{% url 'atspublic:signup' %}"  role="button">Sign up Today</a></p>
 			  </div>
 			</div>
 		  </div>
@@ -134,13 +135,9 @@
 				<img  src ="{% static 'atspublic/images/atsrf_logo.jpg' %}">
 			 </div>
 			 <div class="container-md">
-				  <p class="lead text-muted">Automated Test Solutions is dedicated to improving the quality of your Business Environment.</p>
+				  <p class="lead text-muted">Automated Test Solutions is dedicated to improving quality and streamlining the process of your Business Environment. Our applications feature  database integration, hardware integration, and automation software for every possible step of your business process.</p>
 				  <p class="lead text-muted"></p>
-				  <p class="lead text-muted">Our Personnel are Test Equipment Experts and we have professional and personal relationships with all major Vendor Application Engineers including Keysite, Rohde & Schwartz, Tektronics, Fluke, etc... </p>
-				  <p class="lead text-muted"></p>
-				  <p class="lead text-muted">Our Test Engineers are experienced in Coding all Major Standard Software environments. We can build from the ground up or we can maintain and expand existing software environment.</p>
-				  
-				  
+				  <p class="lead text-muted">Production costs and risk of error is greatly reduced.  The possibilities for analyzing and reporting is greatly increased. Our staff is fully engadged in designing and providing reports, drawings, schematics, invoices, and bills of material upon request.</p>
 				  <p>
 					  <a href="{% url 'atspublic:contacts' %}" class="btn btn-primary my-2">Contact Us</a>
 					  <a href="{% url 'atspublic:testmonial' %}" class="btn btn-secondary my-2">Testimonials</a>
@@ -154,7 +151,7 @@
 		<div class="row featurette">
 		  <div class="col-md-7 order-md-2">
 			<h2 class="featurette-heading">Software Solutions. <span class="text-muted"></span></h2>
-			<p class="lead">Led by its flagship Database/ATE software automation framework, ATS allows testers and developers alike to thoroughly test applications from a user’s perspective. Automated Test Solutions Services are both cost-effective and based on standard programming techniques and languages, making them ideal for development teams of all sizes.  </p>
+			<p class="lead"> Test Data handling, searching, and reporting will have unlimited expansion possibilities Led by its flagship Database/ATE software automation framework, ATS allows testers and developers alike to thoroughly test applications from a user’s perspective. Automated Test Solutions Services are both cost-effective and based on standard programming techniques and languages, making them ideal for development teams of all sizes.  </p>
 		  </div>
 		  <div class="col-md-5 order-md-1">
 				<img  src ="{% static 'atspublic/images/kaylafieldfox.png' %}">
@@ -167,7 +164,7 @@
 		<div class="row featurette">
 		  <div class="col-md-7">
 			<h2 class="featurette-heading">Database Integration<span class="text-muted"></span></h2>
-			<p class="lead">Our ATE framework includes an integration of Software and Database. All configuration and functions are derived from specific Database tables. All Data is saved and retrieved from specific Database tables. This allows for and extremely powerful flexible system that will adapt to any environment.</p>
+			<p class="lead">Database integration allows your application to expand and ’get smarter’ with each use.  All configurations and functions are derived from specific Database tables. All Data is saved and retrieved from specific Database tables. This allows for and extremely powerful flexible system that will adapt to any environment.</p>
 		  </div>
 		  <div class="col-md-5">
 			<img  src ="{% static 'atspublic/images/database.jpg' %}">
@@ -192,8 +189,74 @@
 
 	  <!-- FOOTER -->
 	  <footer class="container">
-		<p class="float-right"><a href="#">Back to top</a></p>
+		<div class="container mt-5 mb-5 d-flex justify-content-center">
+		<ul class="social-list">
+			<li>
+				<div class="maincard p-3">
+					<div class="thecard">
+						<div class="thefront text-center py-4 facebook">
+							<div class="social-icon"> <i class="fa fa-facebook fa-2x"></i> </div>
+						</div>
+						<div class="theback py-3 px-3 text-center facebook">
+							<div href="https://www.facebook.com/SIMBAProgramLLC" class="social-text mt-1"> <small class="font-weight-bold">Facebook</small> </div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="maincard p-3">
+					<div class="thecard">
+						<div class="thefront text-center py-4 instagram">
+							<div class="social-icon"> <i class="fa fa-instagram fa-2x"></i> </div>
+						</div>
+						<div class="theback py-3 px-3 text-center instagram">
+							<div class="social-text mt-1"> <small class="font-weight-bold">Instagram</small> </div>
+							
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="maincard p-3">
+					<div class="thecard">
+						<div class="thefront text-center py-4 youtube">
+							<div class="social-icon"> <i class="fa fa-youtube fa-2x"></i> </div>
+						</div>
+						<div class="theback py-3 px-3 text-center youtube">
+							<div class="social-text mt-1"> <small class="font-weight-bold">Youtube</small> </div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="maincard p-3">
+					<div class="thecard">
+						<div class="thefront text-center py-4 whatsapp">
+							<div class="social-icon"> <i class="fa fa-whatsapp fa-2x"></i> </div>
+						</div>
+						<div class="theback py-3 px-3 text-center whatsapp">
+							<div class="social-text mt-1"> <small class="font-weight-bold">Whatsapp</small> </div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="maincard p-3">
+					<div class="thecard">
+						<div class="thefront text-center py-4 pinterest">
+							<div class="social-icon"> <i class="fa fa-pinterest fa-2x"></i> </div>
+						</div>
+						<div class="theback py-3 px-3 text-center pinterest">
+							<div class="social-text mt-1"> <small class="font-weight-bold">Pinterest</small> </div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<p class="float-right"><a href="#">Back to top</a></p>
 		<p>&copy; 2010-2020 Automated Test Solutions &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		
 	  </footer>
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
