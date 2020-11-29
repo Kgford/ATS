@@ -34,88 +34,64 @@
     </style>
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="{% static 'users/css/product.css' %}">
-	<link rel="stylesheet" href="{% static 'users/css/navbar.css' %}">
+	<link rel="stylesheet" href="{% static 'users/css/offcanvas.css' %}">
   </head>
-  <body>
-    <nav class="site-header sticky-top py-1">
-		<div class="container d-flex flex-column flex-md-row justify-content-between">
-			{% if user.is_authenticated %}
-				<a class="py-2" href="{% url 'users:logout' %}" aria-label="logut">
-			{% else %}
-				<a class="py-2" href="{% url 'users:user_login' %}" aria-label="login">
-			{% endif %}
-			 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
-			</a>
-			<a class="py-2 d-none d-md-inline-block" href="{% url 'admin:index' %}">Admin</a>
-			<a class="py-2 d-none d-md-inline-block" href="{% url 'users:register' %}">Register</a>
-			<a class="py-2 d-none d-md-inline-block" href="{% url 'atspublic:public' %}">Website</a>
-			
-			{% if user.is_authenticated %}
-				<a class="py-2 d-none d-md-inline-block" href="{% url 'users:logout' %}">Logout</a>
-				<a class="py-2 d-none d-md-inline-block" href="{% url 'admin:password_change' %}">change password</a>
-			{% else %}
-				<a class="py-2 d-none d-md-inline-block" href="{% url 'users:user_login' %}">Login</a>
-				<a class="py-2 d-none d-md-inline-block" href="#">reset password</a>
-			{% endif %}
-	   </div>
-	</nav>
-	{% if user.is_authenticated %}
-		<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-		  <a class="navbar-brand" href="#">Database</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+	  <a class="navbar-brand mr-auto mr-lg-0" href="#">ATS</a>
+	  <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+		<span class="navbar-toggler-icon"></span>
+	  </button>
 
-		  <div class="collapse navbar-collapse" id="navbarsExample03">
-			<ul class="navbar-nav mr-auto">
-			  <li class="nav-item active">
-				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Accounting</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown03">
-				  <a class="dropdown-item" href="">Expenses</a>
-				  <a class="dropdown-item" href="">Quotes</a>
-				  <a class="dropdown-item" href="">Invoices</a>
-				</div>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clients</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown03">
-				  <a class="dropdown-item" href="{% url 'inventory:inven' %}">Customers</a>
-				  <a class="dropdown-item" href="{% url 'inventory:items' %}">Contractors</a>
-				</div>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inventory</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown03">
-				  <a class="dropdown-item" href="{% url 'inventory:inven' %}">Search Inventory</a>
-				  <a class="dropdown-item" href="{% url 'inventory:items' %}">Create new Inventory Item</a>
-				  <a class="dropdown-item" href="{% url 'inventory:items' %}">Event History</a>
-				</div>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Equipment</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown03">
-				  <a class="dropdown-item" href="{% url 'inventory:inven' %}">Search Models</a>
-				  <a class="dropdown-item" href="{% url 'inventory:items' %}">Create new Inventory Item</a>
-				</div>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">On-Site Locations</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown03">
-				  <a class="dropdown-item" href="{% url 'locations:location' %}">Search locations</a>
-				  <a class="dropdown-item" href="{% url 'locations:location' %}">Create new Site</a>
-				</div>
-			  </li>
-			</ul>
-			<form class="form-inline my-2 my-md-0">
-			  <input class="form-control" type="text" placeholder="Search">
-			</form>
-		  </div>
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'atspublic:public' %}">Website <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+      </li>
+	  {% if user.is_authenticated %}
+		  <li class="nav-item">
+			<a class="nav-link" href="{% url 'users:logout' %}">Logout</a>
+		  </li>
+		   <li class="nav-item">
+			<a class="nav-link" href="{% url 'admin:password_change' %}">Change Password</a>
+		  </li>
+       {% else %}
+		<li class="nav-item">
+			<a class="nav-link"  href="{% url 'users:user_login' %}">Login</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link"  href="">reset password</a>
+		</li>
+	   {% endif %}
+	 <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+</div>
+</nav>
+{% if user.is_authenticated %}
+	<div class="nav-scroller bg-white shadow-sm">
+		<nav class="nav nav-underline">
+			<a class="nav-link" href="#">Accounting</a>
+			<a class="nav-link" href="#">Clients</a>
+			<a class="nav-link" href="{% url 'inventory:inven' %}">Inventory</a>
+			<a class="nav-link" href="{% url 'inventory:inven' %}">Equipment</a>
+			<a class="nav-link" href="{% url 'locations:location' %}">Locations</a>
 		</nav>
-	{% endif %}
-	
+	</div>	  
+{% endif %}	
+ 	
 <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
   <div class="col-md-5 p-lg-5 mx-auto my-5">
     <div class = "test">
@@ -131,7 +107,6 @@
   <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
   <small class="d-block mb-3 text-muted">&copy; Automated Test Solutions © 2020</small>
 </div>
-
 
 
 <footer class="container py-5">
@@ -167,5 +142,6 @@
    </div>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src={% static 'users/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'users/js/bootstrap.bundle.js' %}"></script></body>
+  <script>window.jQuery || document.write('<script src={% static 'users/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'users/js/bootstrap.bundle.js' %}"></script></body>
+  <script src="{% static 'users/js/offcanvas.js' %}"></script></body>
 </html>
