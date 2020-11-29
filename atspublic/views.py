@@ -17,9 +17,9 @@ def index(request):
 	return render(request,'atspublic/index.html')
 
 
-class BlogView(View):
-    template_name = "blog.html"
-    success_url = reverse_lazy('blog:blog')
+class TestimonialView(View):
+    template_name = "testimonial.html"
+    success_url = reverse_lazy('atspublic:testimonial')
     def get(self, *args, **kwargs):
         inv=-1
         try:
@@ -27,7 +27,7 @@ class BlogView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render(self.request,'testimonial.html',{"inventory": inv})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -38,28 +38,11 @@ class BlogView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
-       
-
-class CategoryView(View):
-    template_name = "blog.html"
-    success_url = reverse_lazy('category:view_category_post')
-    def get(self, *args, **kwargs):
-        inv=-1
-        try:
-            slug = request.POST.get('slug', -1)
-            category = get_object_or_404(Category, slug=slug)
-            print('in Get')
-            success = True
-        except IOError as e:
-            print('error = ',e) 
-        return render('view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
- 
-
-# Create your views here.
-class PostView(View):
-    template_name = "view_post.html"
-    success_url = reverse_lazy('post:view_blog_post')
+        return render(self.request,'testimonial.html',{"inventory": inv})
+        
+class ContactView(View):
+    template_name = "contact_us.html"
+    success_url = reverse_lazy('atspublic:contacts')
     def get(self, *args, **kwargs):
         inv=-1
         try:
@@ -67,7 +50,8 @@ class PostView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug)}) 
+        return render(self.request,'contact_us.html',{"inventory": inv})
+    
     def post(self, request, *args, **kwargs):
         inv=-1
         try: 
@@ -77,7 +61,96 @@ class PostView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render_to_response('view_post.html', {'post': get_object_or_404(Blog, slug=slug)})
+        return render(self.request,'contact_us.html',{"inventory": inv})
+
+class NewsView(View):
+    template_name = "newsletter.html"
+    success_url = reverse_lazy('atspublic:news')
+    def get(self, *args, **kwargs):
+        inv=-1
+        try:
+            print('in Get')
+            success = True
+        except IOError as e:
+            print('error = ',e) 
+        return render(self.request,'newsletter.html',{"inventory": inv})
+    
+    def post(self, request, *args, **kwargs):
+        inv=-1
+        try: 
+            print("in POST")
+            success = True
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        return render(self.request,'newsletter.html',{"inventory": inv})
+        
+class BlogView(View):
+    template_name = "blog.html"
+    success_url = reverse_lazy('atspublic:blog')
+    def get(self, *args, **kwargs):
+        inv=-1
+        try:
+            print('in Get')
+            success = True
+        except IOError as e:
+            print('error = ',e) 
+        return render(self.request,'view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+    
+    def post(self, request, *args, **kwargs):
+        inv=-1
+        try: 
+            print("in POST")
+            success = True
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        return render(self.request,'view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+       
+
+class CategoryView(View):
+    template_name = "blog.html"
+    success_url = reverse_lazy('atspublic:view_category_post')
+    def get(self, *args, **kwargs):
+        inv=-1
+        try:
+            #slug = request.POST.get('slug', -1)
+            #category = get_object_or_404(Category, slug=slug)
+            category = -1
+            print('in Get')
+            success = True
+        except IOError as e:
+            print('error = ',e) 
+        return render(self.request,'view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+ 
+
+# Create your views here.
+class PostView(View):
+    template_name = "view_post.html"
+    success_url = reverse_lazy('atspublic:view_blog_post')
+    def get(self, *args, **kwargs):
+        inv=-1
+        try:
+            category = -1
+            print('in Get')
+            success = True
+        except IOError as e:
+            print('error = ',e) 
+        #return render(self.request,'view_post.html', {'post': get_object_or_404(Blog, slug=slug)}) 
+        return render(self.request,'view_post.html') 
+    def post(self, request, *args, **kwargs):
+        inv=-1
+        try: 
+            print("in POST")
+            success = True
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        #return render(self.request,'view_post.html', {'post': get_object_or_404(Blog, slug=slug)})
+        return render(self.request,'view_post.html') 
 
 # Create your views here.
 class PublicView(View):
