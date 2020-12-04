@@ -1,3 +1,202 @@
+from django import forms
+import json
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.core import serializers
+from datetime import date
+from django.urls import reverse, reverse_lazy
+from equipment.models import Model
+from locations.models import Location
+from inventory.models import Inventory, Events
+from accounting.models import Expenses
+from django.views import View
+import datetime
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+class ExpensesView(View):
+  
+    template_name = "expense.html"
+    success_url = reverse_lazy('accounting:expenses')
+    def get(self, *args, **kwargs):
+        try:
+            desc_list=-1
+            type_list=-1
+            item_name_list=-1
+            item_desc_list=-1
+            desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
+            item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
+            item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
+            
+            print("in GET")
+            expense_list = Expenses.objects.all()
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list})
+    
+    def post(self, request, *args, **kwargs):
+        try: 
+            #print("in POST")
+            type_list = []
+            inv_list = []
+            inv = []
+            search = request.POST.get('search', -1)
+            #print('search =',search)
+            vendor = request.POST.get('_vendor', -1)
+            expense_type = request.POST.get('_exp_type', -1)
+            #print('expense_type = ',expense_type)
+            expence_desc = request.POST.get('_exp_desc', -1)
+            #print('expence_desc =',expence_desc)
+            item_name = request.POST.get('_item_name', -1)
+            #print('item_name =',item_name)
+            item_desc = request.POST.get('_item_desc', -1)
+            #print('item_desc =',item_desc)
+              
+            desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
+            item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
+            item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
+                        
+            success = True
+            if not search ==-1:
+                expense_list = Expenses.objects.filter(vendor_id__icontains=search) | Expenses.objects.filter(expense_type__icontains=search) | Expenses.objects.filter(expense_description__icontains=search) | Expenses.objects.filter(item_name__icontains=search) | Expenses.objects.filter(item_desc__icontains=search) | Expenses.objects.filter(item_cost__contains=search) | Expenses.objects.filter(expense_date__contains=search) | Expenses.objects.filter(invoice__icontains=search).all()
+            elif not expense_type =="select menu": 
+                if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(expense_type=expense_type).all()
+                if not expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc).all()  
+                if not expense_desc == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
+                if not expense_desc == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+            elif not expense_desc =="select menu": 
+                if expense_type == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(expense_description=expense_desc).all()
+                if not expense_type == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc).all()  
+                if not expense_type == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
+                if not expense_type == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+            elif not item_name =="select menu": 
+                if item_name == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(item=item_name).all()
+                if not item_name == "select menu" and expense_desc == "select menu" and item_desc == "select menu":  
+                    expense_list = Expenses.objects.filter(item=item_name, expense_description__contains=expense_desc).all()  
+                if not item_name == "select menu" and not expense_desc == "select menu" and item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
+                if not item_name == "select menu" and not expense_desc == "select menu" and not item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all()
+            elif not item_desc =="select menu": 
+                if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(item_desc=item_desc).all()
+                if not expense_desc == "select menu" and item_name == "select menu" and expense_type == "select menu":  
+                    expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc).all()  
+                if not expense_desc == "select menu" and not item_name == "select menu" and expense_type == "select menu": 
+                    expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name).all()  
+                if not expense_desc == "select menu" and not item_name == "select menu" and not expense_type == "select menu": 
+                    expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name, expense_type__contains=expense_type).all() 
+            else:
+                expense_list = Expenses.objects.all()
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        print('expense_list',expense_list)
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list})
+           
+           
+class SaveExpensesView(View):
+    template_name = "save_expenses.html"
+    success_url = reverse_lazy('accounting:new_expense')
+    def get(self, *args, **kwargs):
+        try:
+            exp_id = request.GET.get('expense_id', -1)
+            expense_list = Expenses.objects.all()
+            desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
+            if exp_id !=-1:
+                exp = Model.objects.filter(id=exp_id).all()
+            else:
+                exp =-1
+                
+            if exp !=-1:
+                vendor = Vendors.objects.filter(id=exp.vendor_id)
+            else:
+                vendor = -1
+            print(exp)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor})
+'''
+    def post(self, request, *args, **kwargs):
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            operator = str(request.user)
+            exp_id = request.POST.get('e_id', -1)
+            expense_list = Expenses.objects.all()
+            desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
+            if exp_id !=-1:
+                exp = Model.objects.filter(id=exp_id).all()
+            else:
+                exp =-1
+            search = request.POST.get('search', -1)
+            #print('search =',search)
+            vendor = request.POST.get('_vendor', -1)
+            #print('vendor_id = ',vendor_id)
+            expense_type = request.POST.get('_exp_type', -1)
+            #print('expense_type = ',expense_type)
+            expence_desc = request.POST.get('_exp_desc', -1)
+            #print('expence_desc =',expence_desc)
+            item_name = request.POST.get('_item_name', -1)
+            #print('item_name =',item_name)
+            item_desc = request.POST.get('_item_desc', -1)
+            #print('item_desc =',item_desc)
+            quantity = request.POST.get('_quantity', -1)
+            #print('quantity =',quantity)
+            item_cost = request.POST.get('_item_cost', -1)
+            #print('item_cost =',item_cost)
+            total_cost = request.POST.get('_total_cost', -1)
+            #print('item_cost =',item_cost)
+            sale_date = request.POST.get('_sale_date', -1)
+            #print('expense_date =',expense_date)
+            invoice = request.POST.get('_invoice', -1)
+            interval = request.POST.get('_interval', -1)
+            print('interval =',interval)
+            interval_time = request.POST.get('_interval_time', -1)
+            print('interval_time =',interval_time)
+            save_exp = request.POST.get('_save', -1)
+            update_exp = request.POST.get('_update', -1)
+            del_exp = request.POST.get('_delete', -1)
+            quantity = request.POST.get('_quantity', -1)
+            success = True
+            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
+            desc_list =  Vendors.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            
+            if not del_exp==-1:
+                try:
+                   #update item	
+                    Expenses.objects.filter(id=expense_id).delete()
+                    print('delete complete')
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounting:expenses'))
+            elif not update_exp==-1:
+                #update item	
+                vendor_id = Vendors.objects.filter(company_name=vendor)
+                Expenses.objects.filter(id=iexpense_id).update(vendor_id=vendor_id,expense_type=expense_type,expence_desc=expence_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+            elif not save_exp==-1:
+               #save item	
+                vendor_id = Vendors.objects.filter(company_name=vendor)
+                Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_desc=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                      quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                                        
+        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor})     
+'''        

@@ -90,7 +90,6 @@ class InventoryView(View):
     def get(self, *args, **kwargs):
         form = self.form_class()
         try:
-            
             description=-1
             category=-1
             model=-1
