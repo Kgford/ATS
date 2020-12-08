@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 class ChargeCodes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -24,7 +25,7 @@ class Expenses(models.Model):
     vendor_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
     expense_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
     expense_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
-    sale_date = models.CharField("sale date",max_length=50,null=True,unique=False,default='N/A') 
+    sale_date = models.DateTimeField(default=datetime.now, blank=True)
     item = models.CharField("item",max_length=50,null=True,unique=False,default='N/A') 
     item_desc = models.CharField("item desc",max_length=355,null=True,unique=False,default='N/A') 
     quantity = models.CharField("quantity",max_length=50,null=True,unique=False,default='N/A') 
@@ -93,20 +94,6 @@ class Contractor_QuoteID(models.Model):
     last_update = models.DateField(null=True)  
     backup_index = models.IntegerField(null=True,unique=False)    
      
-class Vendors(models.Model):
-    id = models.AutoField(primary_key=True)
-    company_name = models.CharField("company name",max_length=255,null=True,unique=False,default='N/A')
-    street_address = models.CharField("street address",max_length=255,null=True,unique=False,default='N/A')
-    city = models.CharField("city",max_length=255,null=True,unique=False,default='N/A')
-    state = models.CharField("state",max_length=50,null=True,unique=False,default='N/A')
-    zip_code = models.CharField("zip code",max_length=50,null=True,unique=False,default='N/A')
-    phone_number = models.CharField("phone number",max_length=50,null=True,unique=False,default='N/A')
-    email = models.CharField("email",max_length=255,null=True,unique=False,default='N/A')
-    tax_id = models.CharField("tax id",max_length=50,null=True,unique=False,default='N/A')
-    fax = models.CharField("Fax",max_length=50,null=True,unique=False,default='N/A')
-    client = models.CharField("client",max_length=50,null=True,unique=False,default='N/A')
-    last_update = models.DateField(null=True) 
-    backup_index = models.IntegerField(null=True,unique=False)
 
 class ZipCode(models.Model):
     id = models.AutoField(primary_key=True)

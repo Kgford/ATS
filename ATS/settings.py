@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'atspublic',
     'clients',
     'accounting',
+    'vendors',
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',

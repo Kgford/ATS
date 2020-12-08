@@ -10,9 +10,11 @@ from equipment.models import Model
 from locations.models import Location
 from inventory.models import Inventory, Events
 from accounting.models import Expenses
+from vendors.models import Vendors
 from django.views import View
-import datetime
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
+from django.db.models.functions import ExtractYear 
 
 class ExpensesView(View):
   
@@ -24,21 +26,32 @@ class ExpensesView(View):
             type_list=-1
             item_name_list=-1
             item_desc_list=-1
+            operator = str(self.request.user)
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
-            
+            #year_list = [d.year for d in Expenses.objects.all().datetimes('sale_date', 'year')]
+            years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
+            year_list=[]
+            for year in years:
+                dt = year.split('-')
+                print(dt[0])
+                year_list.append(dt[0])
+               
+                
+            print("year_list",year_list)           
             print("in GET")
             expense_list = Expenses.objects.all()
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list})
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator})
     
     def post(self, request, *args, **kwargs):
         try: 
             #print("in POST")
+            operator = str(self.request.user)
             type_list = []
             inv_list = []
             inv = []
@@ -58,6 +71,9 @@ class ExpensesView(View):
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
+            #year_list = [d.year for d in Expenses.objects.all().datetimes('sale_date', 'year')]
+            year_list = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
+           
                         
             success = True
             if not search ==-1:
@@ -105,7 +121,7 @@ class ExpensesView(View):
             print ("Lists load Failure ", e)
 
         print('expense_list',expense_list)
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list})
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator})
            
            
 class SaveExpensesView(View):
@@ -113,71 +129,96 @@ class SaveExpensesView(View):
     success_url = reverse_lazy('accounting:new_expense')
     def get(self, *args, **kwargs):
         try:
-            exp_id = request.GET.get('expense_id', -1)
+            vendor = -1
+            exp_id = self.request.GET.get('expense_id', -1)
+            vendor_id = self.request.GET.get('vendor_id', -1)
+            print('exp_id =',exp_id)
+            print('vendor_id =',vendor_id)
+            operator = str(self.request.user)
             expense_list = Expenses.objects.all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
-            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('name').values_list('name', flat=True).distinct()
+            print('vendor_list =',vendor_list)
             if exp_id !=-1:
-                exp = Model.objects.filter(id=exp_id).all()
+                exp = Expenses.objects.filter(id=exp_id)
+                exp = exp[0]
+                print('exp=',exp.sale_date)
             else:
                 exp =-1
                 
-            if exp !=-1:
-                vendor = Vendors.objects.filter(id=exp.vendor_id)
-            else:
-                vendor = -1
-            print(exp)
+            if vendor_id !=-1:
+                vendor = Vendors.objects.filter(id=vendor_id)
+                vendor = vendor[0].name
+                print('vendor=',vendor)
+            
+            print('exp=', exp)
             print("in GET")
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor})
-'''
+        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+
     def post(self, request, *args, **kwargs):
+        vendor_list = []
+        expense_list =[]
+        desc_list = []
+        exp =-1
+        vendor =-1
+        
         try: 
             print("in POST")
             timestamp = date.today()
-            operator = str(request.user)
+            operator = str(self.request.user)
             exp_id = request.POST.get('e_id', -1)
+            print('exp_id =',exp_id)
             expense_list = Expenses.objects.all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
-            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('name').values_list('name', flat=True).distinct()
             if exp_id !=-1:
                 exp = Model.objects.filter(id=exp_id).all()
-            else:
-                exp =-1
+            
+            
             search = request.POST.get('search', -1)
-            #print('search =',search)
+            print('search =',search)
             vendor = request.POST.get('_vendor', -1)
-            #print('vendor_id = ',vendor_id)
+            print('vendor = ',vendor)
             expense_type = request.POST.get('_exp_type', -1)
-            #print('expense_type = ',expense_type)
-            expence_desc = request.POST.get('_exp_desc', -1)
-            #print('expence_desc =',expence_desc)
+            print('expense_type = ',expense_type)
+            expense_desc = request.POST.get('_exp_desc', -1)
+            print('expense_desc =',expense_desc)
             item_name = request.POST.get('_item_name', -1)
-            #print('item_name =',item_name)
+            print('item_name =',item_name)
             item_desc = request.POST.get('_item_desc', -1)
-            #print('item_desc =',item_desc)
+            print('item_desc =',item_desc)
             quantity = request.POST.get('_quantity', -1)
-            #print('quantity =',quantity)
+            print('quantity =',quantity)
             item_cost = request.POST.get('_item_cost', -1)
-            #print('item_cost =',item_cost)
+            print('item_cost =',item_cost)
             total_cost = request.POST.get('_total_cost', -1)
-            #print('item_cost =',item_cost)
+            print('total_cost =',total_cost)
             sale_date = request.POST.get('_sale_date', -1)
-            #print('expense_date =',expense_date)
+            print('sale_date =',sale_date)
             invoice = request.POST.get('_invoice', -1)
-            interval = request.POST.get('_interval', -1)
+            print('invoice =',invoice)
+            interval = request.POST.get('_interval', False)
             print('interval =',interval)
+            
             interval_time = request.POST.get('_interval_time', -1)
             print('interval_time =',interval_time)
             save_exp = request.POST.get('_save', -1)
+            print('save_exp =',save_exp)
             update_exp = request.POST.get('_update', -1)
+            print('update_exp =',update_exp)
             del_exp = request.POST.get('_delete', -1)
+            print('del_exp =',del_exp)
             quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
             success = True
-            vendor_list =  Vendors.objects.order_by('company_name').values_list('company_name', flat=True).distinct()
-            desc_list =  Vendors.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
+            if interval_time=='select option':
+                interval_time = "N/A"
+                
+            if interval =='on':
+                interval = True
             
             if not del_exp==-1:
                 try:
@@ -189,14 +230,20 @@ class SaveExpensesView(View):
                     return HttpResponseRedirect(reverse('accounting:expenses'))
             elif not update_exp==-1:
                 #update item	
-                vendor_id = Vendors.objects.filter(company_name=vendor)
-                Expenses.objects.filter(id=iexpense_id).update(vendor_id=vendor_id,expense_type=expense_type,expence_desc=expence_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                ven = Vendors.objects.filter(name=vendor)
+                vendor_id = ven[0].id
+                print('vendor_id=',ven.id)
+                Expenses.objects.filter(id=expense_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expence_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
             elif not save_exp==-1:
                #save item	
-                vendor_id = Vendors.objects.filter(company_name=vendor)
-                Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_desc=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                ven = Vendors.objects.filter(name=vendor)
+                vendor_id = ven[0].id
+                print('vendor_id=',vendor_id)
+                Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                                        
-        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor})     
-'''        
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
+        

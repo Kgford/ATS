@@ -4,13 +4,13 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<link rel="icon" type="image/x-icon" href="{% static 'inventory/images/rings_16X16.ico' %}">
+		<link rel="icon" type="image/x-icon" href="{% static 'accounting/images/ats_16X16.ico' %}">
 		<title>Automated Test Solutions</title>	
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="Inventory Management page">
+		<meta name="Automated Test Solutions" content="Accounting Management page">
 		<!-- Bootstrap core CSS -->
-		<link rel="stylesheet" href="{% static 'inventory/css/bootstrap.css' %}">
-		<link rel="stylesheet" href="{% static 'inventory/css/styles.css' %}">
+		<link rel="stylesheet" href="{% static 'accounting/css/bootstrap.css' %}">
+		<link rel="stylesheet" href="{% static 'accounting/css/styles.css' %}">
 		<!-- Book Search -->
 		<link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/grid/">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -23,8 +23,29 @@
 		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
         
 		<!-- Custom styles for this template -->
-		<link href="{% static 'inventory/css/grid.css' %}" rel="stylesheet">
-		<link href="{% static 'inventory/css/styles.css' %}" rel="stylesheet">
+		<!--link href="{% static 'accounting/js/checkbox.js' %}" rel="stylesheet"-->
+		<link href="{% static 'accounting/css/styles.css' %}" rel="stylesheet">
+		<script>
+			function check()
+			{
+			  if (document.getElementById('_interval').checked) 
+			  {
+				  document.getElementById("_interval_checked").style.visibility = "visible";
+			  } else {
+				  document.getElementById("_interval_checked").style.visibility = "hidden";
+			  }
+			}
+			
+			function check_start()
+			{
+				 if (document.getElementById('_interval').checked) 
+				  {
+					  document.getElementById("_interval_checked").style.visibility = "visible";
+				  } else {
+					  document.getElementById("_interval_checked").style.visibility = "hidden";
+				  }
+			}
+		</script>
 	</head>
 	<body>
 	   {% block body %}

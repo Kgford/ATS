@@ -69,28 +69,27 @@
 	   <li class="nav-item">
         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
       </li>
-      
-	 <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social Media</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="https://www.facebook.com/SIMBAProgramLLC" class="fa fa-facebook">Facebook</a>
-          <a class="dropdown-item" href="https://www.youtube.com/channel/UCvNoBhL6vW80sgQWlQUGu3g?view_as=subscriber">YouTube</a>
-          <a class="dropdown-item" href="#">Instagram</a>
-		  <a class="dropdown-item" href="#">Twitter</a>
-        </div>
-      </li>
+      {% if user.is_authenticated %}
+		 <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social Media</a>
+			<div class="dropdown-menu" aria-labelledby="dropdown01">
+			  <a class="dropdown-item" href="https://www.facebook.com/SIMBAProgramLLC" class="fa fa-facebook">Facebook</a>
+			  <a class="dropdown-item" href="https://www.youtube.com/channel/UCvNoBhL6vW80sgQWlQUGu3g?view_as=subscriber">YouTube</a>
+			  <a class="dropdown-item" href="#">Instagram</a>
+			  <a class="dropdown-item" href="#">Twitter</a>
+			</div>
+		  </li>
+	{% endif %}	
     </ul>
 </div>
 </nav>
 {% if user.is_authenticated %}
 	<div class="nav-scroller bg-white shadow-sm">
 		<nav class="nav nav-underline">
+			<a class="nav-link" href="">Dashboard</a>
 			<a class="nav-link" href="{% url 'accounting:expenses' %}">Expenses</a>
-			<a class="nav-link" href="">Invoicing</a>
 			<a class="nav-link" href="{% url 'inventory:inven' %}">Inventory</a>
-			<a class="nav-link" href="{% url 'equipment:equipment' %}">Equipment</a>
-			<a class="nav-link" href="{% url 'locations:location' %}">Locations</a>
-			<a class="nav-link" href="#">Clients</a>
+			<a class="nav-link" href="">Invoicing</a>
 		</nav>
 	</div>	  
 {% endif %}	
