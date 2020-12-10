@@ -24,17 +24,17 @@
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
 			    <li class="nav-item">
-					<a class="nav-link active" href="{% url 'users:base' %}">
-					  <span data-feather="home"></span>
-					  Home <span class="sr-only">(current)</span>
+					<a class="nav-link" href="{% url 'vendors:vendor' %}">
+					  <span data-feather="users"></span>
+					  Add new Vendor, Contractor, or Store
 					</a>
-			    </li>
+				</li>
 				<li class="nav-item">
 					<a class="nav-link active" href="{% url 'accounting:expenses' %}">
 					  <span data-feather="home"></span>
 					  Search Expenses <span class="sr-only">(current)</span>
 					</a>
-			    </li>
+				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
 					  <span data-feather="file"></span>
@@ -47,20 +47,26 @@
 					  Log out
 					</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="{% url 'users:base' %}">
+					  <span data-feather="home"></span>
+					  Home <span class="sr-only">(current)</span>
+					</a>
+				</li>
+				
 			 </ul>
 		</div>
 	</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-			<h1 class="h2">Vendor location</h1>
+			<h1 class="h2">Vendor Detail</h1>
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<div class="btn-group mr-2">
-					<button type="button" id = "share" class="btn btn-sm btn-outline-secondary">Share</button>
-					<button type="button" id = "export" class="btn btn-sm btn-outline-secondary">Export</button>
+					<a style = "color:#CCD1D1" > {{operator}} logged in</a>
 				</div>
 			</div>
 		</div>
-		<form action = "{% url 'vendors:vendor' %}"  method="post">
+		<form action = "{% url 'vendors:site' vendor_id=site.id %}"  method="post">
 		    {% csrf_token %}
 			<div class="row">
 				<div class="col-sm-1 col-lg-4 grid-col">
@@ -72,13 +78,13 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Latitude</label>
-						<input id = "_lat" name = "_lat" input class="form-control"  value={{site.lat}} placeholder="Enter GPS Latitude"  required>
+						<input id = "_lat" name = "_lat" input class="form-control"  value={{site.lat}} placeholder="Enter GPS Latitude">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Longitude</label>
-						<input id = "_lng" name = "_lng" input class="form-control" value={{site.lng}} placeholder="Enter GPS Longitude"  required>
+						<input id = "_lng" name = "_lng" input class="form-control" value={{site.lng}} placeholder="Enter GPS Longitude">
 					</div>
 				</div>
 			</div>
@@ -86,25 +92,25 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Street address</label>
-						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street"  required>
+						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_city">City</label>
-						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City"  required>
+						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_state">state</label>
-						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state"  required>
+						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state">
 					</div>
 				</div>
 			   <div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_zip">Zip Code</label>
-						<input id = "_zip" name = "_zip" input class="form-control"  value="{{site.zip_code}}" placeholder="Enter Zip Code"  required>
+						<input id = "_zip" name = "_zip" input class="form-control"  value="{{site.zip_code}}" placeholder="Enter Zip Code">
 					</div>	
 				</div>
 			</div>
@@ -112,29 +118,39 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_phone">Phone Number</label>
-						<input id = "_phone" name = "_phone" input class="form-control"  value="{{site.phone}}" placeholder="Enter phone #"  required>
+						<input type="tel" id = "_phone" name = "_phone" input class="form-control"  value="{{site.phone}}" placeholder="Enter phone #">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_email">Email Address</label>
-						<input id = "_email" name = "_email" input class="form-control"  value="{{site.email}}" placeholder="Enter Email"  required>
+						<input type="email" id = "_email" name = "_email" input class="form-control"  value="{{site.email}}" placeholder="Enter Email">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_web">Web Site</label>
-						<input id = "_web" name = "_web" input class="form-control" value="{{website.name}}" placeholder="Enter website"  required>
+						<input type="url" id = "_web" name = "_web" input class="form-control" value="{{website.name}}" placeholder="Enter website">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
+					<div class="form-check">
+						{% if active == 'on' %}
+							<input type="checkbox" class="form-check-input" id="_active" name="_active" checked = "checked" onclick="check();"/>
+							<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
+						{% else %}
+							<input type="checkbox" class="form-check-input" id="_active" name="_active" onclick="check();"/>
+							<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
+						{% endif %}
+					</div>
 					<div class="form-group">
-						<input type="submit" id = "title" data-search="save"  value="Update Site Location">
+						<a>&nbsp;&nbsp;</a>
+						<button type="submit" id = "title" data-search="save" value="Save"  class="btn btn-success">Update Vendor</button>
 					</div>
 				</div>
 			</div>
 		 </form>
-		<h2>Site List</h2>
+		<h2>Vendor Location</h2>
 		<h4>{{site.name}},   {{site.address}}, {{site.city}}, {{site.state}}</h4>
 		<!--The div element for the map -->
 		<div id="map"></div>

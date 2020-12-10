@@ -18,8 +18,7 @@ class Vendors(models.Model):
     inventory_id  = models.IntegerField(null=True,unique=False)
     lat = models.FloatField("lat",null=True,unique=False)
     lng = models.FloatField("lng",null=True,unique=False)
-    shelf = models.CharField("shelf",max_length=25,null=False,unique=False,default='N/A')   
-    
+       
     def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
         self.name = name
         self.address = address

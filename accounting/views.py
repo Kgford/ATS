@@ -130,6 +130,7 @@ class SaveExpensesView(View):
     def get(self, *args, **kwargs):
         try:
             vendor = -1
+            interval = 'off'
             exp_id = self.request.GET.get('expense_id', -1)
             vendor_id = self.request.GET.get('vendor_id', -1)
             print('exp_id =',exp_id)
@@ -142,6 +143,10 @@ class SaveExpensesView(View):
             if exp_id !=-1:
                 exp = Expenses.objects.filter(id=exp_id)
                 exp = exp[0]
+                if exp.reoccuuring_expenses == True:
+                    interval = 'on'
+                else:
+                    interval = 'off'
                 print('exp=',exp.sale_date)
             else:
                 exp =-1
@@ -156,7 +161,7 @@ class SaveExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
 
     def post(self, request, *args, **kwargs):
         vendor_list = []
@@ -175,7 +180,7 @@ class SaveExpensesView(View):
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             vendor_list =  Vendors.objects.order_by('name').values_list('name', flat=True).distinct()
             if exp_id !=-1:
-                exp = Model.objects.filter(id=exp_id).all()
+                exp = Expenses.objects.filter(id=exp_id).all()
             
             
             search = request.POST.get('search', -1)
@@ -216,15 +221,20 @@ class SaveExpensesView(View):
             success = True
             if interval_time=='select option':
                 interval_time = "N/A"
-                
+           
+            print('interval=',interval)    
             if interval =='on':
-                interval = True
+                interval_save = True
+            else:
+                interval_save = False
             
+            print('interval=',interval)
             if not del_exp==-1:
                 try:
                    #update item	
                     Expenses.objects.filter(id=expense_id).delete()
                     print('delete complete')
+                    exp=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
                     return HttpResponseRedirect(reverse('accounting:expenses'))
@@ -232,16 +242,21 @@ class SaveExpensesView(View):
                 #update item	
                 ven = Vendors.objects.filter(name=vendor)
                 vendor_id = ven[0].id
-                print('vendor_id=',ven.id)
-                Expenses.objects.filter(id=expense_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expence_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-            elif not save_exp==-1:
-               #save item	
-                ven = Vendors.objects.filter(name=vendor)
-                vendor_id = ven[0].id
                 print('vendor_id=',vendor_id)
-                Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                      quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                Expenses.objects.filter(id=exp_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                exp=-1
+            elif not save_exp==-1:
+                if Expenses.objects.filter(item=item_name).exists():
+                    exp = Expenses.objects.filter(item=item_name).all()
+                    return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+                else:
+                   #save item	
+                    ven = Vendors.objects.filter(name=vendor)
+                    vendor_id = ven[0].id
+                    print('vendor_id=',vendor_id)
+                    Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                          quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 

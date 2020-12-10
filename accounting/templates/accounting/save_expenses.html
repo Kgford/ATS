@@ -30,6 +30,10 @@
 					  Home <span class="sr-only">(current)</span>
 					</a>
 			    </li>
+				<li class="nav-item active">
+					<span data-feather="home"></span>
+					<a class="nav-link" href="{% url 'accounting:new_expense' %}">  Clear Expense&nbsp;&nbsp;</a>
+				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'vendors:vendor' %}">
 					  <span data-feather="users"></span>
@@ -135,11 +139,10 @@
 					<label>Vendor/Contractor/Store<span class="k-required"></span></label>
 					<input type='hidden' name='_vendor' data-select='vendor'/>
 					<select id='_vendor' name ='_vendor' class="browser-default custom-select custom-select-lg mb-3" required>
-						{% if vendor != -1  and vendor != 'select menu'%}
-							<option selected>{{vendor}}</option>
+						{% if exp == -1%}
 							<option data-desc = 'vendor', value = "select menu">select menu</option>
 						{% else %}
-							<option selected>select menu</option>
+							<option selected>{{vendor}}</option>
 						{% endif %}	
 						{% for ven in vendor_list%}
 							<option data-desc = 'vendor', value = "{{ven}}">{{ven}}</option>
@@ -176,9 +179,9 @@
 				<div class="form-group">
 					<label for="_quantity">Quantity</label>
 					{% if exp == -1 %}
-						<input id = "_quantity"  name = "_quantity" input class="form-control"  placeholder="Quantity"  required >
+						<input id = "_quantity"  name = "_quantity" input class="form-control"  placeholder="Quantity" required>
 					{% else %}
-						<input id = "_quantity"  name = "_quantity" value = "{{exp.quantity}}" input class="form-control"  required>
+						<input id = "_quantity"  name = "_quantity" value = "{{exp.quantity}}" input class="form-control" required>
 					{% endif %}
 				</div>	
 			</div>
@@ -186,9 +189,9 @@
 				<div class="form-group">
 					<label for="_item_cost">Item Cost</label>
 					{% if exp == -1 %}
-						<input id = "_item_cost"  name = "_item_cost" input class="form-control"  placeholder="Enter cost"  required>
+						<input id = "_item_cost"  name = "_item_cost" input class="form-control"  placeholder="Enter cost" required>
 					{% else %}
-						<input id = "_item_cost"  name = "_item_cost" value = "{{exp.item_cost}}" input class="form-control"  required>
+						<input id = "_item_cost"  name = "_item_cost" value = "{{exp.item_cost}}" input class="form-control" required>
 					{% endif %}
 				</div>	
 			</div>
@@ -222,8 +225,8 @@
 				{% else %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update Expense</button>
-							<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete Expense</button>
+							<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update</button>
+							<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete&nbsp;</button>
 						</div>
 					</div>
 				{% endif %}
@@ -232,8 +235,13 @@
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					<div class="form-check">
-						<input type="checkbox" class="form-check-input" id="_interval" name="_interval" onclick="check();"/>
-						<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Re-occuring?</label>
+						{% if interval == 'on' %}
+							<input type="checkbox" class="form-check-input" id="_interval" name="_interval" checked = "checked" onclick="check();"/>
+							<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Re-occuring?</label>
+						{% else %}
+							<input type="checkbox" class="form-check-input" id="_interval" name="_interval" onclick="check();"/>
+							<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Re-occuring?</label>
+						{% endif %}
 					</div>
 				</div>	
 			</div>
@@ -289,10 +297,23 @@
     </main>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		// Get value on button click and show alert
+		$("#_quantity").keyup(calc);
+		$("#_item_cost").keyup(calc);
+		function calc() {
+		  $('#_total_cost').val(
+			parseInt($('#_quantity').val(), 10) * parseFloat($('#_item_cost').val(), 10)
+		);
+	}
+	});
+</script>
+		
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
 <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script>
-<script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
+
 </body>
 {% endblock %}
 
