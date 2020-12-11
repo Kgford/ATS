@@ -82,25 +82,28 @@ class VendorView(View):
             print('active_save',active_save)            
             inventory_id = None
             vendors = Vendors.objects.all()
+            sites = Vendors.objects.all()
+            site = Vendors.objects.filter(name=name).all()
+            print('site=',site)
            
             try: 
-               if Vendors.objects.filter(name=name).exists():
+                if Vendors.objects.filter(name=name).exists():
                     site = Vendors.objects.filter(name=name).all()
                     print('site=',site)
                     return redirect('vendors:site',site[0].id)
-               else:
-                   if lat=='':
-                         Vendors.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
+                else:
+                    if lat=='':
+                        print('lat=',lat)
+                        Vendors.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
                                 active=active_save, inventory_id=inventory_id, created_on=timestamp, last_entry=timestamp)
-                   else:
-                       Vendors.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
+                    else:
+                        Vendors.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
                                 active=active_save, inventory_id=inventory_id, created_on=timestamp, last_entry=timestamp, lat=lat, lng=lng)
-               return render(request,"vendors/site.html",{"sites": sites, "site": site, "lat":lat, "lng":lng, "index_type":"Model", "active":active, "operator":operator})
             except IOError as e:
                 print ("vendor Save Failure ", e)	
         return render (self.request,"vendors/index.html",{"vendors":vendors, "index_type":"SIGNIN", "UserN":self.request.user, "index_type":"Vendor" , "operator":operator, "active":active})
 
-def save_csv(delete):               
+def save_vendor_csv(delete):               
     #~~~~~~~~~~~Load vendor database from csv. must put this somewhere else later"
     import csv
     timestamp  = date.today()
@@ -127,6 +130,8 @@ def save_csv(delete):
 def site(request,vendor_id):
     sites = []
     site = []
+    lat = 0
+    lng = 0
     print('we are here')
     if request.method == 'GET':
         operator = str(request.user)
@@ -140,10 +145,12 @@ def site(request,vendor_id):
                 if site1.id ==vendor_id:
                     site = site1
                     break
-            lat = float(site.lat)
-            print(lat)
-            lng = float(site.lng)
-            print(lng)
+            print('site.lat=',site.lat)       
+            if not site.lat ==None:
+                lat = float(site.lat)
+                print(lat)
+                lng = float(site.lng)
+                print(lng)
             if site.active == True:
                 active = 'on'
             else:
@@ -181,7 +188,9 @@ def site(request,vendor_id):
             lat = request.POST.get('_lat', -1)
             lng = request.POST.get('_lng', -1)
             email = request.POST.get('_email', -1)
+            print('email=',email)
             website = request.POST.get('_web', -1)
+            print('website=',website)
             active = request.POST.get('_active', -1)
             if active == 'on':
                 active_save = True
@@ -189,7 +198,7 @@ def site(request,vendor_id):
                 active_save = False
             print('active=',active_save)
             Vendors.objects.filter(id=vendor_id).update(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email,
-                 website=website,active=active_save, lat=float(lat), lng=float(lng), created_on=timestamp, last_entry=timestamp)
+                        website=website,active=active_save, lat=float(lat), lng=float(lng), created_on=timestamp, last_entry=timestamp)
         except IOError as e:
             print ("load model Failure ", e)
             print('error = ',e) 

@@ -12,9 +12,11 @@ from inventory.models import Inventory, Events
 from accounting.models import Expenses
 from vendors.models import Vendors
 from django.views import View
-from datetime import datetime
+#from datetime import datetime
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import ExtractYear 
+import datetime as dt
 
 class ExpensesView(View):
   
@@ -60,8 +62,8 @@ class ExpensesView(View):
             vendor = request.POST.get('_vendor', -1)
             expense_type = request.POST.get('_exp_type', -1)
             #print('expense_type = ',expense_type)
-            expence_desc = request.POST.get('_exp_desc', -1)
-            #print('expence_desc =',expence_desc)
+            expense_desc = request.POST.get('_exp_desc', -1)
+            print('expense_desc =',expense_desc)
             item_name = request.POST.get('_item_name', -1)
             #print('item_name =',item_name)
             item_desc = request.POST.get('_item_desc', -1)
@@ -73,7 +75,7 @@ class ExpensesView(View):
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
             #year_list = [d.year for d in Expenses.objects.all().datetimes('sale_date', 'year')]
             year_list = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
-           
+            expense_list = Expenses.objects.all()
                         
             success = True
             if not search ==-1:
@@ -261,4 +263,49 @@ class SaveExpensesView(View):
             print ("Lists load Failure ", e)
             print('error = ',e) 
         return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
+        
+        
+def save_expenses_csv(delete):               
+    #~~~~~~~~~~~Load vendor database from csv. must put this somewhere else later"
+    import csv
+    timestamp  = date.today()
+    CSV_PATH = 'C:\\SRC\\ATS\\accounting\\Expenses.csv'
+    print('csv = ',CSV_PATH)
+
+    contSuccess = 0
+    # Remove all data from Table
+    # Vendors.objects.all().delete()
+       
+    f = open(CSV_PATH)
+    reader = csv.reader(f)
+    print('reader = ',reader)
+    for vendor, expense_type, expense_desc, sale_date, item_name, item_desc, quantity, item_cost, total_cost, interval_save, interval_time in reader:
+        if vendor=='ï»¿N/A':
+            vendor='N/A'
+        print('vendor=',vendor)
+        print('expense_type=',expense_type)
+        print('expense_desc=',expense_desc)
+        format_str = '%m/%d/%Y' # The format
+        sale_date = datetime.datetime.strptime(sale_date, format_str)
+        print('sale_date=',sale_date)
+        
+        
+        print('item_name=',item_name)
+        print('item_desc=',item_desc)
+        print('quantity=',quantity)
+        print('item_cost=',item_cost)
+        print('total_cost=',total_cost)
+        print('interval_save=',interval_save)
+        print('interval_time=',interval_time)
+        ven = Vendors.objects.filter(name=vendor)
+        print('ven=',ven)
+        vendor_id = ven[0].id
+        print('vendor_id=',vendor_id)
+        if interval_save=='FALSE':
+            interval_save = False
+        else:
+            interval_save = True
+        print('interval_save=',interval_save)
+        Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                     quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
         

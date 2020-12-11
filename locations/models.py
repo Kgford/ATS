@@ -8,7 +8,7 @@ class Location(models.Model):
     city = models.CharField("city",max_length=50,null=False,unique=False,default='N/A')                           
     state = models.CharField("state",max_length=25,null=False,unique=False,default='N/A')    
     zip_code = models.CharField("zip_code",max_length=25,null=False,unique=False,default='N/A')   
-    phone = models.CharField("Phone",max_length=15,null=False,unique=False,default='N/A')      
+    phone = models.CharField("Phone",max_length=25,null=False,unique=False,default='N/A')      
     email = models.CharField("email",max_length=50,null=False,unique=False,default='N/A')   
     website = models.CharField("website",max_length=60,null=False,unique=False,default='N/A') 
     active = models.BooleanField("active",unique=False,null =True,default=True)
@@ -18,7 +18,7 @@ class Location(models.Model):
     inventory_id  = models.IntegerField(null=True,unique=False)
     lat = models.FloatField("lat",null=True,unique=False)
     lng = models.FloatField("lng",null=True,unique=False)
-    shelf = models.CharField("shelf",max_length=25,null=False,unique=False,default='N/A')   
+    shelf = models.CharField("shelf",max_length=25,null=True,unique=False,default='N/A')   
     
     def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
         self.name = name
