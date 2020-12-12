@@ -1,25 +1,56 @@
 from django.db import models
 
-class Clients(models.Model):
+# Create your locaions models here.
+class Clients(models.Model):   
     id = models.AutoField(primary_key=True)
-    FirstName = models.CharField("First Name",max_length=255,null=True,unique=False,default='N/A') 
-    LastName = models.CharField("last name",max_length=255,null=True,unique=False,default='N/A') 
-    StreetAddress = models.CharField("street address",max_length=255,null=True,unique=False,default='N/A') 
-    City = models.CharField("city",max_length=255,null=True,unique=False,default='N/A') 
-    State = models.CharField("state",max_length=50,null=True,unique=False,default='N/A')  
-    ZipCode = models.CharField("zip code",max_length=50,null=True,unique=False,default='N/A')  
-    PhoneNumber = models.CharField("phone number",max_length=50,null=True,unique=False,default='N/A')  
-    EmailAddress = models.CharField("email",max_length=255,null=True,unique=False,default='N/A')  
-    CustomerType = models.CharField("customer type",max_length=255,null=True,unique=False,default='N/A')  
-    TaxIDNumber = models.CharField("tax id",max_length=50,null=True,unique=False,default='N/A') 
-    ShipStreet = models.CharField("ship street",max_length=100,null=True,unique=False,default='N/A')  
-    ShipCity = models.CharField("ship city",max_length=50,null=True,unique=False,default='N/A')  
-    ShipState = models.CharField("shipstate",max_length=50,null=True,unique=False,default='N/A')  
-    ShipZip = models.CharField("ship zip",max_length=50,null=True,unique=False,default='N/A')      
-    Unsubscribe = models.BooleanField("active",unique=False,null=True,default=True)
-    ProfitabilityScale = models.CharField("ship zip",max_length=50,null=True,unique=False,default='N/A') 
-    Business = models.CharField("ship zip",max_length=50,null=True,unique=False,default='N/A') 
-    BusinessName = models.CharField("ship zip",max_length=255,null=True,unique=False,default='N/A') 
-    Client = models.CharField("ship zip",max_length=50,null=True,unique=False,default='N/A')
-    last_update = models.DateField(null=True)    
-    backup_index = models.IntegerField(null=True,unique=False)
+    name = models.CharField("name",max_length=100,null=False,unique=True)
+    address = models.CharField("address",max_length=100,null=False,unique=False,default='N/A')    	
+    city = models.CharField("city",max_length=50,null=False,unique=False,default='N/A')                           
+    state = models.CharField("state",max_length=25,null=False,unique=False,default='N/A')    
+    zip_code = models.CharField("zip_code",max_length=25,null=False,unique=False,default='N/A')   
+    phone = models.CharField("Phone",max_length=15,null=False,unique=False,default='N/A')      
+    email = models.CharField("email",max_length=50,null=False,unique=False,default='N/A')   
+    website = models.CharField("website",max_length=60,null=False,unique=False,default='N/A') 
+    active = models.BooleanField("active",unique=False,null =True,default=True)
+    image_file = models.CharField("image",max_length=50,null=True,unique=False)   
+    created_on = models.DateField()
+    last_entry = models.DateField()
+    inventory_id  = models.IntegerField(null=True,unique=False)
+    lat = models.FloatField("lat",null=True,unique=False)
+    lng = models.FloatField("lng",null=True,unique=False)
+
+       
+    def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
+        self.name = name
+        self.address = address
+        self.city = city
+        self.state = state
+        self.phone = phone
+        self.email = email
+        self.website = website
+        self.active = active
+        self.inventory_id = inventory_id
+        self.created_on = create_date
+        self.last_entry = log_date
+        self.lat = lat
+        self.lng = lng
+        self.save()	
+	
+    def serialize(self):
+        return {
+            'id': self.id, 
+            'name': self.name,
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip_code': self.zip_code,
+            'phone': self.phone,
+            'email': self.email,
+            'website': self.website,
+            'active': self.active,
+            'image_file': self.image_file,
+            'created_on': self.created_on,
+            'last_entry': self.last_entry,
+            'inventory_id': self.inventory_id
+        }
+

@@ -75,8 +75,8 @@
 			<div class="dropdown-menu" aria-labelledby="dropdown01">
 			  <a class="dropdown-item" href="https://www.facebook.com/SIMBAProgramLLC" class="fa fa-facebook">Facebook</a>
 			  <a class="dropdown-item" href="https://www.youtube.com/channel/UCvNoBhL6vW80sgQWlQUGu3g?view_as=subscriber">YouTube</a>
-			  <a class="dropdown-item" href="#">Instagram</a>
-			  <a class="dropdown-item" href="#">Twitter</a>
+			  <a class="dropdown-item" href="https://www.instagram.com/automatedtestsolutions/" >Instagram</a>
+			  <a class="dropdown-item" href="https://twitter.com/automatedtests1">Twitter</a>
 			</div>
 		  </li>
 	{% endif %}	
@@ -117,7 +117,7 @@
 	{% if user.is_authenticated %}
 		<h5>Accounting</h5>
 		<ul class="list-unstyled text-small">
-			<li><a class="text-muted" href="accounting:expenses">Expenses</a></li>
+			<li><a class="text-muted" href="{% url 'accounting:expenses' %}">Expenses</a></li>
 			<li><a class="text-muted" href="accounting:expenses">Invoices</a></li>
 			<li><a class="text-muted" href="accounting:expenses">Sales</a></li>
 		</ul>
@@ -130,6 +130,8 @@
 			<li><a class="text-muted" href="{% url 'inventory:inven' %}">Search Inventory</a></li>
 			<li><a class="text-muted" href="{% url 'inventory:items' %}">Create new Inventory Item</a></li>
 			<li><a class="text-muted" href="{% url 'inventory:items' %}">Event History</a></li>
+			<li><a class="text-muted" href="{% url 'locations:location' %}">Search locations</a></li>
+			<li><a class="text-muted" href="{% url 'locations:location' %}">Create new Site</a></li>
 		</ul>
 	{% endif %}
 	</div>
@@ -144,10 +146,9 @@
     </div>
     <div class="col-6 col-md">
 	{% if user.is_authenticated %}
-        <h5>Site Locations</h5>
+        <h5>Clients</h5>
         <ul class="list-unstyled text-small">
-	    	<li><a class="text-muted" href="{% url 'locations:location' %}">Search locations</a></li>
-			<li><a class="text-muted" href="{% url 'locations:location' %}">Create new Site</a></li>
+	    	<li><a class="text-muted" href="{% url 'clients:client' %}">Search Clients</a></li>
 		</ul>
 	{% endif %}
     </div>
