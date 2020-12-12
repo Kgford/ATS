@@ -1,4 +1,6 @@
 from django.urls import path
+from datetime import datetime
+from django.contrib.auth import views as auth_views
 from django.conf.urls import url,include
 from . import views
 from django.conf import settings
@@ -14,6 +16,17 @@ from accounting.views import (
 app_name = "accounting"
 
 urlpatterns =[
+    path('login/',
+         auth_views.LoginView.as_view
+         (
+             template_name='users/login.html',
+             extra_context=
+             {
+                 'title': 'Log in',
+                 'year' : datetime.now().year,
+             }
+         ),
+         name='user_login'),
 	path('expenses', login_required(ExpensesView.as_view(template_name="expense.html")), name='expenses'),
     path('new_expense', login_required(SaveExpensesView.as_view(template_name="save_expenses.html")), name='new_expense'),
     path('staff/', include("users.urls")),

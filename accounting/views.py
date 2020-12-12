@@ -87,7 +87,6 @@ class ExpensesView(View):
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
             years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
             year_list=[]
-            expense_list = Expenses.objects.all()
             for year1 in years:
                 dt = year1.split('-')
                 year_list.append(dt[0])
@@ -95,8 +94,29 @@ class ExpensesView(View):
             print("year_list",year_list) 
             print('year',year_c)
             success = True
+            #expense_list = Expenses.objects.all() 
             if not search ==-1:
-                expense_list = Expenses.objects.filter(vendor_id__icontains=search) | Expenses.objects.filter(expense_type__icontains=search) | Expenses.objects.filter(expense_description__icontains=search) | Expenses.objects.filter(item_name__icontains=search) | Expenses.objects.filter(item_desc__icontains=search) | Expenses.objects.filter(item_cost__contains=search) | Expenses.objects.filter(expense_date__contains=search) | Expenses.objects.filter(invoice__icontains=search).all()
+                if  Expenses.objects.filter(vendor_id__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(vendor_id__icontains=search).all()
+                    print('search 1=',expense_list)
+                elif  Expenses.objects.filter(expense_type__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(expense_type__icontains=search).all()
+                    print('search 2=',expense_list)
+                elif Expenses.objects.filter(expense_description__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(expense_description__icontains=search).all() 
+                    print('search 3=',expense_list)
+                elif Expenses.objects.filter(item__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(item__icontains=search).all()
+                    print('search 4=',expense_list)
+                elif Expenses.objects.filter(item_desc__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(item_desc__icontains=search).all()
+                    print('search 5=',expense_list)
+                elif Expenses.objects.filter(item_cost__icontains=search).exists():
+                    expense_list = Expenses.objects.filter(item_cost__contains=search).all()
+                    print('search 6=',expense_list)
+                elif Expenses.objects.filter(sale_date__contains=search).exists():
+                    expense_list = Expenses.objects.filter(sale_date__contains=search).all()
+                    print('esearch 7=',expense_list)
             elif not expense_type =="select menu": 
                 if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(expense_type=expense_type).all()
@@ -106,6 +126,7 @@ class ExpensesView(View):
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
                 if not expense_desc == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                print('expense_type =',expense_list)
             elif not expense_desc =="select menu": 
                 if expense_type == "select menu" and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(expense_description=expense_desc).all()
@@ -115,6 +136,7 @@ class ExpensesView(View):
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
                 if not expense_type == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                print('expense_desc =',expense_list)
             elif not item_name =="select menu": 
                 if item_name == "select menu" and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(item=item_name).all()
@@ -124,6 +146,7 @@ class ExpensesView(View):
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
                 if not item_name == "select menu" and not expense_desc == "select menu" and not item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all()
+                print('item_name =',expense_list)
             elif not item_desc =="select menu": 
                 if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(item_desc=item_desc).all()
@@ -133,10 +156,9 @@ class ExpensesView(View):
                     expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name).all()  
                 if not expense_desc == "select menu" and not item_name == "select menu" and not expense_type == "select menu": 
                     expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name, expense_type__contains=expense_type).all() 
-            else:
-                expense_list = Expenses.objects.all()
-            print('desc_list =',desc_list)
-            print('expense_list =',expense_list)
+                print('item_desc =',expense_list)
+            #print('desc_list =',desc_list)
+            #print('expense_list =',expense_list)
             for expense in expense_list:
                 total=round(total+float(expense.total_cost),2)
             print(total)
@@ -144,7 +166,7 @@ class ExpensesView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        print('expense_list',expense_list)
+        #print('expense_list',expense_list)
         return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
