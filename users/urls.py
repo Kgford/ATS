@@ -16,6 +16,5 @@ urlpatterns=[
     url(r'^user_login/$',views.user_login,name='user_login'),   
     url(r'^$',views.index,name='base'),
     url(r'^special/',views.special,name='special'),
-    #url(r'^users/',include('users.urls')),
     url(r'^logout/$', views.user_logout, name='logout'),    
 ]

@@ -12,11 +12,11 @@ from inventory.models import Inventory, Events
 from accounting.models import Expenses
 from vendors.models import Vendors
 from django.views import View
-#from datetime import datetime
 import datetime
+from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import ExtractYear 
-import datetime as dt
+
 
 class ExpensesView(View):
   
@@ -24,31 +24,38 @@ class ExpensesView(View):
     success_url = reverse_lazy('accounting:expenses')
     def get(self, *args, **kwargs):
         try:
+            year = datetime.date.today().year
+            print('year',year)
             desc_list=-1
             type_list=-1
             item_name_list=-1
             item_desc_list=-1
+            total=0
+            expense_type =-1
+            expense_desc =-1
+            item_name = -1
+            item_desc =-1
             operator = str(self.request.user)
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
-            #year_list = [d.year for d in Expenses.objects.all().datetimes('sale_date', 'year')]
             years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
             year_list=[]
-            for year in years:
-                dt = year.split('-')
-                print(dt[0])
+            for year1 in years:
+                dt = year1.split('-')
                 year_list.append(dt[0])
-               
-                
-            print("year_list",year_list)           
+            year_list = list(OrderedDict.fromkeys(year_list))
             print("in GET")
             expense_list = Expenses.objects.all()
+            for expense in expense_list:
+                total=round(total+float(expense.total_cost),2)
+            print(total)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator})
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
+                        "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
     
     def post(self, request, *args, **kwargs):
         try: 
@@ -57,26 +64,36 @@ class ExpensesView(View):
             type_list = []
             inv_list = []
             inv = []
+            total=0
             search = request.POST.get('search', -1)
-            #print('search =',search)
+            print('search =',search)
             vendor = request.POST.get('_vendor', -1)
             expense_type = request.POST.get('_exp_type', -1)
-            #print('expense_type = ',expense_type)
+            print('expense_type = ',expense_type)
             expense_desc = request.POST.get('_exp_desc', -1)
             print('expense_desc =',expense_desc)
             item_name = request.POST.get('_item_name', -1)
-            #print('item_name =',item_name)
+            print('item_name =',item_name)
             item_desc = request.POST.get('_item_desc', -1)
-            #print('item_desc =',item_desc)
-              
+            print('item_desc =',item_desc)
+            year_c = request.POST.get('_year', -1)
+            if year_c ==-1:
+                year_c = datetime.date.today().year
+            print('year =',year_c)
+            year = datetime.date.today().year
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
-            #year_list = [d.year for d in Expenses.objects.all().datetimes('sale_date', 'year')]
-            year_list = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
+            years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
+            year_list=[]
             expense_list = Expenses.objects.all()
-                        
+            for year1 in years:
+                dt = year1.split('-')
+                year_list.append(dt[0])
+            year_list = list(OrderedDict.fromkeys(year_list))
+            print("year_list",year_list) 
+            print('year',year_c)
             success = True
             if not search ==-1:
                 expense_list = Expenses.objects.filter(vendor_id__icontains=search) | Expenses.objects.filter(expense_type__icontains=search) | Expenses.objects.filter(expense_description__icontains=search) | Expenses.objects.filter(item_name__icontains=search) | Expenses.objects.filter(item_desc__icontains=search) | Expenses.objects.filter(item_cost__contains=search) | Expenses.objects.filter(expense_date__contains=search) | Expenses.objects.filter(invoice__icontains=search).all()
@@ -118,12 +135,18 @@ class ExpensesView(View):
                     expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name, expense_type__contains=expense_type).all() 
             else:
                 expense_list = Expenses.objects.all()
+            print('desc_list =',desc_list)
+            print('expense_list =',expense_list)
+            for expense in expense_list:
+                total=round(total+float(expense.total_cost),2)
+            print(total)
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
 
         print('expense_list',expense_list)
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator})
+        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
+                        "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
            
 class SaveExpensesView(View):
