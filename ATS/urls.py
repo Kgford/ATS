@@ -11,12 +11,12 @@ urlpatterns = [
     url(r'^$',views.index,name='public'),
     path('staff/', include("users.urls")),
     path('', include("atspublic.urls")),
+    path('vendors/', include("vendors.urls")),
+    path('customers/', include("customers.urls"),name='customer'),
     path('inventory/', include("inventory.urls"),name='inven'),
     path('locations/', include("locations.urls")),
     path('equipment/', include("equipment.urls")),
     path('accounting/', include("accounting.urls")),
-    path('vendors/', include("vendors.urls")),
-    path('clients/', include("clients.urls"),name='client'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #if settings.DEBUG:

@@ -37,10 +37,10 @@ ALLOWED_HOSTS = ['automatedtestsolutions.com','automatedtestsolutions.herokuapp.
 INSTALLED_APPS = [
     'users',
     'equipment',
+    'customers',
     'locations',
     'inventory',
     'atspublic',
-    'clients',
     'accounting',
     'vendors',
     'whitenoise.runserver_nostatic',

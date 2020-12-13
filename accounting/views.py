@@ -8,8 +8,9 @@ from datetime import date
 from django.urls import reverse, reverse_lazy
 from equipment.models import Model
 from locations.models import Location
+from customers.models import Customers
 from inventory.models import Inventory, Events
-from accounting.models import Expenses
+from accounting.models import Expenses, Invoice_Item, Charge_Codes
 from vendors.models import Vendors
 from django.views import View
 import datetime
@@ -309,6 +310,150 @@ class SaveExpensesView(View):
             print('error = ',e) 
         return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
         
+class InvoiceItemView(View):
+    template_name = "invoice_item.html"
+    success_url = reverse_lazy('accounting:invoice_item')
+    def get(self, *args, **kwargs):
+        try:
+            vendor = -1
+            customer = -1
+            item = -1
+            charge_code = -1
+            active = 'off'
+            item_id = self.request.GET.get('item_id', -1)
+            if item_id !=-1:
+                item = Invoice_Item.objects.filter(id=exp_id)
+                active = item[0].active
+                if active=='on':
+                    active = True
+                vendor_id = item[0].vendor_id
+                vendor = Vendors.objects.filter(id=vendor_id)
+                vendor = vendor[0].name
+                cust_id = item[0].customer_id
+                customer = Customers.objects.filter(id=cust_id)
+                customer = customer[0].name
+                charge_id== item[0].charge_id
+                charge_code = Charge_Codes.objects.filter(id=charge_id)
+                
+            operator = str(self.request.user)
+            charge_list =  Charge_Codes.objects.order_by('charge_code').values_list('charge_code', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('name').values_list('name', flat=True).distinct()
+            customer_list =  Customers.objects.order_by('name').values_list('name', flat=True).distinct()
+            print('item_id =',item_id)
+            print('vendor=',vendor)
+            print('customer=',customer)    
+            print('item=', item)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/invoice_item.html",{"charge_list": charge_list, "id":id, "vendor_list":vendor_list, 'customer_list':customer_list,
+                        'charge_code':charge_code, 'customer':customer, "item":item, 'vendor':vendor, "operator":operator,'active':active,'item_id':item_id})
+
+    def post(self, request, *args, **kwargs):
+        vendor_list = []
+        expense_list =[]
+        desc_list = []
+        item_id = -1
+        exp =-1
+        vendor =-1
+        
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            charge_list =  Charge_Codes.objects.order_by('charge_code').values_list('charge_code', flat=True).distinct()
+            vendor_list =  Vendors.objects.order_by('name').values_list('name', flat=True).distinct()
+            customer_list =  Customers.objects.order_by('name').values_list('name', flat=True).distinct()
+           
+            
+            
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            item_id = request.POST.get('_item_id', -1 )
+            print('item_id =',item_id)
+            vendor = request.POST.get('_vendor', -1 )#service_provider
+            print('vendor = ',vendor)
+            service_type = request.POST.get('_service_type', -1)
+            print('service_type = ',service_type)
+            resource_type = request.POST.get('_res_type', -1)
+            print('resource_type = ',resource_type)
+            customer = request.POST.get('_cust', -1)
+            print('customer =',expense_desc)
+            charge_code = request.POST.get('_charge', -1)
+            print('charge_code =',item_name)
+            item_desc = request.POST.get('_item_desc', -1)
+            print('item_desc =',item_desc)
+            cost_type = request.POST.get('_item_cost_type', -1)
+            print('cost_type =',cost_type)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            rate = request.POST.get('_item_cost', -1)
+            print('rate =',rate)
+            total_cost = request.POST.get('_total_cost', -1)
+            print('total_cost =',total_cost)
+            item_date = request.POST.get('_item_date', -1)
+            print('item_date =',sale_date)
+            invoice = request.POST.get('_invoice', -1)
+            print('invoice =',invoice)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            
+            save_item = request.POST.get('_save', -1)
+            print('save_item =',save_exp)
+            update_item = request.POST.get('_update', -1)
+            print('update_exp =',update_exp)
+            del_item = request.POST.get('_delete', -1)
+            print('del_item =',del_exp)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            success = True
+                       
+            if active =='on':
+                active_save = True
+            else:
+                active_save = False
+                
+                
+            customer_id = Customers.objects.filter(name=customer).first()
+            vendor_id = Vendors.objects.filter(name=vendor).first()
+            charge_id = Vendors.objects.filter(charge_code=charge_code).first()
+            
+            print('active_save=',active_save)
+            if not del_item==-1:
+                try:
+                   #update item	
+                    Invoice_Item.objects.filter(id=item_id).delete()
+                    print('delete complete')
+                    item=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounting:expenses'))
+            elif not update_item==-1:
+                #update item	
+                ven = Vendors.objects.filter(name=vendor)
+                vendor_id = ven[0].id
+                print('vendor_id=',vendor_id)
+                Invoice_Item.objects.filter(id=item_id).update(vendor_id=vendor_id,customer_id=customer_id,charge_id=charge_id,resource_type=resource_type,service_type=service_type, service_provider=vendor,
+                                        cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active, last_update=timestamp)
+                exp=-1
+            elif not save_exp==-1:
+                if Invoice_Item.objects.filter(item=item_name).exists():
+                    item = Invoice_Item.objects.filter(item=item_name).all()
+                    return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+                else:
+                   #save item	
+                    ven = Vendors.objects.filter(name=vendor)
+                    vendor_id = ven[0].id
+                    print('vendor_id=',vendor_id)
+                    Invoice_Item.objects.create(vendor_id=vendor_id,customer_id=customer_id,charge_id=charge_id,resource_type=resource_type,service_type=service_type, service_provider=vendor,
+                                        cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active, last_update=timestamp)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/invoice_item.html",{"charge_list": charge_list, "id":id, "vendor_list":vendor_list, 'customer_list':customer_list,
+                        'charge_code':charge_code, 'customer':customer, "item":item, 'vendor':vendor, "operator":operator,'active':active,'item_id':item_id})
+
         
 def save_expenses_csv(delete):               
     #~~~~~~~~~~~Load vendor database from csv. must put this somewhere else later"
@@ -353,4 +498,6 @@ def save_expenses_csv(delete):
         print('interval_save=',interval_save)
         Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
                                      quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                                     
+
         

@@ -88,8 +88,8 @@
 		<nav class="nav nav-underline">
 			<a class="nav-link" href="">Dashboard</a>
 			<a class="nav-link" href="{% url 'accounting:expenses' %}">Expenses</a>
+			<a class="nav-link" href="{% url 'accounting:invoice_item' %}">Invoicing</a>
 			<a class="nav-link" href="{% url 'inventory:inven' %}">Inventory</a>
-			<a class="nav-link" href="">Invoicing</a>
 		</nav>
 	</div>	  
 {% endif %}	
@@ -118,7 +118,7 @@
 		<h5>Accounting</h5>
 		<ul class="list-unstyled text-small">
 			<li><a class="text-muted" href="{% url 'accounting:expenses' %}">Expenses</a></li>
-			<li><a class="text-muted" href="accounting:expenses">Invoices</a></li>
+			<li><a class="text-muted" href={% url 'accounting:invoice_item' %}>Invoices</a></li>
 			<li><a class="text-muted" href="accounting:expenses">Sales</a></li>
 		</ul>
 	{% endif %}
@@ -148,7 +148,7 @@
 	{% if user.is_authenticated %}
         <h5>Clients</h5>
         <ul class="list-unstyled text-small">
-	    	<li><a class="text-muted" href="{% url 'clients:client' %}">Search Clients</a></li>
+	    	<li><a class="text-muted" href="{% url 'customers:customer' %}">Search Clients</a></li>
 		</ul>
 	{% endif %}
     </div>

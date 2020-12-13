@@ -8,27 +8,14 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required, permission_required
 from accounting.views import (
     ExpensesView,
-    SaveExpensesView
+    SaveExpensesView,
+    InvoiceItemView,
 )
-
-
 
 app_name = "accounting"
 
 urlpatterns =[
-    path('login/',
-         auth_views.LoginView.as_view
-         (
-             template_name='users/login.html',
-             extra_context=
-             {
-                 'title': 'Log in',
-                 'year' : datetime.now().year,
-             }
-         ),
-         name='user_login'),
-	path('expenses', login_required(ExpensesView.as_view(template_name="expense.html")), name='expenses'),
+    path('expenses', login_required(ExpensesView.as_view(template_name="expense.html")), name='expenses'),
     path('new_expense', login_required(SaveExpensesView.as_view(template_name="save_expenses.html")), name='new_expense'),
-    path('staff/', include("users.urls")),
-    
+    path('invoice_item', login_required(InvoiceItemView.as_view(template_name="invoice_item.html")), name='invoice_item'),
     ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
