@@ -152,6 +152,22 @@
 		</ul>
 	{% endif %}
     </div>
+	<div class="col-6 col-md">
+	{% if user.is_authenticated %}
+        <h5>Vendors</h5>
+        <ul class="list-unstyled text-small">
+	    	<li><a class="text-muted" href="{% url 'vendors:vendor' %}">Search Vendors</a></li>
+		</ul>
+	{% endif %}
+    </div>
+	<div class="col-6 col-md">
+	{% if user.is_authenticated %}
+        <h5>Vendors</h5>
+        <ul class="list-unstyled text-small">
+	    	<li><a class="text-muted" href="{% url 'contractors:contractor' %}">Search Contractors</a></li>
+		</ul>
+	{% endif %}
+    </div>
    </div>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

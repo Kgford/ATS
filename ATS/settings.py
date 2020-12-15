@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'users',
     'equipment',
     'customers',
+    'contractors',
     'locations',
     'inventory',
     'atspublic',

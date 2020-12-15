@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include("atspublic.urls")),
     path('vendors/', include("vendors.urls")),
     path('customers/', include("customers.urls"),name='customer'),
+    path('contractors/', include("contractors.urls"),name='contractor'),
     path('inventory/', include("inventory.urls"),name='inven'),
     path('locations/', include("locations.urls")),
     path('equipment/', include("equipment.urls")),

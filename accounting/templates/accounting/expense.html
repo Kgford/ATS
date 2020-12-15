@@ -15,36 +15,32 @@
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
-					<span data-feather="home"></span>
-					<a class="nav-link" href="{% url 'users:base' %}">home&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-item active">
-					<span data-feather="home"></span>
-					<a class="nav-link" href="{% url 'accounting:new_expense' %}">  New Expense&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-item active">
-					<span data-feather="home"></span>
-					<a class="nav-link" href="{% url 'vendors:vendor' %}"> Vendor/Contractor/Store&nbsp;&nbsp;&nbsp;  </a>
-				</li>
-				<li class="nav-item active">
 				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">Log out</a>
+					<a class="nav-link" href="{% url 'accounting:expenses' %}" aria-disabled="true">Expense&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				<li class="nav-item active">
-				<span data-feather="dummyspace"></span>
-					<a class="nav-link" href="#" aria-disabled="true">      </a>
+				<li class="nav-item  ">
+					<span data-feather="clipboard"></span>
+					<a class="nav-link" href="{% url 'accounting:new_expense' %}">New Expense</a>
 				</li>
-				<li class="nav-item active">
-				<span data-feather="dummyspace"></span>
-					<a class="nav-link" href="#" aria-disabled="true">      </a>
+				<li class="nav-item ">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'vendors:vendor' %}">New Vendor or Store&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>
-			<form class="form-inline mt-6 mt-md-0 col-lg-16" method="post" action="{% url 'accounting:expenses' %}">
+			<form class="form-inline mt-4 mt-md-0 col-lg-4" method="post" action="{% url 'accounting:expenses' %}">
 				{% csrf_token %}
 				{% if search == -1 %}
-					<input id = "search"  size = "100" name = "search" onchange="this.form.submit()" "mr-sm-6 col-md-6 col-lg-16" type="text" placeholder="Search" aria-label="Search" autofocus>
+					<input id = "search"  size = "100" name = "search" onchange="this.form.submit()" "mr-sm-2 col-md-4 col-lg-4" type="text" placeholder="Search" aria-label="Search" autofocus>
 				{% else %}
-					<input id = "search"  size = "100" value = "{{search}}" name = "search" onchange="this.form.submit()" "mr-sm-6 col-md-6 col-lg-16" type="text" placeholder="Search" aria-label="Search" autofocus>
+					<input id = "search"  size = "100" value = "{{search}}" name = "search" onchange="this.form.submit()" "mr-sm-2 col-md-4 col-lg-4" type="text" placeholder="Search" aria-label="Search" autofocus>
 				{% endif %}
 				
 			</form>
