@@ -27,7 +27,7 @@
 					<a class="nav-link" href="{% url 'accounting:invoice_item' %}" aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
 				</li><li class="nav-item ">
 					<span data-feather="clipboard"></span>
-					<a class="nav-link" href="">Charge Codes</a>
+					<a class="nav-link" href="{% url 'accounting:charge_code' %}">Charge Codes</a>
 				</li>
 				<li class="nav-item">
 					<span data-feather="dollar-sign"></span>
@@ -35,7 +35,7 @@
 				</li>
 				<li class="nav-item ">
 				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'customers:customer' %}" aria-disabled="true">Customers&nbsp;&nbsp;&nbsp;</a>
+					<a class="nav-link" href="{% url 'client:client' %}" aria-disabled="true">Clients&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				</li>
 				<li class="nav-item ">
@@ -85,7 +85,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'customers:customer' %}">
+					<a class="nav-link" href="{% url 'client:client' %}">
 					  <span data-feather="layers"></span>
 					  Customers
 					</a>
@@ -97,9 +97,9 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'vendors:vendor' %}">
+					<a class="nav-link" href="{% url 'vendor:vendor' %}">
 					  <span data-feather="layers"></span>
-					  Vendors
+					  vendor
 					</a>
 				</li>
 				
@@ -200,17 +200,17 @@
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<!-- Vendor-->
+					<!-- contractor-->
 					<label>Service Provider<span class="k-required"></span></label>
-					<input type='hidden' name='_vendor' data-select='vendor'/>
-					<select id='_vendor' name ='_vendor' class="browser-default custom-select custom-select-lg mb-3" required>
+					<input type='hidden' name='_contractor' data-select='contractor'/>
+					<select id='_contractor' name ='_contractor' class="browser-default custom-select custom-select-lg mb-3" required>
 						{% if item == -1%}
-							<option data-desc = 'vendor', value = "select menu">select menu</option>
+							<option data-desc = 'contractor', value = "select menu">select menu</option>
 						{% else %}
-							<option selected>{{vendor}}</option>
+							<option selected>{{contractor}}</option>
 						{% endif %}	
-						{% for ven in vendor_list%}
-							<option data-desc = 'vendor', value = "{{ven}}">{{ven}}</option>
+						{% for contr in contractor_list%}
+							<option data-desc = 'contractor', value = "{{contr}}">{{contr}}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -226,9 +226,9 @@
 						{% if item == -1%}
 							<option data-desc = 'vendor', value = "select menu">select menu</option>
 						{% else %}
-							<option selected>{{customer}}</option>
+							<option selected>{{client}}</option>
 						{% endif %}	
-						{% for cust in customer_list%}
+						{% for cust in client_list%}
 							<option data-desc = 'vendor', value = "{{ven}}">{{cust}}</option>
 						{% endfor %}
 					</select>

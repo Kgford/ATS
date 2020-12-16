@@ -1,0 +1,392 @@
+{% extends "accounting/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ index_type }}
+{% endblock %}
+
+{% block body %}
+<body onload="check_start()">
+   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="" aria-disabled="true">Reconsile Invoice&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href={% url 'accounting:invoice_item' %} aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
+				</li><li class="nav-item  active ">
+					<span data-feather="clipboard"></span>
+					<a class="nav-link" href="{% url 'accounting:charge_code' %}">Charge Codes</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'contractors:contractor' %}">Contractors&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'client:client' %}" aria-disabled="true">Clients&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+		  <div class="sidebar-sticky pt-3">
+			<ul class="nav flex-column">
+			   <li class="nav-item">
+					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
+					  <span data-feather="file"></span>
+					  Dashboard
+					</a>
+				 </li>
+				  <li class="nav-item">
+					<a class="nav-link" href="{% url 'accounting:invoice_item' %}">
+					  <span data-feather="file"></span>
+					  Invoicing
+					</a>
+				 </li>
+				 <li class="nav-item">
+					<a class="nav-link active" href="{% url 'accounting:expenses' %}">
+					  <span data-feather="dollar-sign"></span>
+					  Expenses <span class="sr-only">(current)</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'inventory:inven' %}">
+					  <span data-feather="layers"></span>
+					  Inventory
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'equipment:equipment' %}">
+					  <span data-feather="layers"></span>
+					  Equipment
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'client:client' %}">
+					  <span data-feather="layers"></span>
+					  Client
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'contractors:contractor' %}">
+					  <span data-feather="layers"></span>
+					  Contractors
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'vendor:vendor' %}">
+					  <span data-feather="layers"></span>
+					  vendor
+					</a>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'users:base' %}">
+					  <span data-feather="layers"></span>
+					  Home
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'users:logout' %}">
+					  <span data-feather="layers"></span>
+					  Logout
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'admin:index' %}">
+					  <span data-feather="layers"></span>
+					  Admin
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'atspublic:public' %}">
+					  <span data-feather="file"></span>
+					  Website
+					</a>
+				 </li>
+				  
+			</ul>
+		</div>
+	</nav>
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+	<form action = "{% url 'accounting:new_expense' %}" method="post">
+		{% csrf_token %}
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			{% if item == -1 %}
+				<h1 class="h2">Create new Charge Code</h1>
+			{% else %}
+				<h1 class="h2">Modify Charge Code</h1>
+			{% endif %}
+			<div class="btn-toolbar mb-2 mb-md-0">
+				<a style = "color:#CCD1D1" > {{operator}} logged in</a>
+			</div>
+		</div>
+		{% if item == -1 %}
+			<input type='hidden' id = '_item_id' name='_item_id' value = "-1" />
+		{% else %}
+			<input type='hidden' id = 'item_id' name='_item_id' value = "{{item.id}}" />
+		{% endif %}
+		<div class="row">
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<label>Service Type<span class="k-required"></span></label>
+					<input type='hidden' name='exp_desc' data-select='site'/>
+					<select id='_service_type' name = "_service_type" class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if item != -1  %}
+							<option selected>{{item.service_type}}</option>
+						{% else %}
+							<option selected>select menu</option>
+						{% endif %}	
+						<option data-desc = 'expense', value = "Rent">Sales</option>
+						<option data-desc = 'expense', value = "Utilities">Promotion</option>
+						<option data-desc = 'expense', value = "Insurance">Engineering</option>
+						<option data-desc = 'expense', value = "Fees">Production</option>
+						<option data-desc = 'expense', value = "Wages">Quality</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<!-- Customer-->
+					<label>Customer<span class="k-required"></span></label>
+					<input type='hidden' name='_cust' data-select='cust'/>
+					<select id='_cust' name ='_cust' class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if item == -1%}
+							<option data-desc = 'vendor', value = "select menu">select menu</option>
+						{% else %}
+							<option selected>{{client}}</option>
+						{% endif %}	
+						{% for cust in client_list%}
+							<option data-desc = 'vendor', value = "{{ven}}">{{cust}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<!-- contractor-->
+					<label>Service Provider<span class="k-required"></span></label>
+					<input type='hidden' name='_contractor' data-select='contractor'/>
+					<select id='_contractor' name ='_contractor' class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if item == -1%}
+							<option data-desc = 'contractor', value = "select menu">select menu</option>
+						{% else %}
+							<option selected>{{contractor}}</option>
+						{% endif %}	
+						{% for contr in contractor_list%}
+							<option data-desc = 'contractor', value = "{{contr}}">{{contr}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>	
+		<div class="row">
+		<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<!-- Customer-->
+					<label>Charge Code<span class="k-required"></span></label>
+					<input type='hidden' name='_charge' data-select='cust'/>
+					<select id='_charge' name ='_charge' class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if item == -1%}
+							<option data-desc = 'charge', value = "select menu">select menu</option>
+						{% else %}
+							<option selected>{{charge_code}}</option>
+						{% endif %}	
+						{% for charg in charge_list%}
+							<option data-desc = 'charge', value = "{{charg}}">{{charg}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="col-sm-1 col-lg-4 grid-col">
+				<div class="form-group">
+					<label for="_item_desc">Product or Service</label>
+					{% if item == -1 %}
+						<input id = "_item_desc" name = "_item_desc" input class="form-control" placeholder="Enter Item description"  required >
+					{% else %}
+						<input id = "_desc" name = "_item_desc" input class="form-control" value = "{{item.item_desc}}"  required >
+					{% endif %}
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<label for="_quantity">Item Date</label>
+					{% if item == -1 %}
+						<input type = "date" id = "_item_date"  name = "_item_date" input class="form-control" required>
+					{% else %}
+						<input type = "date" id = "_item_date"  name = "_item_date" value = {{item.item_date}} input class="form-control"  required>
+					{% endif %}
+				</div>	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-1 col-lg-1 grid-col">
+				<div class="form-group">
+					<label>Cost Type<span class="k-required"></span></label>
+					<input type='hidden' name='exp_desc' data-select='site'/>
+					<select id='_item_cost_type' name = "_item_cost_type" class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if item != -1  %}
+							<option selected>{{item.cost_type}}</option>
+						{% else %}
+							<option selected>select menu</option>
+						{% endif %}	
+						<option data-desc = 'expense', value = "Rent">Per Hour</option>
+						<option data-desc = 'expense', value = "Utilities">Quantity</option>
+						<option data-desc = 'expense', value = "Insurance">Size mm</option>
+						<option data-desc = 'expense', value = "Insurance">Size cm</option>
+						<option data-desc = 'expense', value = "Insurance">Size meter</option>
+						<option data-desc = 'expense', value = "Fees">Size inch</option>
+						<option data-desc = 'expense', value = "Wages">Size Foot</option>
+						<option data-desc = 'expense', value = "Insurance">Length mm</option>
+						<option data-desc = 'expense', value = "Insurance">Length cm</option>
+						<option data-desc = 'expense', value = "Insurance">Length meter</option>
+						<option data-desc = 'expense', value = "Fees">Length inch</option>
+						<option data-desc = 'expense', value = "Wages">Length Foot</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-1 grid-col">
+				<div class="form-group">
+					<label for="_quantity">Quantity</label>
+					{% if item == -1 %}
+						<input id = "_quantity"  name = "_quantity" input class="form-control"  placeholder="Quantity" required>
+					{% else %}
+						<input id = "_quantity"  name = "_quantity" value = "{{item.quantity}}" input class="form-control" required>
+					{% endif %}
+				</div>	
+			</div>
+			<div class="col-sm-1 col-lg-1 grid-col">
+				<div class="form-group">
+					<label for="_item_cost">Rate</label>
+					{% if item == -1 %}
+						<input id = "_item_cost"  name = "_item_cost" input class="form-control"  placeholder="Enter cost" required>
+					{% else %}
+						<input id = "_item_cost"  name = "_item_cost" value = "{{item.item_cost}}" input class="form-control" required>
+					{% endif %}
+				</div>	
+			</div>
+			<div class="col-sm-1 col-lg-1 grid-col">
+				<div class="form-group">
+					<label for="_total_cost">Total Cost</label>
+					{% if item == -1 %}
+						<input id = "_total_cost" name = "_total_cost" input class="form-control" placeholder="Total cost"  required>
+					{% else %}
+						<input id = "_total_cost" name = "_total_cost" input class="form-control" value = "{{item.total_cost}}" required>
+					{% endif %}
+				</div>
+			</div>
+			{% if item == -1 %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label  for="_quantity">Save</label>
+							<button type="submit" id = "_save" name = "_save"  class="btn btn-success">Save Item</button>
+						</div>
+					</div>
+				{% else %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update</button>
+							<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete&nbsp;</button>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		<div class="row">
+		</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<div class="form-check">
+						{% if active == 'on' %}
+							<input type="checkbox" class="form-check-input" id="_active" name="_active" checked = "checked" onclick="check();"/>
+							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
+						{% else %}
+							<input type="checkbox" class="form-check-input" id="_active" name="_active" onclick="check();"/>
+							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active?</label>
+						{% endif %}
+					</div>
+				</div>	
+			</div>
+		</div>
+	</form>
+		</div>	
+		<h2 class="text-center">Items List</h2>
+		<div class="table-responsive" Method = "POST">
+			 <table id = "table_id" class="table table-striped table-sm">
+			    <thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Item Description</th>
+					  <th>Resource Type</th>
+					  <th>Service Type</th>
+					  <th>Item Date</th>
+					  <th>Item Description</th>
+					  <th>Total Cost</th>
+					  <th>Active</th>
+					</tr>
+			    </thead>
+				<tbody>
+					{% for item1 in item_list %}
+						<tr>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}">{{item1.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.total_cost}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.active}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+    </main>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		// Get value on button click and show alert
+		$("#_quantity").keyup(calc);
+		$("#_item_cost").keyup(calc);
+		function calc() {
+		  $('#_total_cost').val(
+			parseInt($('#_quantity').val(), 10) * parseFloat($('#_item_cost').val(), 10)
+		);
+	}
+	});
+</script>
+		
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script>
+
+</body>
+{% endblock %}
+
+</html>
