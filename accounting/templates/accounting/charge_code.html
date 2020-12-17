@@ -132,7 +132,7 @@
 		</div>
 	</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<form action = "{% url 'accounting:new_expense' %}" method="post">
+	<form action = "{% url 'accounting:charge_code' %}" method="post">
 		{% csrf_token %}
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 			{% if item == -1 %}
@@ -153,160 +153,88 @@
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					<label>Service Type<span class="k-required"></span></label>
-					<input type='hidden' name='exp_desc' data-select='site'/>
-					<select id='_service_type' name = "_service_type" class="browser-default custom-select custom-select-lg mb-3" required>
+					<input type='hidden' name='charge_type' data-select='site'/>
+					<select id='_charge_type' name = "_charge_type" class="browser-default custom-select custom-select-lg mb-3" required>
 						{% if item != -1  %}
-							<option selected>{{item.service_type}}</option>
+							<option selected>{{item.charge_type}}</option>
 						{% else %}
 							<option selected>select menu</option>
 						{% endif %}	
-						<option data-desc = 'expense', value = "Rent">Sales</option>
-						<option data-desc = 'expense', value = "Utilities">Promotion</option>
-						<option data-desc = 'expense', value = "Insurance">Engineering</option>
-						<option data-desc = 'expense', value = "Fees">Production</option>
-						<option data-desc = 'expense', value = "Wages">Quality</option>
+						<option data-desc = 'expense', value = "Sales">Sales</option>
+						<option data-desc = 'expense', value = "Promotion">Promotion</option>
+						<option data-desc = 'expense', value = "Engineering">Engineering</option>
+						<option data-desc = 'expense', value = "Production">Production</option>
+						<option data-desc = 'expense', value = "Quality">Quality</option>
 					</select>
 				</div>
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					<!-- Customer-->
-					<label>Customer<span class="k-required"></span></label>
-					<input type='hidden' name='_cust' data-select='cust'/>
-					<select id='_cust' name ='_cust' class="browser-default custom-select custom-select-lg mb-3" required>
+					<label>Client<span class="k-required"></span></label>
+					<input type='hidden' name='_client' data-select='cust'/>
+					<select id='_client' name ='_client' class="browser-default custom-select custom-select-lg mb-3" required>
 						{% if item == -1%}
 							<option data-desc = 'vendor', value = "select menu">select menu</option>
 						{% else %}
 							<option selected>{{client}}</option>
 						{% endif %}	
 						{% for cust in client_list%}
-							<option data-desc = 'vendor', value = "{{ven}}">{{cust}}</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-			
-			<div class="col-sm-1 col-lg-2 grid-col">
-				<div class="form-group">
-					<!-- contractor-->
-					<label>Service Provider<span class="k-required"></span></label>
-					<input type='hidden' name='_contractor' data-select='contractor'/>
-					<select id='_contractor' name ='_contractor' class="browser-default custom-select custom-select-lg mb-3" required>
-						{% if item == -1%}
-							<option data-desc = 'contractor', value = "select menu">select menu</option>
-						{% else %}
-							<option selected>{{contractor}}</option>
-						{% endif %}	
-						{% for contr in contractor_list%}
-							<option data-desc = 'contractor', value = "{{contr}}">{{contr}}</option>
+							<option data-desc = 'vendor', value = "{{cust}}">{{cust}}</option>
 						{% endfor %}
 					</select>
 				</div>
 			</div>
 		</div>	
 		<div class="row">
-		<div class="col-sm-1 col-lg-2 grid-col">
-				<div class="form-group">
-					<!-- Customer-->
-					<label>Charge Code<span class="k-required"></span></label>
-					<input type='hidden' name='_charge' data-select='cust'/>
-					<select id='_charge' name ='_charge' class="browser-default custom-select custom-select-lg mb-3" required>
-						{% if item == -1%}
-							<option data-desc = 'charge', value = "select menu">select menu</option>
-						{% else %}
-							<option selected>{{charge_code}}</option>
-						{% endif %}	
-						{% for charg in charge_list%}
-							<option data-desc = 'charge', value = "{{charg}}">{{charg}}</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-			
-		</div>
-		<div class="row">
-			<div class="col-sm-1 col-lg-4 grid-col">
-				<div class="form-group">
-					<label for="_item_desc">Product or Service</label>
-					{% if item == -1 %}
-						<input id = "_item_desc" name = "_item_desc" input class="form-control" placeholder="Enter Item description"  required >
-					{% else %}
-						<input id = "_desc" name = "_item_desc" input class="form-control" value = "{{item.item_desc}}"  required >
-					{% endif %}
-				</div>
-			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<label for="_quantity">Item Date</label>
+					<label for="_item_desc">Charge Code</label>
 					{% if item == -1 %}
-						<input type = "date" id = "_item_date"  name = "_item_date" input class="form-control" required>
+						<input id = "_charge_code" name = "_charge_code" input class="form-control" placeholder="Enter Item description"  required >
 					{% else %}
-						<input type = "date" id = "_item_date"  name = "_item_date" value = {{item.item_date}} input class="form-control"  required>
+						<input id = "_charge_code" name = "_charge_code" input class="form-control" value = "{{item.charge}}"  required >
 					{% endif %}
-				</div>	
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-3 grid-col">
+				<div class="form-group">
+					<label for="_item_desc">Charge Code Description</label>
+					{% if item == -1 %}
+						<input id = "_item_desc" name = "_charge_desc" input class="form-control" placeholder="Enter Item description"  required >
+					{% else %}
+						<input id = "_desc" name = "_charge_desc" input class="form-control" value = "{{item.charge_desc}}"  required >
+					{% endif %}
+				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-1 col-lg-1 grid-col">
+			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<label>Cost Type<span class="k-required"></span></label>
-					<input type='hidden' name='exp_desc' data-select='site'/>
-					<select id='_item_cost_type' name = "_item_cost_type" class="browser-default custom-select custom-select-lg mb-3" required>
-						{% if item != -1  %}
-							<option selected>{{item.cost_type}}</option>
-						{% else %}
-							<option selected>select menu</option>
-						{% endif %}	
-						<option data-desc = 'expense', value = "Rent">Per Hour</option>
-						<option data-desc = 'expense', value = "Utilities">Quantity</option>
-						<option data-desc = 'expense', value = "Insurance">Size mm</option>
-						<option data-desc = 'expense', value = "Insurance">Size cm</option>
-						<option data-desc = 'expense', value = "Insurance">Size meter</option>
-						<option data-desc = 'expense', value = "Fees">Size inch</option>
-						<option data-desc = 'expense', value = "Wages">Size Foot</option>
-						<option data-desc = 'expense', value = "Insurance">Length mm</option>
-						<option data-desc = 'expense', value = "Insurance">Length cm</option>
-						<option data-desc = 'expense', value = "Insurance">Length meter</option>
-						<option data-desc = 'expense', value = "Fees">Length inch</option>
-						<option data-desc = 'expense', value = "Wages">Length Foot</option>
-					</select>
-				</div>
-			</div>
-			<div class="col-sm-1 col-lg-1 grid-col">
-				<div class="form-group">
-					<label for="_quantity">Quantity</label>
+					<label for="_quantity">Start Date</label>
 					{% if item == -1 %}
-						<input id = "_quantity"  name = "_quantity" input class="form-control"  placeholder="Quantity" required>
+						<input type = "date" id = "_start_date"  name = "_start_date" input class="form-control" required>
 					{% else %}
-						<input id = "_quantity"  name = "_quantity" value = "{{item.quantity}}" input class="form-control" required>
+						<input type = "date" id = "_start_date"  name = "_start_date" value = {{item.start_date}} input class="form-control"  required>
 					{% endif %}
 				</div>	
 			</div>
-			<div class="col-sm-1 col-lg-1 grid-col">
+		   <div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<label for="_item_cost">Rate</label>
+					<label for="_quantity">End Date</label>
 					{% if item == -1 %}
-						<input id = "_item_cost"  name = "_item_cost" input class="form-control"  placeholder="Enter cost" required>
+						<input type = "date" id = "_end_date"  name = "_end_date" input class="form-control" required>
 					{% else %}
-						<input id = "_item_cost"  name = "_item_cost" value = "{{item.item_cost}}" input class="form-control" required>
+						<input type = "date" id = "_end_date"  name = "_end_date" value = {{item.end_date}} input class="form-control"  required>
 					{% endif %}
 				</div>	
 			</div>
-			<div class="col-sm-1 col-lg-1 grid-col">
-				<div class="form-group">
-					<label for="_total_cost">Total Cost</label>
-					{% if item == -1 %}
-						<input id = "_total_cost" name = "_total_cost" input class="form-control" placeholder="Total cost"  required>
-					{% else %}
-						<input id = "_total_cost" name = "_total_cost" input class="form-control" value = "{{item.total_cost}}" required>
-					{% endif %}
-				</div>
-			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
 			{% if item == -1 %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
 							<label  for="_quantity">Save</label>
-							<button type="submit" id = "_save" name = "_save"  class="btn btn-success">Save Item</button>
+							<button type="submit" id = "_save" name = "_save"  class="btn btn-success">Save</button>
 						</div>
 					</div>
 				{% else %}
@@ -318,49 +246,33 @@
 					</div>
 				{% endif %}
 			</div>
-		<div class="row">
 		</div>
-			<div class="col-sm-1 col-lg-2 grid-col">
-				<div class="form-group">
-					<div class="form-check">
-						{% if active == 'on' %}
-							<input type="checkbox" class="form-check-input" id="_active" name="_active" checked = "checked" onclick="check();"/>
-							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
-						{% else %}
-							<input type="checkbox" class="form-check-input" id="_active" name="_active" onclick="check();"/>
-							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active?</label>
-						{% endif %}
-					</div>
-				</div>	
-			</div>
+		
 		</div>
 	</form>
 		</div>	
-		<h2 class="text-center">Items List</h2>
+		<h2 class="text-center">Charge Code List</h2>
 		<div class="table-responsive" Method = "POST">
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
 					<tr>
 					  <th>ID</th>
-					  <th>Item Description</th>
-					  <th>Resource Type</th>
-					  <th>Service Type</th>
-					  <th>Item Date</th>
-					  <th>Item Description</th>
-					  <th>Total Cost</th>
-					  <th>Active</th>
-					</tr>
+					  <th>Charge Type</th>
+					  <th>Charge Code</th>
+					  <th>Code Description</th>
+					  <th>Start Date</th>
+					  <th>End Date</th>
+				 </tr>
 			    </thead>
 				<tbody>
-					{% for item1 in item_list %}
+					{% for code in charge_list %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}">{{item1.id}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.resource_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.service_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.total_cost}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.active}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.charge_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.charge}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.charge_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.start_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:charge_code' %}?code_id={{code.id}}&client_id={{code.client_id}}">{{code.end_date}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

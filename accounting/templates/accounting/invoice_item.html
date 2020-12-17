@@ -132,7 +132,7 @@
 		</div>
 	</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<form action = "{% url 'accounting:new_expense' %}" method="post">
+	<form action = "{% url 'accounting:invoice_item' %}" method="post">
 		{% csrf_token %}
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 			{% if item == -1 %}
@@ -190,11 +190,11 @@
 						{% else %}
 							<option selected>select menu</option>
 						{% endif %}	
-						<option data-desc = 'expense', value = "Rent">Sales</option>
-						<option data-desc = 'expense', value = "Utilities">Promotion</option>
-						<option data-desc = 'expense', value = "Insurance">Engineering</option>
-						<option data-desc = 'expense', value = "Fees">Production</option>
-						<option data-desc = 'expense', value = "Wages">Quality</option>
+						<option data-desc = 'expense', value = "Sales">Sales</option>
+						<option data-desc = 'expense', value = "Promotion">Promotion</option>
+						<option data-desc = 'expense', value = "Engineering">Engineering</option>
+						<option data-desc = 'expense', value = "Production">Production</option>
+						<option data-desc = 'expense', value = "Quality">Quality</option>
 					</select>
 				</div>
 			</div>
@@ -229,7 +229,7 @@
 							<option selected>{{client}}</option>
 						{% endif %}	
 						{% for cust in client_list%}
-							<option data-desc = 'vendor', value = "{{ven}}">{{cust}}</option>
+							<option data-desc = 'vendor', value = "{{cust}}">{{cust}}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -243,7 +243,7 @@
 						{% if item == -1%}
 							<option data-desc = 'charge', value = "select menu">select menu</option>
 						{% else %}
-							<option selected>{{charge_code}}</option>
+							<option selected>{{charge}}</option>
 						{% endif %}	
 						{% for charg in charge_list%}
 							<option data-desc = 'charge', value = "{{charg}}">{{charg}}</option>
@@ -260,7 +260,7 @@
 					{% if item == -1 %}
 						<input id = "_item_desc" name = "_item_desc" input class="form-control" placeholder="Enter Item description"  required >
 					{% else %}
-						<input id = "_desc" name = "_item_desc" input class="form-control" value = "{{item.item_desc}}"  required >
+						<input id = "_item_desc" name = "_item_desc" input class="form-control" value = "{{item.item_desc}}"  required >
 					{% endif %}
 				</div>
 			</div>
@@ -270,7 +270,7 @@
 					{% if item == -1 %}
 						<input type = "date" id = "_item_date"  name = "_item_date" input class="form-control" required>
 					{% else %}
-						<input type = "date" id = "_item_date"  name = "_item_date" value = {{item.item_date}} input class="form-control"  required>
+						<input type = "date" id = "_item_date"  name = "_item_date" value = {{item.item_date}}" input class="form-control"  required>
 					{% endif %}
 				</div>	
 			</div>
@@ -286,18 +286,18 @@
 						{% else %}
 							<option selected>select menu</option>
 						{% endif %}	
-						<option data-desc = 'expense', value = "Rent">Per Hour</option>
-						<option data-desc = 'expense', value = "Utilities">Quantity</option>
-						<option data-desc = 'expense', value = "Insurance">Size mm</option>
-						<option data-desc = 'expense', value = "Insurance">Size cm</option>
-						<option data-desc = 'expense', value = "Insurance">Size meter</option>
-						<option data-desc = 'expense', value = "Fees">Size inch</option>
-						<option data-desc = 'expense', value = "Wages">Size Foot</option>
-						<option data-desc = 'expense', value = "Insurance">Length mm</option>
-						<option data-desc = 'expense', value = "Insurance">Length cm</option>
-						<option data-desc = 'expense', value = "Insurance">Length meter</option>
-						<option data-desc = 'expense', value = "Fees">Length inch</option>
-						<option data-desc = 'expense', value = "Wages">Length Foot</option>
+						<option data-desc = 'expense', value = "Per Hour">Per Hour</option>
+						<option data-desc = 'expense', value = "Quantity">Quantity</option>
+						<option data-desc = 'expense', value = "Size mm">Size mm</option>
+						<option data-desc = 'expense', value = "Size cm">Size cm</option>
+						<option data-desc = 'expense', value = "Size meter">Size meter</option>
+						<option data-desc = 'expense', value = "Size inch">Size inch</option>
+						<option data-desc = 'expense', value = "Size Foot">Size Foot</option>
+						<option data-desc = 'expense', value = "Length mm">Length mm</option>
+						<option data-desc = 'expense', value = "Length cm">Length cm</option>
+						<option data-desc = 'expense', value = "Length meter">Length meter</option>
+						<option data-desc = 'expense', value = "Length inch">Length inch</option>
+						<option data-desc = 'expense', value = "Length Foot">Length Foot</option>
 					</select>
 				</div>
 			</div>
@@ -317,7 +317,7 @@
 					{% if item == -1 %}
 						<input id = "_item_cost"  name = "_item_cost" input class="form-control"  placeholder="Enter cost" required>
 					{% else %}
-						<input id = "_item_cost"  name = "_item_cost" value = "{{item.item_cost}}" input class="form-control" required>
+						<input id = "_item_cost"  name = "_item_cost" value = "{{item.rate}}" input class="form-control" required>
 					{% endif %}
 				</div>	
 			</div>
@@ -327,7 +327,7 @@
 					{% if item == -1 %}
 						<input id = "_total_cost" name = "_total_cost" input class="form-control" placeholder="Total cost"  required>
 					{% else %}
-						<input id = "_total_cost" name = "_total_cost" input class="form-control" value = "{{item.total_cost}}" required>
+						<input id = "_total_cost" name = "_total_cost" input class="form-control" value = "{{item.total}}" required>
 					{% endif %}
 				</div>
 			</div>
@@ -376,20 +376,21 @@
 					  <th>Service Type</th>
 					  <th>Item Date</th>
 					  <th>Item Description</th>
-					  <th>Total Cost</th>
+					  <th>Total Charge</th>
 					  <th>Active</th>
 					</tr>
 			    </thead>
 				<tbody>
 					{% for item1 in item_list %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}">{{item1.id}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.resource_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.service_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.item_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.total_cost}}</td>
-							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item__id={{item1.id}}">{{item1.active}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.total}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.active}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

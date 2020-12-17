@@ -1,16 +1,16 @@
 from django.db import models
 from datetime import datetime
 
-class ChargeCodes(models.Model):
+class Charge_Code(models.Model):
     id = models.AutoField(primary_key=True)
-    ResourceID = models.CharField("resource id",max_length=100,null=True,unique=False,default='N/A') 
-    Customer = models.CharField("client",max_length=100,null=True,unique=False,default='N/A') 
-    ChargeCode = models.CharField("charge code",max_length=100,null=True,unique=False,default='N/A') 
-    Products_Services = models.CharField("products services",max_length=100,null=True,unique=False,default='N/A') 
-    ChargeDate = models.CharField("charge date",max_length=100,null=True,unique=False,default='N/A') 
-    Client = models.CharField("client",max_length=100,null=True,unique=False,default='N/A') 
+    charge_type = models.CharField("charge_type",max_length=100,null=True,unique=False,default='N/A') 
+    client_id = models.IntegerField(null=True,unique=False)
+    charge = models.CharField("charge code",max_length=100,null=True,unique=False,default='N/A') 
+    charge_desc = models.CharField("charge_desc",max_length=100,null=True,unique=False,default='N/A') 
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True) 
     last_update = models.DateField(null=True)
-    backup_index = models.IntegerField(null=True,unique=False)
+   
 
 class ClassCodes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -37,13 +37,29 @@ class Expenses(models.Model):
     operator = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A') 
     last_update = models.DateField(null=True) 
     backup_index = models.IntegerField(null=True,unique=False)
+	
+class Income(models.Model):
+	id = models.AutoField(primary_key=True)
+	client_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
+	invoice_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
+	income_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
+	income_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
+	invoice_date = models.DateTimeField(default=datetime.now, blank=True)
+	payment_date = models.DateTimeField(default=datetime.now, blank=True)
+	total = models.FloatField("total",null=True,unique=False) 
+	operator = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A') 
+	last_update = models.DateField(null=True) 
+	backup_index = models.IntegerField(null=True,unique=False)
     
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
-    invoice_id = models.IntegerField(null=True,unique=False)
+    invoiceItem_id = models.IntegerField(null=True,unique=False)
     client_id = models.IntegerField(null=True,unique=False)
-    item_id = models.CharField("resource name",max_length=100,null=True,unique=False,default='N/A')
-    staff_id = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A')
+    item_id = models.IntegerField(null=True,unique=False)
+    staff_id = models.IntegerField(null=True,unique=False)
+    charge_code = models.CharField("resource name",max_length=100,null=True,unique=False,default='N/A')
+    paid = models.BooleanField("paid",unique=False,null=True,default=True)
+    payment_date = models.DateField(null=True)
     last_update = models.DateField(null=True)
     backup_index = models.IntegerField(null=True,unique=False)
 
@@ -51,7 +67,7 @@ class Invoice_Item(models.Model):
     id = models.AutoField(primary_key=True)
     client_id = models.IntegerField(null=True,unique=False)  
     charge_id = models.IntegerField(null=True,unique=False)  
-    vendor_id = models.IntegerField(null=True,unique=False) 
+    contractor_id = models.IntegerField(null=True,unique=False) 
     resource_type = models.CharField("resource type",max_length=100,null=True,unique=False,default='N/A')
     service_type = models.CharField("service type",max_length=100,null=True,unique=False,default='N/A')
     service_provider = models.CharField("service provider",max_length=100,null=True,unique=False,default='N/A')
@@ -60,12 +76,12 @@ class Invoice_Item(models.Model):
     item_desc = models.CharField("item description",max_length=100,null=True,unique=False,default='N/A')
     rate = models.FloatField("rate",null=True,unique=False)
     quantity = models.IntegerField(null=True,unique=False)   
-    total = models.FloatField("total",null=True,unique=False) 
+    total = models.FloatField("total",null=True,unique=False)
     active = models.BooleanField("active",unique=False,null=True,default=True)
-    last_update = models.DateField(null=True)
+    last_update = models.DateField(null=True)	
     backup_index = models.IntegerField(null=True,unique=False)
     
-class Charge_Codes(models.Model):
+class ChargeCode(models.Model):
     id = models.AutoField(primary_key=True)
     client_id = models.IntegerField(null=True,unique=False)  
     charge_code = models.CharField("charge",max_length=100,null=True,unique=False,default='N/A')
