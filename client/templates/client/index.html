@@ -7,7 +7,7 @@
 
 {% block body %}
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Client Manager</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -63,6 +63,12 @@
 					<a class="nav-link" href="{% url 'accounting:invoice_item' %}">
 					  <span data-feather="file"></span>
 					  Invoicing
+					</a>
+				 </li>
+				 <li class="nav-item">
+					<a class="nav-link active" href="{% url 'accounting:income' %}">
+					  <span data-feather="dollar-sign"></span>
+					  Income <span class="sr-only">(current)</span>
 					</a>
 				 </li>
 				 <li class="nav-item">

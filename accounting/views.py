@@ -10,7 +10,7 @@ from equipment.models import Model
 from locations.models import Location
 from client.models import Clients
 from inventory.models import Inventory, Events
-from accounting.models import Expenses, Invoice_Item, Charge_Code
+from accounting.models import Expenses, Invoice_Item, Charge_Code, Income, Invoices
 from vendor.models import Vendor
 from contractors.models import Contractors
 from django.views import View
@@ -340,6 +340,10 @@ class InvoiceItemView(View):
                 charge = Charge_Code.objects.filter(id=charge_id)
                 charge = charge[0].charge
                 print('charge=',charge)
+            if client_id !=-1:
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+            else:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
                 
             operator = str(self.request.user)
             if client_id !=-1:
@@ -348,7 +352,7 @@ class InvoiceItemView(View):
                 charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
                 
             contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
-            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            
             item_list = Invoice_Item.objects.all()
             print('item_list =',item_list)
             print('item_id =',item_id)
@@ -620,4 +624,261 @@ def save_expenses_csv(delete):
                                      quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
                                      
 
+class IncomeView(View):
+  
+    template_name = "income.html"
+    success_url = reverse_lazy('accounting:income')
+    def get(self, *args, **kwargs):
+        try:
+            income_id = self.request.GET.get('income_id', -1)
+            invoice_id = self.request.GET.get('invoice_id', -1)
+            client_id = self.request.GET.get('client_id', -1)
+            desc_list=-1
+            type_list=-1
+            item_name_list=-1
+            item_desc_list=-1
+            total=0
+            income_type =-1
+            income_desc =-1
+            invoice =-1
+            operator = str(self.request.user)
+            year = datetime.date.today().year
+            print('year',year)
+            if client_id !=-1:
+                client_list =  Income.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client = Clients.objects.filter(id=client_id).first()
+                client = client[0]
+                desc_list = Income.objects.filter(id=client_id).order_by('income_description').values_list('income_description', flat=True).distinct()
+                type_list = Income.objects.filter(id=client_id).order_by('income_type').values_list('income_type', flat=True).distinct()
+                years = Income.objects.filter(id=client_id).order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
+            else:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+                client = -1
+                desc_list = Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
+                type_list = Income.objects.order_by('income_type').values_list('income_type', flat=True).distinct()
+                years = Income.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
+                
+            if invoice_id !=-1:
+                invoice = Invoices.objects.filter(id=invoice_id).first()
+                invoice=invoice[0].invoice_desc
+            
+            
+            year_list=[]
+            for year1 in years:
+                dt = year1.split('-')
+                year_list.append(dt[0])
+            year_list = list(OrderedDict.fromkeys(year_list))
+            print("in GET")
+            income_list = Income.objects.all()
+            for income in income_list:
+                total=round(total+float(income.total_cost),2)
+            print(total)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
+                                    "income_desc":income_desc, "year_list":year_list, "operator":operator, "invoice":invoice, "total":total, "year":year})
+    
+    def post(self, request, *args, **kwargs):
+        try: 
+            #print("in POST")
+            operator = str(self.request.user)
+            type_list = []
+            inv_list = []
+            inv = []
+            total=0
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            vendor = request.POST.get('_vendor', -1)
+            income_type = request.POST.get('_inc_type', -1)
+            print('income_type = ',income_type)
+            income_desc = request.POST.get('_inc_desc', -1)
+            print('income_desc =',income_desc)
+            year_c = request.POST.get('_year', -1)
+            if year_c ==-1:
+                year_c = datetime.date.today().year
+            print('year =',year_c)
+            year = datetime.date.today().year
+            desc_list = Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
+            type_list = Income.objects.order_by('income_type').values_list('income_type', flat=True).distinct()
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            years = Income.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
+            year_list=[]
+            for year1 in years:
+                dt = year1.split('-')
+                year_list.append(dt[0])
+            year_list = list(OrderedDict.fromkeys(year_list))
+            print("year_list",year_list) 
+            print('year',year_c)
+            success = True
+            #income_list = Income.objects.all() 
+            if not search ==-1:
+                if  Income.objects.filter(vendor_id__icontains=search).exists():
+                    income_list = Income.objects.filter(vendor_id__icontains=search).all()
+                    print('search 1=',income_list)
+                elif  Income.objects.filter(income_type__icontains=search).exists():
+                    income_list = Income.objects.filter(income_type__icontains=search).all()
+                    print('search 2=',income_list)
+                elif Income.objects.filter(income_description__icontains=search).exists():
+                    income_list = Income.objects.filter(income_description__icontains=search).all() 
+                    print('search 3=',income_list)
+                elif Income.objects.filter(item_cost__icontains=search).exists():
+                    income_list = Income.objects.filter(item_cost__contains=search).all()
+                    print('search 6=',income_list)
+                elif Income.objects.filter(sale_date__contains=search).exists():
+                    income_list = Income.objects.filter(invoice_date__contains=search).all()
+                    print('esearch 7=',income_list)
+            elif not income_type =="select menu": 
+                if income_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    income_list = Income.objects.filter(income_type=income_type).all()
+                if not income_desc == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc).all()  
+                if not income_desc == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc, item__contains=item_name).all()  
+                if not income_desc == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                print('income_type =',income_list)
+            elif not income_desc =="select menu": 
+                if income_type == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    income_list = Income.objects.filter(income_description=income_desc).all()
+                if not income_type == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc).all()  
+                if not income_type == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc, item__contains=item_name).all()  
+                if not income_type == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
+                    income_list = Income.objects.filter(income_type=income_type, income_description__contains=income_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                print('income_desc =',income_list)
+            #print('desc_list =',desc_list)
+            #print('income_list =',income_list)
+            for income in income_list:
+                total=round(total+float(income.total_cost),2)
+            print(total)
+        except IOError as e:
+            inv_list = None
+            print ("Lists load Failure ", e)
+
+        #print('income_list',income_list)
+        return render (self.request,"accounting/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
+                                    "income_desc":income_desc, "year_list":year_list, "operator":operator, "invoice":invoice, "total":total, "year":year})
+           
+           
+class SaveIncomeView(View):
+    template_name = "save_income.html"
+    success_url = reverse_lazy('accounting:new_income')
+    def get(self, *args, **kwargs):
+        try:
+            invoice = -1
+            inc = -1
+            interval = 'off'
+            income_id = self.request.GET.get('income_id', -1)
+            client_id = self.request.GET.get('client_id', -1)
+            invoice_id = self.request.GET.get('invoice_id', -1)
+            print('income_id =',income_id)
+            print('invoice_id =',invoice_id)
+            operator = str(self.request.user)
+            print('inc=',inc)
+            desc_list =  Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
+            invoice_list =  Invoices.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+            print('invoice_list =',invoice_list)
+            if income_id !=-1:
+                inc = Income.objects.filter(id=income.id).first
+            if client_id !=-1:
+                client_list =  Income.objects.filter(client_id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client = Clients.objects.filter(id=client_id).first()
+                client = client[0]
+                years = Income.objects.filter(id=client_id).order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
+            else:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+                client = -1
+                years = Income.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
+            if invoice_id !=-1:
+                invoice = Invoices.objects.filter(id=invoice_id)
+                invoice = invoice[0].name
+                print('invoice=',invoice)
+            
+            
+            print('inc=', inc)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/save_income.html",{"id":id, "inc":inc, 'invoice':invoice, "client_list":client_list, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})
+
+    def post(self, request, *args, **kwargs):
+        invoice_list = []
+        income_list =[]
+        desc_list = []
+        inc =-1
+        invoice =-1
         
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            inc_id = request.POST.get('e_id', -1)
+            print('inc_id =',inc_id)
+            income_list = Income.objects.all()
+            desc_list =  Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
+            invoice_list =  Invoices.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+            if inc_id !=-1:
+                inc = Income.objects.filter(id=inc_id).all()
+            
+            
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            invoice = request.POST.get('_invoice', -1)
+            print('invoice = ',invoice)
+            income_type = request.POST.get('_inc_type', -1)
+            print('income_type = ',income_type)
+            income_desc = request.POST.get('_inc_desc', -1)
+            print('income_desc =',income_desc)
+            total_charge = request.POST.get('_total_charge', -1)
+            print('total_charge =',total_charge)
+            sale_date = request.POST.get('_sale_date', -1)
+            print('sale_date =',sale_date)
+            invoice = request.POST.get('_invoice', -1)
+            print('invoice =',invoice)
+            client = request.POST.get('_client', -1)
+            print('client =',invoice)
+            
+            
+            save_inc = request.POST.get('_save', -1)
+            print('save_inc =',save_inc)
+            update_inc = request.POST.get('_update', -1)
+            print('update_inc =',update_inc)
+            del_inc = request.POST.get('_delete', -1)
+            print('del_inc =',del_inc)
+            success = True
+            
+            if not del_inc==-1:
+                try:
+                   #update item	
+                    Income.objects.filter(id=income_id).delete()
+                    print('delete complete')
+                    inc=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounting:income'))
+            elif not update_inc==-1:
+                #update item	
+                cli = Vendor.objects.filter(name=invoice)
+                client_id = cli[0].id
+                print('client_id=',client_id)
+                Income.objects.filter(id=inc_id).update(client_id=client_id,invoice_id=invoice_id, income_type=income_type,income_description=income_desc,
+                                       total=total_charge, operator=operator,last_update=timestamp)
+                inc=-1
+            elif not save_inc==-1:
+                if Income.objects.filter(item=item_name).exists():
+                    inc = Income.objects.filter(item=item_name).all()
+                    return render (self.request,"accounting/save_income.html",{"income_list": income_list, "id":id, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "operator":operator})
+                else:
+                   #save item	
+                    cli = Vendor.objects.filter(name=invoice)
+                    client_id = cli[0].id
+                    print('client_id=',client_id)
+                    Income.objects.create(client_id=client_id, income_type=income_type, income_description=income_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                          quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_income=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounting/save_income.html",{"income_list": income_list, "id":id, "inc":inc, 'invoicd':invoice, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})           

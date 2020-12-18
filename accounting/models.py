@@ -40,8 +40,8 @@ class Expenses(models.Model):
 	
 class Income(models.Model):
 	id = models.AutoField(primary_key=True)
-	client_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
-	invoice_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
+	client_id = models.IntegerField(null=True,unique=False)
+	invoice_id = models.IntegerField(null=True,unique=False)
 	income_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
 	income_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
 	invoice_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -51,12 +51,13 @@ class Income(models.Model):
 	last_update = models.DateField(null=True) 
 	backup_index = models.IntegerField(null=True,unique=False)
     
-class Invoice(models.Model):
+class Invoices(models.Model):
     id = models.AutoField(primary_key=True)
     invoiceItem_id = models.IntegerField(null=True,unique=False)
     client_id = models.IntegerField(null=True,unique=False)
     item_id = models.IntegerField(null=True,unique=False)
     staff_id = models.IntegerField(null=True,unique=False)
+    invoice_desc = models.CharField("invoice_desc",max_length=100,null=True,unique=False,default='N/A')
     charge_code = models.CharField("resource name",max_length=100,null=True,unique=False,default='N/A')
     paid = models.BooleanField("paid",unique=False,null=True,default=True)
     payment_date = models.DateField(null=True)
