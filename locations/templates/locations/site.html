@@ -168,19 +168,19 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Street address</label>
-						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street"  required>
+						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street" onkeyup= "get_geo();" required>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_city">City</label>
-						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City"  required>
+						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City" onkeyup= "get_geo();" required>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_state">state</label>
-						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state"  required>
+						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state" onkeyup= "get_geo();" required>
 					</div>
 				</div>
 			   <div class="col-sm-1 col-lg-2 grid-col">

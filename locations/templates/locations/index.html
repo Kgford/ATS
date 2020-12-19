@@ -148,19 +148,21 @@
 				<div class="col-sm-1 col-lg-4 grid-col">
 					<div class="form-group">
 						<label for="_name">Company Name</label>
-						<input id = "_name" name = "_name" input class="form-control" placeholder="Enter Company Name"  required autofocus>
+						<input id = "_name" name = "_name" input class="form-control" placeholder="Enter Company Name"  onkeyup= "get_name();"  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Latitude</label>
 						<input id = "_lat" name = "_lat" input class="form-control" placeholder="Enter GPS Latitude"  required autofocus>
+						<input type="hidden" id = "_lat_val" name = "_lat_val" value = '-40.731743'  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Longitude</label>
 						<input id = "_lng" name = "_lng" input class="form-control" placeholder="Enter GPS Longitude"  required autofocus>
+						<input type="hidden" id = "_lng_val" name = "_lng_val" value = '-73.36336'  required autofocus>
 					</div>
 				</div>
 			</div>
@@ -168,19 +170,19 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Street address</label>
-						<input id = "_addr" name = "_addr" input class="form-control" placeholder="Enter Street"  required autofocus>
+						<input id = "_addr" name = "_addr" input class="form-control" placeholder="Enter Street"  onkeyup= "get_geo();"  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_city">City</label>
-						<input id = "_city" name = "_city" input class="form-control" placeholder="Enter City"  required autofocus>
+						<input id = "_city" name = "_city" input class="form-control" placeholder="Enter City"  onkeyup= "get_geo();"  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_state">state</label>
-						<input id = "_state" name="_state" input class="form-control" placeholder="Enter state"  required autofocus>
+						<input id = "_state" name="_state" input class="form-control" placeholder="Enter state"  onkeyup= "get_geo();"  required autofocus>
 					</div>
 				</div>
 			   <div class="col-sm-1 col-lg-2 grid-col">
@@ -194,13 +196,13 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_phone">Phone Number</label>
-						<input id = "_phone" name = "_phone" input class="form-control" placeholder="Enter Street"  required autofocus>
+						<input id = "_phone" name = "_phone" input class="form-control" placeholder="Enter phone number"  onkeyup= "get_geo();"  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_email">Email Address</label>
-						<input id = "_email" name = "_email" input class="form-control" placeholder="Enter City"  required autofocus>
+						<input id = "_email" name = "_email" input class="form-control" placeholder="Enter email"  required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
@@ -244,14 +246,16 @@
 				{% endfor %}
 				</tbody>
 			</table>
-			<h4>Globecomm Systems 45 Oser Ave. Hauppauge NY</h4>
+			<h4 id ='_company' name ='_company' >Automated Test Solutions 2 Palm Place West Babylon NY 11704</h4>
 			<!--The div element for the map -->
 			<div id="map"></div>
 			<script>
 				// Initialize and add the map
 				function initMap() {
 				  // The locationname of Uluru
-				  var uluru = {lat: 40.815320, lng: -73.237710};
+				  var lat = parseFloat(document.getElementById("_lat_val").value)
+				  var lng = parseFloat(document.getElementById("_lng_val").value)
+				  var uluru = {lat: lat, lng: lng};
 				  // The map, centered at Uluru
 				  var map = new google.maps.Map(
 				  document.getElementById('map'), {zoom: 4, center: uluru});
@@ -270,7 +274,7 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="{% static 'locations/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'locations/js/bootstrap.bundle.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js' %}"></script>
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js' %}"></script-->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdLJjwYFH9rnK-YPQ8zN-S09aKNinc_2Q&callback=initMap"></script>
 </body>
 {% endblock %}

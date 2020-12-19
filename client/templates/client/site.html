@@ -151,19 +151,19 @@
 				<div class="col-sm-1 col-lg-4 grid-col">
 					<div class="form-group">
 						<label for="_name">Company Name</label>
-						<input id = "_name" name = "_name" input class="form-control" value="{{site.name}}" placeholder="Enter Company Name"  required autofocus>
+						<input id = "_name" name = "_name" input class="form-control" value="{{site.name}}" placeholder="Enter Company Name"   onkeyup= "get_name();" required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Latitude</label>
-						<input id = "_lat" name = "_lat" input class="form-control"  value={{site.lat}} placeholder="Enter GPS Latitude">
+						<input id = "_lat" name = "_lat" input class="form-control"  value="{{site.lat}}" placeholder="Enter GPS Latitude">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_name">Longitude</label>
-						<input id = "_lng" name = "_lng" input class="form-control" value={{site.lng}} placeholder="Enter GPS Longitude">
+						<input id = "_lng" name = "_lng" input class="form-control" value="{{site.lng}}" placeholder="Enter GPS Longitude">
 					</div>
 				</div>
 			</div>
@@ -171,19 +171,19 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Street address</label>
-						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street">
+						<input id = "_addr" name = "_addr" input class="form-control" value="{{site.address}}" placeholder="Enter Street"  onkeyup= "get_geo();">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_city">City</label>
-						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City">
+						<input id = "_city" name = "_city" input class="form-control" value="{{site.city}}" placeholder="Enter City"  onkeyup= "get_geo();">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_state">state</label>
-						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state">
+						<input id = "_state" name="_state" input class="form-control"  value="{{site.state}}" placeholder="Enter state"  onkeyup= "get_geo();">
 					</div>
 				</div>
 			   <div class="col-sm-1 col-lg-2 grid-col">
@@ -230,11 +230,11 @@
 			</div>
 		 </form>
 		<h2>Client Location</h2>
-		<h4>{{site.name}},   {{site.address}}, {{site.city}}, {{site.state}}</h4>
+		<h4 id ='_company' name ='_company' >{{site.name}},   {{site.address}}, {{site.city}}, {{site.state}}</h4>
 		<!--The div element for the map -->
 		<div id="map"></div>
-		<input type="hidden" id = "_long" value = {{lng}}>
-		<input type="hidden" id = "latitude" value = {{lat}}>
+		<input type="hidden" id = "_long" value = "{{site.lng}}">
+		<input type="hidden" id = "latitude" value = "{{site.lat}}">
 		
 		<script>
 			// Initialize and add the map

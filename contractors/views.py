@@ -173,12 +173,10 @@ def site(request,contractor_id):
                 if site1.id ==contractor_id:
                     site = site1
                     break
-            lat = float(site.lat)
-            print(lat)
-            lng = float(site.lng)
             operator = str(request.user)
             timestamp = date.today()
             name = request.POST.get('_name', -1)
+            print('name=',name)
             address = request.POST.get('_addr', -1)
             city = request.POST.get('_city', -1)
             state = request.POST.get('_state', -1)
@@ -197,8 +195,17 @@ def site(request,contractor_id):
             else:
                 active_save = False
             print('active=',active_save)
-            Contractors.objects.filter(id=contractor_id).update(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email,
-                        website=website,active=active_save, lat=float(lat), lng=float(lng), created_on=timestamp, last_entry=timestamp)
+            test = Contractors.objects.filter(id=contractor_id).first()
+            test=test.name
+            print(test,name)
+            if test ==name:
+                Contractors.objects.filter(id=contractor_id).update(address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email,
+                            website=website,active=active_save, lat=float(lat), lng=float(lng), created_on=timestamp, last_entry=timestamp)
+            else:
+                 Contractors.objects.filter(id=contractor_id).update(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email,
+                            website=website,active=active_save, lat=float(lat), lng=float(lng), created_on=timestamp, last_entry=timestamp)
+                            
+                            
         except IOError as e:
             print ("load model Failure ", e)
             print('error = ',e) 

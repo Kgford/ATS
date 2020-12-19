@@ -182,9 +182,6 @@ def site(request,client_id):
                 if site1.id ==client_id:
                     site = site1
                     break
-            lat = float(site.lat)
-            print(lat)
-            lng = float(site.lng)
             operator = str(request.user)
             timestamp = date.today()
             name = request.POST.get('_name', -1)

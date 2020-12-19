@@ -151,7 +151,7 @@
 				<div class="col-sm-1 col-lg-4 grid-col">
 					<div class="form-group">
 						<label for="_name">Clients/Client Name</label>
-						<input id = "_name" name = "_name" input class="form-control" placeholder="Enter Company Name"  required autofocus>
+						<input id = "_name" name = "_name" input class="form-control" placeholder="Enter Company Name"  onkeyup= "get_name(); required autofocus>
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
@@ -171,7 +171,7 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Tax ID Number</label>
-						<input  id = "_tax" name = "_tax" input class="form-control" placeholder="Enter Address">
+						<input  id = "_tax" name = "_tax" input class="form-control" placeholder="Enter Tax ID" " >
 					</div>
 				</div>
 			</div>
@@ -179,19 +179,19 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_addr">Street address</label>
-						<input  id = "_addr" name = "_addr" input class="form-control" placeholder="Enter Address">
+						<input  id = "_addr" name = "_addr" input class="form-control" placeholder="Enter Address"  onkeyup= "get_geo();">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_city">City</label>
-						<input id = "_city" name = "_city" input class="form-control" placeholder="Enter City">
+						<input id = "_city" name = "_city" input class="form-control" placeholder="Enter City"  onkeyup= "get_geo();">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_state">state</label>
-						<input id = "_state" name="_state" input class="form-control" placeholder="Enter state">
+						<input id = "_state" name="_state" input class="form-control" placeholder="Enter state"  onkeyup= "get_geo();">
 					</div>
 				</div>
 			   <div class="col-sm-1 col-lg-2 grid-col">

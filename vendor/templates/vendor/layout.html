@@ -25,6 +25,54 @@
 		<!-- Custom styles for this template -->
 		<link href="{% static 'vendor/css/grid.css' %}" rel="stylesheet">
 		<link href="{% static 'vendor/css/styles.css' %}" rel="stylesheet">
+		<script>
+			function get_name()
+			{
+				var name = document.getElementById('_name').value
+				var company = `${name}`
+				document.getElementById('_company').innerHTML = company
+			}
+		
+			function get_geo()
+			{
+				var name = document.getElementById('_name').value
+				var addr = document.getElementById('_addr').value
+				var city = document.getElementById('_city').value
+				var state = document.getElementById('_state').value
+				const proxyurl = "https://cors-anywhere.herokuapp.com/";
+				var URL = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${addr}+${city}+${state}&benchmark=9&format=json`
+				
+				if (addr != "" & city != "" & state != "")
+				{
+					let requestURL = proxyurl + URL;
+					let request = new XMLHttpRequest();
+					request.open('GET', requestURL);
+					request.responseType = 'json';
+					request.send()
+					
+					request.onload = function() {
+					const locationResp = request.response;
+					var res = JSON.stringify(locationResp)
+					//alert(res)
+					var lat = locationResp.result.addressMatches[0].coordinates.y
+					var lng = locationResp.result.addressMatches[0].coordinates.x
+					var zip_code = locationResp.result.addressMatches[0].addressComponents.zip
+					document.getElementById('_zip').value = zip_code;
+					document.getElementById('_lat').value = lat;
+					document.getElementById('_lng').value = lng;
+					document.getElementById('latitude').value = lat;
+					document.getElementById('_long').value = lng;
+					
+					var company = `${name} ${addr}, ${city} ${state} ${zip_code}`
+					document.getElementById('_company').innerHTML = company
+					initMap();
+					}
+					
+				}
+				
+			}
+			
+		</script>
 	</head>
 	<body>
 	   {% block body %}
