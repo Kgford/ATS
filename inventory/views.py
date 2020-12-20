@@ -15,6 +15,38 @@ import datetime
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+class UserLogin(View):
+    template_name = "user_login.html"
+    success_url = reverse_lazy('inventory:login')
+        
+    def get(self, *args, **kwargs):
+        try:
+            operator = str(self.request.user)
+        
+        except IOError as e:
+           print('error = ',e) 
+        return render(request, 'inventory/user_login.html', {})
+ 
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request,user)
+                    redirect_to = resolve_url(LOGIN_REDIRECT_URL)
+                    print('redirect =',LOGIN_REDIRECT_URL)
+                    return render(request,'inventory/index.html')
+                else:
+                    return render(request, 'inventory/user_login.html', {'message':'Login Failed!!'})
+            else:
+                print("Someone tried to login and failed.")
+                print("They used username: {} and password: {}".format(username,password))
+            return render(request, 'inventory/user_login.html', {'message':'Login Failed!!'})
+        else:
+            return render(request, 'inventory/user_login.html', {})
+
 class InventoryView(View):
     '''
     #~~~~~~~~~~~Load Item database from csv. must put this somewhere else later"

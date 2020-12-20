@@ -61,7 +61,7 @@
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
 			   <li class="nav-item">
-					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}">
 					  <span data-feather="file"></span>
 					  Dashboard
 					</a>
@@ -108,7 +108,7 @@
 					  Contractors
 					</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item active">
 					<a class="nav-link" href="{% url 'vendor:vendor' %}">
 					  <span data-feather="layers"></span>
 					  Vendor
@@ -240,8 +240,8 @@
 		<h4 id ='_company' name ='_company' >{{site.name}},   {{site.address}}, {{site.city}}, {{site.state}}</h4>
 		<!--The div element for the map -->
 		<div id="map"></div>
-		<input type="hidden" id = "_long" value = "{site.lng}}">
-		<input type="hidden" id = "latitude" value = "{site.lat}}">
+		<input type="hidden" id = "_long" value = "{{site.lng}}">
+		<input type="hidden" id = "latitude" value = "{{site.lat}}">
 		
 		<script>
 			// Initialize and add the map

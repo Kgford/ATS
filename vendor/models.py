@@ -19,8 +19,8 @@ class Vendor(models.Model):
     lat = models.FloatField("lat",null=True,unique=False)
     lng = models.FloatField("lng",null=True,unique=False)
     shelf = models.CharField("shelf",max_length=25,null=True,unique=False,default='N/A') 
-    contact_first = models.CharField("name",max_length=100,null=False,unique=True,default='N/A')
-    contact_last = models.CharField("name",max_length=100,null=False,unique=True,default='N/A')
+    contact_first = models.CharField("name",max_length=100,null=False,unique=False,default='N/A')
+    contact_last = models.CharField("name",max_length=100,null=False,unique=False,default='N/A')
     vendor_type = models.CharField("first",max_length=100,null=False,unique=False,default='N/A')
     tax_id = models.CharField("last",max_length=100,null=False,unique=False,default='N/A')
        

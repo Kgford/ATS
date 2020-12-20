@@ -13,6 +13,7 @@ from accounting.views import (
     SaveIncomeView,
     InvoiceItemView,
     Charge_codeView,
+    UserLogin
 )
 
 app_name = "accounting"
@@ -24,4 +25,6 @@ urlpatterns =[
     path('new_income', login_required(SaveIncomeView.as_view(template_name="save_income.html")), name='new_income'),
     path('invoice_item', login_required(InvoiceItemView.as_view(template_name="invoice_item.html")), name='invoice_item'),
     path('charge_code', login_required(Charge_codeView.as_view(template_name="charge_code.html")), name='charge_code'),
+    path('login', login_required(UserLogin.as_view(template_name="user_login.html")), name='login'),
+    path('staff/', include("users.urls")),
     ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

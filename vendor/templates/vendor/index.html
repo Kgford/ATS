@@ -45,10 +45,10 @@
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
-			   <li class="nav-item">
-					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
-					  <span data-feather="file"></span>
-					  Dashboard
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}">
+					  <span data-feather="file">Dashboard</span>
+					  
 					</a>
 				 </li>
 				  <li class="nav-item">
@@ -93,7 +93,7 @@
 					  Contractors
 					</a>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item active" >
 					<a class="nav-link" href="{% url 'vendor:vendor' %}">
 					  <span data-feather="layers"></span>
 					  Vendor
@@ -115,7 +115,7 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'admin:index' %}">
 					  <span data-feather="layers"></span>
-					  Admin
+					  Settings
 					</a>
 				</li>
 				<li class="nav-item">
@@ -189,7 +189,7 @@
 				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
 						<label for="_phone">Phone Number</label>
-						<input type="tel" id = "_phone" name = "_phone" input class="form-control" placeholder="Enter Street">
+						<input type="tel" id = "_phone" name = "_phone" input class="form-control" placeholder="Enter Phone Number">
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-2 grid-col">
@@ -268,7 +268,9 @@
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="{% static 'locations/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'vendor/js/bootstrap.bundle.js' %}"></script>
+<script>window.jQuery || document.write('<script src="{% static 'vendor/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'vendor/js/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'vendor/js/theme.js' %}"></script>
+<script src="{% static 'vendor/js/bs-init.js' %}"></script>
 </body>
 {% endblock %}
 

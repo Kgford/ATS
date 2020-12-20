@@ -19,6 +19,38 @@ from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import ExtractYear 
 
+class UserLogin(View):
+    template_name = "user_login.html"
+    success_url = reverse_lazy('client:login')
+        
+    def get(self, *args, **kwargs):
+        try:
+            operator = str(self.request.user)
+        
+        except IOError as e:
+           print('error = ',e) 
+        return render(request, 'client/user_login.html', {})
+ 
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request,user)
+                    redirect_to = resolve_url(LOGIN_REDIRECT_URL)
+                    print('redirect =',LOGIN_REDIRECT_URL)
+                    return render(request,'client/index.html')
+                else:
+                    return render(request, 'client/user_login.html', {'message':'Login Failed!!'})
+            else:
+                print("Someone tried to login and failed.")
+                print("They used username: {} and password: {}".format(username,password))
+            return render(request, 'client/user_login.html', {'message':'Login Failed!!'})
+        else:
+            return render(request, 'client/user_login.html', {})
+
 
 class ExpensesView(View):
   
@@ -26,6 +58,63 @@ class ExpensesView(View):
     success_url = reverse_lazy('accounting:expenses')
     def get(self, *args, **kwargs):
         try:
+            operator = str(self.request.user)
+            import csv
+            timestamp  = date.today()
+            CSV_PATH = 'C:\\SRC\\ATS\\accounting\\Expenses.csv'
+            print('csv = ',CSV_PATH)
+
+            contSuccess = 0
+            '''
+            # Remove all data from Table
+            Expenses.objects.all().delete()
+              
+            f = open(CSV_PATH)
+            reader = csv.reader(f)
+            print('reader = ',reader)
+            for vendor, expense_type, expense_desc, sale_date, item_name, item_desc, quantity, item_cost, total_cost, interval_save, interval_time in reader:
+                if vendor=='ï»¿Vani Kapor':
+                    vendor='Vani Kapor'
+                print('vendor=',vendor)
+                print('expense_type=',expense_type)
+                print('expense_desc=',expense_desc)
+                #format_str = '%mm/%dd/%YYYY' # The format
+                #sale_date = datetime.datetime.strptime(sale_date, format_str)
+                #print('sale_date=',sale_date)
+                
+                
+                print('item_name=',item_name)
+                print('item_desc=',item_desc)
+                print('quantity=',quantity)
+                print('item_cost=',item_cost)
+                print('total_cost=',total_cost)
+                print('interval_save=',interval_save)
+                print('interval_time=',interval_time)
+                ven = Vendor.objects.filter(name=vendor)
+                print('ven=',ven)
+                vendor_id = ven[0].id
+                print('vendor_id=',vendor_id)
+                if interval_save=='FALSE':
+                    interval_save = False
+                else:
+                    interval_save = True
+                print('interval_save=',interval_save)
+                #Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc,  item=item_name, item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+            
+            
+                '''
+               
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             year = datetime.date.today().year
             print('year',year)
             desc_list=-1
@@ -581,27 +670,22 @@ class Charge_codeView(View):
         
 def save_expenses_csv(delete):               
     #~~~~~~~~~~~Load vendor database from csv. must put this somewhere else later"
-    import csv
-    timestamp  = date.today()
-    CSV_PATH = 'C:\\SRC\\ATS\\accounting\\Expenses.csv'
-    print('csv = ',CSV_PATH)
-
-    contSuccess = 0
-    # Remove all data from Table
-    # Vendor.objects.all().delete()
-       
+   # Remove all data from Table
+    if delete=='yes':
+        Expenses.objects.all().delete()
+      
     f = open(CSV_PATH)
     reader = csv.reader(f)
     print('reader = ',reader)
     for vendor, expense_type, expense_desc, sale_date, item_name, item_desc, quantity, item_cost, total_cost, interval_save, interval_time in reader:
-        if vendor=='ï»¿N/A':
-            vendor='N/A'
+        if vendor=='ï»¿Vani Kapor':
+            vendor='Vani Kapor'
         print('vendor=',vendor)
         print('expense_type=',expense_type)
         print('expense_desc=',expense_desc)
-        format_str = '%m/%d/%Y' # The format
-        sale_date = datetime.datetime.strptime(sale_date, format_str)
-        print('sale_date=',sale_date)
+        #format_str = '%mm/%dd/%YYYY' # The format
+        #sale_date = datetime.datetime.strptime(sale_date, format_str)
+        #print('sale_date=',sale_date)
         
         
         print('item_name=',item_name)
@@ -620,8 +704,8 @@ def save_expenses_csv(delete):
         else:
             interval_save = True
         print('interval_save=',interval_save)
-        Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                     quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+        Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc,  item=item_name, item_desc=item_desc,
+                            quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
                                      
 
 class IncomeView(View):

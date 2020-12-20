@@ -43,8 +43,8 @@
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
 			   <li class="nav-item">
-					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
-					  <span data-feather="file"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}">
+					  <span data-feather="file">Dashboard</span>
 					  Dashboard
 					</a>
 				 </li>
@@ -340,6 +340,7 @@
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
 					<tr>
+					  <th>ID</th>
 					  <th>Vendor ID</th>
 					  <th>Expense Type</th>
 					  <th>Expense Desc</th>
@@ -352,6 +353,7 @@
 				<tbody>
 					{% for exp1 in expense_list %}
 						<tr>
+							<td><a class="nav-link" href="{% url 'accounting:new_expense' %}?expense_id={{exp1.id}}&vendor_id={{exp1.vendor_id}}">{{exp1.id}}</td>
 							<td><a class="nav-link" href="{% url 'accounting:new_expense' %}?expense_id={{exp1.id}}&vendor_id={{exp1.vendor_id}}">{{exp1.vendor_id}}</td>
 							<td><a class="nav-link" href="{% url 'accounting:new_expense' %}?expense_id={{exp1.id}}&vendor_id={{exp1.vendor_id}}">{{exp1.expense_type}}</td>
 							<td><a class="nav-link" href="{% url 'accounting:new_expense' %}?expense_id={{exp1.id}}&vendor_id={{exp1.vendor_id}}">{{exp1.expense_description}}</td>

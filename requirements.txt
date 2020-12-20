@@ -8,4 +8,5 @@ django-contrib-comments
 Pillow
 django-session-timeout
 django-storages
+django-background-tasks
 

@@ -42,6 +42,10 @@
 				<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 			</ul>
 			<form class="form-inline mt-2 mt-md-0 col-lg-2" method="post" action="{% url 'inventory:inven' %}">
 				{% csrf_token %}

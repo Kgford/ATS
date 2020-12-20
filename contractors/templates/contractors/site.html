@@ -50,7 +50,7 @@
 		  <div class="sidebar-sticky pt-3">
 			<ul class="nav flex-column">
 			   <li class="nav-item">
-					<a class="nav-link" href="{% url 'accounting:new_expense' %}">
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}>
 					  <span data-feather="file"></span>
 					  Dashboard
 					</a>
@@ -92,6 +92,12 @@
 					</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link" href="{% url 'contractors:contractor' %}">
+					  <span data-feather="layers"></span>
+					  Contractors
+					</a>
+				</li>
+				<li class="nav-item active">
 					<a class="nav-link" href="{% url 'users:base' %}">
 					  <span data-feather="layers"></span>
 					  Home
