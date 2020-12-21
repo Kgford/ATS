@@ -16,8 +16,12 @@ class DashboardView(View):
         
         except IOError as e:
            print('error = ',e) 
-        return render(self.request, 'dashboard/index.html', {})
+        return render(self.request, 'dashboard/index.html', {'operator':operator})
  
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            return render(self.request, 'dashboard/index.html', {})
+        try:
+            operator = str(self.request.user)
+    
+        except IOError as e:
+            print('error = ',e) 
+        return render(self.request, 'dashboard/index.html', {'operator':operator})

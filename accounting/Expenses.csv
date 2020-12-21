@@ -1,4 +1,5 @@
-﻿Vani Kapor,Salarys,Contractor,11/26/2019,OH,Data Entry,2,11,22,FALSE,
+﻿Vendor,Expense Type,Expense Descrption,Date,Item Name,Item Description,Quantity,Cost,Total Cost,Recurring,Interval
+Vani Kapor,Salarys,Contractor,11/26/2019,Data Entry,Data Entry,2,11,22,FALSE,
 Habberstad BMW,Other Expenses,Vehicle Lease,4/16/2019,BMW,320ix,1,329,329,TRUE,Monthly
 Globecomm,Travel Expenses,Travel,12/16/2017,Travel,Travel Distance = 9.76,1,5.320622881,5.320622881,FALSE,
 Globecomm,Travel Expenses,Travel,12/22/2017,Travel,Travel Distance = 9.76,1,5.320622881,5.320622881,FALSE,
