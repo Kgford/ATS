@@ -51,16 +51,16 @@ class Income(models.Model):
 	last_update = models.DateField(null=True) 
 	backup_index = models.IntegerField(null=True,unique=False)
     
-class Invoices(models.Model):
+class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
-    invoiceItem_id = models.IntegerField(null=True,unique=False)
     client_id = models.IntegerField(null=True,unique=False)
-    item_id = models.IntegerField(null=True,unique=False)
     staff_id = models.IntegerField(null=True,unique=False)
     invoice_desc = models.CharField("invoice_desc",max_length=100,null=True,unique=False,default='N/A')
     charge_code = models.CharField("resource name",max_length=100,null=True,unique=False,default='N/A')
-    paid = models.BooleanField("paid",unique=False,null=True,default=True)
+    paid = models.BooleanField("paid",unique=False,null=True,default=False)
+    invoice_date = models.DateField(null=True)
     payment_date = models.DateField(null=True)
+    total = models.FloatField("total",null=True,unique=False)
     last_update = models.DateField(null=True)
     backup_index = models.IntegerField(null=True,unique=False)
 
@@ -80,7 +80,7 @@ class Invoice_Item(models.Model):
     total = models.FloatField("total",null=True,unique=False)
     active = models.BooleanField("active",unique=False,null=True,default=True)
     last_update = models.DateField(null=True)	
-    backup_index = models.IntegerField(null=True,unique=False)
+    invoice_id = models.IntegerField(null=True,unique=False)
     
 class ChargeCode(models.Model):
     id = models.AutoField(primary_key=True)

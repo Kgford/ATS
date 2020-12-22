@@ -1,0 +1,288 @@
+{% extends "accounting/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ index_type }}
+{% endblock %}
+
+{% block body %}
+<body onload="check_start()">
+   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-invoice">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-invoice active">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="accounting:new_invoice" aria-disabled="true">Reconsile Invoice&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-invoice">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'accounting:invoice_item' %}" aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
+				</li><li class="nav-invoice ">
+					<span data-feather="clipboard"></span>
+					<a class="nav-link" href="{% url 'accounting:charge_code' %}">Charge Codes</a>
+				</li>
+				<li class="nav-invoice">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'contractors:contractor' %}">Contractors&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-invoice ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'client:client' %}" aria-disabled="true">Clients&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				</li>
+				<li class="nav-invoice ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
+				<li class="nav-invoice ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid">
+	  <div class="row">
+		<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar navbar-dark bg-dark sidebar collapse" >
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand text-left sidebar-brand m-0" href="#">
+				<span class="text-left d-lg-flex flex-wrap justify-content-lg-start" style="font-size: 12;">ATS Navigation</span>
+				<div class="sidebar-brand-icon rotate-n-15"></div><div class="sidebar-brand-text mx-3"></div></a>
+				<hr class="sidebar-divider my-0">
+				<ul class="nav navbar-nav text-light nav flex-column" id="accordionSidebar">
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
+					<li class="nav-invoice"></li>
+					<li class="nav-invoice active"><a class="nav-link" href="{% url 'accounting:new_invoice' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'accounting:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'accounting:expenses' %}"><i class="fas fa-book-open"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-male"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'contractors:contractor' %}"><i class="fa fa-wrench"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Contractors</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'vendor:vendor' %}"><i class="fab fa-connectdevelop"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Vendors</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'users:base' %}"><i class="fas fa-tachometer-alt"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Home</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'admin:index' %}"><i class="far fa-sun"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Settings</span></a></li>
+					<li class="nav-invoice"><a class="nav-link" href="{% url 'atspublic:public' %}"><i class="fa fa-bomb"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Website</span></a></li>
+				</ul>
+				<div class="text-center d-none d-md-inline"></div>
+			</div>
+		</nav>
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+	<form action = "{% url 'accounting:new_invoice' %}" method="post">
+		{% csrf_token %}
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-invoices-center pt-3 pb-2 mb-3 border-bottom">
+			{% if invoice == -1 %}
+				<h2 class="text-center">Create new Invoice</h2>
+			{% else %}
+				<h2  class="text-center">Modify/Reconsile Invoice</h2>
+			{% endif %}
+			<div class="btn-toolbar mb-2 mb-md-0">
+				<a style = "color:#CCD1D1" > {{operator}} logged in</a>
+			</div>
+		</div>
+		{% if invoice == -1 %}
+			<input type='hidden' id = '_invoice_id' name='_invoice_id' value = "-1" />
+		{% else %}
+			<input type='hidden' id = '_invoice_id' name='_invoice_id' value = "{{invoice.id}}" />
+		{% endif %}
+		<div class="row">
+			<div class="col-sm-1 col-lg-1 grid-col">
+				<div class="form-group">
+					<!-- contractor-->
+					<label>Invoice ID<span class="k-required"></span></label>
+					<input type='hidden' name='_contractor' data-select='contractor'/>
+					<select id='_contractor' name ='_contractor' class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if invoice == -1%}
+							<option data-desc = 'contractor', value = "select menu">select menu</option>
+						{% else %}
+							<option selected>{{invoice.id}}</option>
+						{% endif %}	
+						{% for inv in invoice_id_list%}
+							<option data-desc = 'contractor', value = "{{inv}}">{{inv}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-3 grid-col">
+				<div class="form-group">
+					<label for="_invoice_desc">Invoice Title</label>
+					{% if invoice == -1 %}
+						<input id = "_invoice_desc" name = "_invoice_desc" input class="form-control" placeholder="Enter Item description"  required >
+					{% else %}
+						<input id = "_invoice_desc" name = "_invoice_desc" input class="form-control" value = "{{invoice.invoice_desc}}"  required >
+					{% endif %}
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<!-- Customer-->
+					<label>Customer<span class="k-required"></span></label>
+					<input type='hidden' name='_cust' data-select='cust'/>
+					<select id='_cust' name ='_cust' class="browser-default custom-select custom-select-lg mb-3" required>
+						{% if invoice == -1%}
+							<option data-desc = 'vendor', value = "select menu">select menu</option>
+						{% else %}
+							<option selected>{{client}}</option>
+						{% endif %}	
+						{% for cust in client_list%}
+							<option data-desc = 'vendor', value = "{{cust}}">{{cust}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+				<div class="form-group">
+					<label for="_quantity">Invoice Date</label>
+					{% if invoice == -1 %}
+						<input  id = "_invoice_date"  name = "_invoice_date" input class="form-control" required>
+					{% else %}
+						<input type = "date" id = "_invoice_date"  name = "_invoice_date" value = {{invoice.invoice_date}}" input class="form-control"  required>
+					{% endif %}
+				</div>	
+			</div>
+			{% if invoice == -1 %}
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label  for="_quantity">New Invoice</label>
+						<button type="submit" id = "_save" name = "_save"  class="btn btn-success">Create</button>
+					</div>
+				</div>
+			{% else %}
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update</button>
+						<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete&nbsp;</button>
+					</div>
+				</div>
+			{% endif %}
+	</form>
+		</div>
+		<h2>Unassigned Items List</h2>
+		<div class="table-responsive" Method = "POST">
+			 <table id = "table_id" class="table table-striped table-sm">
+			    <thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Item Description</th>
+					  <th>Resource Type</th>
+					  <th>Service Type</th>
+					  <th>Item Date</th>
+					  <th>Item Description</th>
+					  <th>Total Charge</th>
+					  <th>Active</th>
+					</tr>
+			    </thead>
+				<tbody>
+					{% for invoice1 in invoice_list %}
+						<tr>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.total}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.active}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<h2>Invoice</h2>
+		<form action = "{% url 'accounting:new_invoice' %}" method="post">
+			<div class="row">
+				{% if invoice == -1 %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<button type="submit" id = "_clear" name = "_clear"  class="btn btn-warning">Clear Invoice</button>
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-2 grid-col">
+						<div class="form-group">
+							<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete Invoice&nbsp;</button>
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-2 grid-col">
+						<div class="form-group">
+							{% if invoice == -1 %}
+								<input id = "_invoice_charge"  name = "_invoice_date" placeholder = 'Invoice Charge Code' input class="form-control" required>
+							{% else %}
+								<input id = "_invoice_charge"  name = "_invoice_date" value = {{invoice.charge_code}}" input class="form-control"  required>
+							{% endif %}
+						</div>	
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<button type="submit" id = "_delete" name = "_print"  class="btn btn-info">Print Invoice&nbsp;</button>
+						</div>
+					</div>
+				{% else %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update</button>
+							<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete&nbsp;</button>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</form>
+		
+		<div class="table-responsive" Method = "POST">
+			 <table id = "table_id" class="table table-striped table-sm">
+			    <thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Item ID</th>
+					  <th>Client ID</th>
+					  <th>Item Description</th>
+					  <th>Item Date</th>
+					  <th>Item Description</th>
+				  </tr>
+			    </thead>
+				<tbody>
+					{% for invoice1 in invoice_list %}
+						<tr>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounting:invoice_invoice' %}?invoice_id={{invoice1.id}}&charge_id={{invoice1.charge_id}}&client_id={{invoice1.client_id}}">{{invoice1.invoice_desc}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+    </main>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		// Get value on button click and show alert
+		$("#_quantity").keyup(calc);
+		$("#_invoice_cost").keyup(calc);
+		function calc() {
+		  $('#_total_cost').val(
+			parseInt($('#_quantity').val(), 10) * parseFloat($('#_invoice_cost').val(), 10)
+		);
+	}
+	});
+</script>
+		
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script>
+
+</body>
+{% endblock %}
+
+</html>

@@ -87,8 +87,8 @@
 	<div class="nav-scroller bg-white shadow-sm">
 		<nav class="nav nav-underline">
 			<a class="nav-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
-			<a class="nav-link" href="{% url 'accounting:expenses' %}">Expenses</a>
-			<a class="nav-link" href="{% url 'accounting:invoice_item' %}">Invoicing</a>
+			<a class="nav-link" href="{% url 'accounts:expenses' %}">Expenses</a>
+			<a class="nav-link" href="{% url 'accounts:invoice_item' %}">Invoicing</a>
 			<a class="nav-link" href="{% url 'inventory:inven' %}">Inventory</a>
 		</nav>
 	</div>	  
@@ -117,10 +117,10 @@
 	{% if user.is_authenticated %}
 		<h5>Accounting</h5>
 		<ul class="list-unstyled text-small">
-			<li><a class="text-muted" href="{% url 'accounting:expenses' %}">Expenses</a></li>
-			<li><a class="text-muted" href={% url 'accounting:invoice_item' %}>Invoices</a></li>
-			<li><a class="text-muted" href={% url 'accounting:charge_code' %}>Charge Codes</a></li>
-			<li><a class="text-muted" href="accounting:expenses">Sales</a></li>
+			<li><a class="text-muted" href="{% url 'accounts:expenses' %}">Expenses</a></li>
+			<li><a class="text-muted" href={% url 'accounts:invoice_item' %}>Invoices</a></li>
+			<li><a class="text-muted" href={% url 'accounts:charge_code' %}>Charge Codes</a></li>
+			<li><a class="text-muted" href="accounts:expenses">Sales</a></li>
 		</ul>
 	{% endif %}
 	</div>

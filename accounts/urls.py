@@ -6,17 +6,18 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required, permission_required
-from accounting.views import (
+from accounts.views import (
     ExpensesView,
     SaveExpensesView,
     IncomeView,
     SaveIncomeView,
     InvoiceItemView,
+    CreateInvoiceView,
     Charge_codeView,
     UserLogin
 )
 
-app_name = "accounting"
+app_name = "accounts"
 
 urlpatterns =[
     path('expenses', login_required(ExpensesView.as_view(template_name="expense.html")), name='expenses'),
@@ -24,6 +25,7 @@ urlpatterns =[
     path('income', login_required(IncomeView.as_view(template_name="income.html")), name='income'),
     path('new_income', login_required(SaveIncomeView.as_view(template_name="save_income.html")), name='new_income'),
     path('invoice_item', login_required(InvoiceItemView.as_view(template_name="invoice_item.html")), name='invoice_item'),
+    path('new_invoice', login_required(CreateInvoiceView.as_view(template_name="create_invoice.html")), name='new_invoice'),
     path('charge_code', login_required(Charge_codeView.as_view(template_name="charge_code.html")), name='charge_code'),
     path('login', login_required(UserLogin.as_view(template_name="user_login.html")), name='login'),
     path('staff/', include("users.urls")),

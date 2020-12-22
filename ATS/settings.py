@@ -27,7 +27,7 @@ LOGOUT_REDIRECT_URL = 'users/user_login'
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['automatedtestsolutions.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
 
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'locations',
     'inventory',
     'atspublic',
-    'accounting',
+    'accounts',
     'vendor',
     'background_task',
     'whitenoise.runserver_nostatic',

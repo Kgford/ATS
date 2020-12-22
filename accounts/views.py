@@ -10,7 +10,7 @@ from equipment.models import Model
 from locations.models import Location
 from client.models import Clients
 from inventory.models import Inventory, Events
-from accounting.models import Expenses, Invoice_Item, Charge_Code, Income, Invoices
+from accounts.models import Expenses, Invoice_Item, Charge_Code, Income, Invoice
 from vendor.models import Vendor
 from contractors.models import Contractors
 from django.views import View
@@ -55,13 +55,13 @@ class UserLogin(View):
 class ExpensesView(View):
   
     template_name = "expense.html"
-    success_url = reverse_lazy('accounting:expenses')
+    success_url = reverse_lazy('accounts:expenses')
     def get(self, *args, **kwargs):
         try:
             operator = str(self.request.user)
             import csv
             timestamp  = date.today()
-            CSV_PATH = 'C:\\SRC\\ATS\\accounting\\Expenses.csv'
+            CSV_PATH = 'C:\\SRC\\ATS\\accounts\\Expenses.csv'
             print('csv = ',CSV_PATH)
 
             contSuccess = 0
@@ -95,7 +95,7 @@ class ExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
+        return render (self.request,"accounts/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
     
     def post(self, request, *args, **kwargs):
@@ -208,13 +208,13 @@ class ExpensesView(View):
             print ("Lists load Failure ", e)
 
         #print('expense_list',expense_list)
-        return render (self.request,"accounting/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
+        return render (self.request,"accounts/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
            
 class SaveExpensesView(View):
     template_name = "save_expenses.html"
-    success_url = reverse_lazy('accounting:new_expense')
+    success_url = reverse_lazy('accounts:new_expense')
     def get(self, *args, **kwargs):
         try:
             vendor = -1
@@ -249,7 +249,7 @@ class SaveExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
+        return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
 
     def post(self, request, *args, **kwargs):
         vendor_list = []
@@ -325,7 +325,7 @@ class SaveExpensesView(View):
                     exp=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
-                    return HttpResponseRedirect(reverse('accounting:expenses'))
+                    return HttpResponseRedirect(reverse('accounts:expenses'))
             elif not update_exp==-1 and (exp_id !=-1 and exp_id != ''):
                 #update item	
                 ven = Vendor.objects.filter(name=vendor)
@@ -337,7 +337,7 @@ class SaveExpensesView(View):
             elif not save_exp==-1 or (exp_id !=-1 and exp_id != ''):
                 if Expenses.objects.filter(item=item_name).exists():
                     exp = Expenses.objects.filter(item=item_name).all()
-                    return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
                 else:
                    #save item	
                     ven = Vendor.objects.filter(name=vendor)
@@ -348,11 +348,11 @@ class SaveExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
+        return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
         
 class InvoiceItemView(View):
     template_name = "invoice_item.html"
-    success_url = reverse_lazy('accounting:invoice_item')
+    success_url = reverse_lazy('accounts:invoice_item')
     def get(self, *args, **kwargs):
         try:
             contractor = -1
@@ -403,7 +403,7 @@ class InvoiceItemView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/invoice_item.html",{"charge_list": charge_list, "id":id, "contractor_list":contractor_list, 'client_list':client_list, 'item_list':item_list,
+        return render (self.request,"accounts/invoice_item.html",{"charge_list": charge_list, "id":id, "contractor_list":contractor_list, 'client_list':client_list, 'item_list':item_list,
                         'charge':charge, 'client':client, "item":item, 'contractor':contractor, "operator":operator,'active':active,'item_id':item_id})
 
     def post(self, request, *args, **kwargs):
@@ -489,7 +489,7 @@ class InvoiceItemView(View):
                     item=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
-                    return HttpResponseRedirect(reverse('accounting:expenses'))
+                    return HttpResponseRedirect(reverse('accounts:expenses'))
             elif not update_item==-1:
                 #update item	
                 print('client_id=',client_id)
@@ -500,7 +500,7 @@ class InvoiceItemView(View):
                 exp=-1
             elif not save_item==-1:
                 if Invoice_Item.objects.filter(id=item_id).exists():
-                    return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
                 else:
                    #save item	
                     print('client_id=',client_id)
@@ -511,13 +511,359 @@ class InvoiceItemView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return HttpResponseRedirect(reverse('accounting:invoice_item'))
+        return HttpResponseRedirect(reverse('accounts:invoice_item'))
                         
+
+class CreateInvoiceView(View):
+    template_name = "create_invoice.html"
+    success_url = reverse_lazy('accounts:new_invoice')
+    def get(self, *args, **kwargs):
+        try:
+            contractor = -1
+            client = -1
+            invoice = -1
+            client_id = -1
+            invoice_id_list =  [] 
+            invoice_list = []
+            invoice_item_list = []
+            invoice = -1
+            invoice_item = -1
+            total = -1
+            charge_code = -1
+            operator = str(self.request.user)
+            invoice_id = self.request.GET.get('invoice_id', -1)
+            item_id = self.request.GET.get('item_id', -1)
+            active = self.request.GET.get('active', -1)
+            item_invoice = self.request.GET.get('item_invoice', -1)
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            if invoice_id !=-1:
+                invoice = Invoice.objects.filter(id=invoice_id)
+                invoice = invoice[0] 
+                client_id = invoice.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_list = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_item = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).all()
+                invoice = Invoice.filter(client_id=client_id).all()
+                total=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                
+                                    
+            print('active =',active)
+            print('client_list =',client_list)
+            print('invoice_list =',invoice_list)
+            print('invoice_id_list =',invoice_id_list)
+            print('invoice_id =',invoice_id)
+            print('client=',client)    
+            print('invoice=', invoice)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/create_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+                        'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
+
+    def post(self, request, *args, **kwargs):
+        try: 
+            contractor = -1
+            client = -1
+            invoice = -1
+            client_id = -1
+            invoice_id_list =  [] 
+            invoice_list = []
+            invoice_item_list = []
+            invoice = -1
+            invoice_item = -1
+            total = -1
+            charge_code = -1
+            paid = False            
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            
+            invoice_id = request.POST.get('_invoice_id', -1 )
+            print('invoice_id =',invoice_id)
+            invoice_desc = request.POST.get('_contractor', -1 )
+            print('invoice_desc = ',invoice_desc)
+            client = request.POST.get('_client', -1)
+            print('client =',client)
+            invoice_desc = request.POST.get('_invoice_desc', -1)
+            print('invoice_desc =',invoice_desc)
+            invoice_date = request.POST.get('_invoice_date', -1)
+            print('invoice_date =',invoice_date)
+            charge_code = invoice_date
+            
+            
+            
+            invoice = request.POST.get('_invoice', -1)
+            print('invoice =',invoice)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            
+            save_invoice = request.POST.get('_save', -1)
+            print('save_invoice =',save_invoice)
+            update_invoice = request.POST.get('_update', -1)
+            print('update_exp =',update_invoice)
+            del_invoice = request.POST.get('_delete', -1)
+            print('del_invoice =',del_invoice)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            success = True
+                       
+            if active =='on':
+                active_save = True
+            else:
+                active_save = False
+                
+                
+            if invoice_id !=-1:
+                invoice = Invoice.objects.filter(id=invoice_id)
+                invoice = invoice[0] 
+                client_id = invoice.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_list = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_item = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).all()
+                invoice = Invoice.filter(client_id=client_id).all()
+                total=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+            if client!=1 and invoice_id ==-1:
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_item = Invoice_Item.filter(client_id=client_id, active=True).all()
+                
+                
+            print('active =',active)
+            print('client_list =',client_list)
+            print('invoice_list =',invoice_list)
+            print('invoice_id_list =',invoice_id_list)
+            print('invoice_id =',invoice_id)
+            print('client=',client)    
+            print('invoice=', invoice)
+            
+                                
+            print('active_save=',active_save)
+            if not del_invoice==-1:
+                try:
+                   #update invoice	
+                    Invoice.objects.filter(id=invoice_id).delete()
+                    print('delete complete')
+                    invoice=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounts:expenses'))
+            elif not update_invoice==-1:
+                #update invoice	
+                print('client_id=',client_id)
+                print('contractor_id=',contractor_id)
+                print('charge_id=',charge_id)
+                Invoice.objects.filter(id=invoice_id).update(client_id=client_id,staff_id=operator, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
+                exp=-1
+            elif not save_invoice==-1:
+                if Invoice.objects.filter(id=invoice_id).exists():
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                else:
+                   #save invoice	
+                    print('client_id=',client_id)
+                    print('contractor_id=',contractor_id)
+                    print('charge_id=',charge_id)
+                    Invoice.objects.create(client_id=client_id,staff_id=operator, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
+                    invoice_id = Invoice.objects.filter(client_id=client_id,staff_id=operator, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp).first()  
+                    invoice_id = invoice_id.id
+                    client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                    Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
+                    invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                    invoice_list = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).order_by('name').values_list('name', flat=True).distinct()
+                    invoice_item = Invoice_Item.filter(client_id=client_id, invoice_id=invoice_id).all()
+                    invoice = Invoice.filter(client_id=client_id).all()
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/create_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+                        'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
+        
+class RecInvoiceView(View):
+    template_name = "invoice.html"
+    success_url = reverse_lazy('accounts:invoice')
+    def get(self, *args, **kwargs):
+        try:
+            contractor = -1
+            client = -1
+            invoice = -1
+            charge = -1
+            active = 'off'
+            invoice_id = self.request.GET.get('invoice_id', -1)
+            charge_id = self.request.GET.get('charge_id', -1)
+            client_id = self.request.GET.get('client_id', -1)
+            if invoice_id !=-1:
+                invoice = Invoice.objects.filter(id=invoice_id)
+                invoice = invoice[0] 
+                active = invoice.active
+                if active=='on':
+                    active = True
+                contractor_id = invoice.contractor_id
+                contractor = Contractors.objects.filter(id=contractor_id)
+                contractor = contractor[0].name
+                cust_id = invoice.client_id
+                client = Clients.objects.filter(id=cust_id)
+                client = client[0].name
+            if charge_id !=-1:   
+                charge = Charge_Code.objects.filter(id=charge_id)
+                charge = charge[0].charge
+                print('charge=',charge)
+            if client_id !=-1:
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+            else:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+                
+            operator = str(self.request.user)
+            if client_id !=-1:
+                charge_list =  Charge_Code.objects.filter(client_id=client_id).values_list('charge', flat=True).distinct()
+            else:
+                charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
+            
+            if invoice_id !=-1:
+                invoice_id_list =  Invoiceobjects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+            else:
+                invoice_id_list =  Invoice.objects.order_by('id').values_list('id', flat=True).distinct()  
+            
+            
+            invoice_list = Invoice.objects.all()
+            print('invoice_list =',invoice_list)
+            print('invoice_id =',invoice_id)
+            print('charge_id =',charge_id)
+            print('contractor=',contractor)
+            print('client=',client)    
+            print('invoice=', invoice)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/invoice.html",{"invoice_id_list": invoice_id_list, "id":id, 'client_list':client_list, 'invoice_list':invoice_list,
+                        'charge':charge, 'client':client, "invoice":invoice, "operator":operator,'active':active,'invoice_id':invoice_id})
+
+    def post(self, request, *args, **kwargs):
+        contractor_list = []
+        expense_list =[]
+        desc_list = []
+        invoice_id = -1
+        exp =-1
+        vendor =-1
+        
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
+            contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            invoice_list = Invoice.objects.all()  
+                        
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            invoice_id = request.POST.get('_invoice_id', -1 )
+            print('invoice_id =',invoice_id)
+            contractor = request.POST.get('_contractor', -1 )#service_provider
+            print('contractor = ',contractor)
+            service_type = request.POST.get('_service_type', -1)
+            print('service_type = ',service_type)
+            resource_type = request.POST.get('_res_type', -1)
+            print('resource_type = ',resource_type)
+            client = request.POST.get('_cust', -1)
+            print('client =',client)
+            charge = request.POST.get('_charge', -1)
+            print('charge =',charge)
+            invoice_desc = request.POST.get('_invoice_desc', -1)
+            print('invoice_desc =',invoice_desc)
+            cost_type = request.POST.get('_invoice_cost_type', -1)
+            print('cost_type =',cost_type)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            rate = request.POST.get('_invoice_cost', -1)
+            print('rate =',rate)
+            total_cost = request.POST.get('_total_cost', -1)
+            print('total_cost =',total_cost)
+            invoice_date = request.POST.get('_invoice_date', -1)
+            print('invoice_date =',invoice_date)
+            invoice = request.POST.get('_invoice', -1)
+            print('invoice =',invoice)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            
+            save_invoice = request.POST.get('_save', -1)
+            print('save_invoice =',save_invoice)
+            update_invoice = request.POST.get('_update', -1)
+            print('update_exp =',update_invoice)
+            del_invoice = request.POST.get('_delete', -1)
+            print('del_invoice =',del_invoice)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            success = True
+                       
+            if active =='on':
+                active_save = True
+            else:
+                active_save = False
+                
+                
+            client_id = Clients.objects.filter(name=client).first()
+            client_id = client_id.id
+            contractor_id = Contractors.objects.filter(name=contractor).first()
+            contractor_id = contractor_id.id
+            charge_id = Charge_Code.objects.filter(charge=charge).first()
+            charge_id = charge_id.id
+            invoice = Invoice.objects.all()
+            invoice = invoice[0]
+            
+                                
+            print('active_save=',active_save)
+            if not del_invoice==-1:
+                try:
+                   #update invoice	
+                    Invoice.objects.filter(id=invoice_id).delete()
+                    print('delete complete')
+                    invoice=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounts:expenses'))
+            elif not update_invoice==-1:
+                #update invoice	
+                print('client_id=',client_id)
+                print('contractor_id=',contractor_id)
+                print('charge_id=',charge_id)
+                Invoice.objects.filter(id=invoice_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, 
+                                        cost_type=cost_type,invoice_date=invoice_date,invoice_desc=invoice_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
+                exp=-1
+            elif not save_invoice==-1:
+                if Invoice.objects.filter(id=invoice_id).exists():
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                else:
+                   #save invoice	
+                    print('client_id=',client_id)
+                    print('contractor_id=',contractor_id)
+                    print('charge_id=',charge_id)
+                    Invoice.objects.create(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,service_type=service_type, 
+                                        cost_type=cost_type,invoice_date=invoice_date,invoice_desc=invoice_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return HttpResponseRedirect(reverse('accounts:invoice'))
                         
                         
 class Charge_codeView(View):
     template_name = "charge.html"
-    success_url = reverse_lazy('accounting:charge_code')
+    success_url = reverse_lazy('accounts:charge_code')
     def get(self, *args, **kwargs):
         try:
             client = -1
@@ -546,7 +892,7 @@ class Charge_codeView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/charge_code.html",{'charge_list':charge_list,'client_list':client_list, "operator":operator,'item_id':item_id, 'item':item, 'client':client})
+        return render (self.request,"accounts/charge_code.html",{'charge_list':charge_list,'client_list':client_list, "operator":operator,'item_id':item_id, 'item':item, 'client':client})
 
     def post(self, request, *args, **kwargs):
         contractor_list = []
@@ -602,20 +948,20 @@ class Charge_codeView(View):
                     item=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
-                    return HttpResponseRedirect(reverse('accounting:charge_code'))
+                    return HttpResponseRedirect(reverse('accounts:charge_code'))
             elif not update_item==-1:
                 #update item	
                 Charge_Code.objects.filter(id=item_id).update(charge_type=charge_type, client_id=client_id, charge=charge, charge_desc=charge_desc, start_date=start_date, end_date=end_date,last_update=timestamp)
             elif not save_item==-1:
                 if Charge_Code.objects.filter(charge=charge).exists():
-                    return render (self.request,"accounting/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
                 else:
                    #save item	
                     Charge_Code.objects.create(charge_type=charge_type, client_id=client_id, charge=charge, charge_desc=charge_desc, start_date=start_date, end_date=end_date,last_update=timestamp)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return HttpResponseRedirect(reverse('accounting:charge_code'))
+        return HttpResponseRedirect(reverse('accounts:charge_code'))
 
         
 def save_expenses_csv(delete):               
@@ -661,7 +1007,7 @@ def save_expenses_csv(delete):
 class IncomeView(View):
   
     template_name = "income.html"
-    success_url = reverse_lazy('accounting:income')
+    success_url = reverse_lazy('accounts:income')
     def get(self, *args, **kwargs):
         try:
             income_id = self.request.GET.get('income_id', -1)
@@ -693,7 +1039,7 @@ class IncomeView(View):
                 years = Income.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
                 
             if invoice_id !=-1:
-                invoice = Invoices.objects.filter(id=invoice_id).first()
+                invoice = Invoice.objects.filter(id=invoice_id).first()
                 invoice=invoice[0].invoice_desc
             
             
@@ -710,7 +1056,7 @@ class IncomeView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
+        return render (self.request,"accounts/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
                                     "income_desc":income_desc, "year_list":year_list, "operator":operator, "invoice":invoice, "total":total, "year":year})
     
     def post(self, request, *args, **kwargs):
@@ -792,13 +1138,13 @@ class IncomeView(View):
             print ("Lists load Failure ", e)
 
         #print('income_list',income_list)
-        return render (self.request,"accounting/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
+        return render (self.request,"accounts/income.html",{"income_list":income_list, "desc_list":desc_list, "type_list":type_list, "client_list":client_list, "income_type":income_type,
                                     "income_desc":income_desc, "year_list":year_list, "operator":operator, "invoice":invoice, "total":total, "year":year})
            
            
 class SaveIncomeView(View):
     template_name = "save_income.html"
-    success_url = reverse_lazy('accounting:new_income')
+    success_url = reverse_lazy('accounts:new_income')
     def get(self, *args, **kwargs):
         try:
             invoice = -1
@@ -812,7 +1158,7 @@ class SaveIncomeView(View):
             operator = str(self.request.user)
             print('inc=',inc)
             desc_list =  Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
-            invoice_list =  Invoices.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+            invoice_list =  Invoice.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
             print('invoice_list =',invoice_list)
             if income_id !=-1:
                 inc = Income.objects.filter(id=income.id).first
@@ -826,7 +1172,7 @@ class SaveIncomeView(View):
                 client = -1
                 years = Income.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
             if invoice_id !=-1:
-                invoice = Invoices.objects.filter(id=invoice_id)
+                invoice = Invoice.objects.filter(id=invoice_id)
                 invoice = invoice[0].name
                 print('invoice=',invoice)
             
@@ -836,7 +1182,7 @@ class SaveIncomeView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_income.html",{"id":id, "inc":inc, 'invoice':invoice, "client_list":client_list, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})
+        return render (self.request,"accounts/save_income.html",{"id":id, "inc":inc, 'invoice':invoice, "client_list":client_list, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})
 
     def post(self, request, *args, **kwargs):
         invoice_list = []
@@ -853,7 +1199,7 @@ class SaveIncomeView(View):
             print('inc_id =',inc_id)
             income_list = Income.objects.all()
             desc_list =  Income.objects.order_by('income_description').values_list('income_description', flat=True).distinct()
-            invoice_list =  Invoices.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+            invoice_list =  Invoice.objects.order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
             if inc_id !=-1:
                 inc = Income.objects.filter(id=inc_id).all()
             
@@ -892,7 +1238,7 @@ class SaveIncomeView(View):
                     inc=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
-                    return HttpResponseRedirect(reverse('accounting:income'))
+                    return HttpResponseRedirect(reverse('accounts:income'))
             elif not update_inc==-1:
                 #update item	
                 cli = Vendor.objects.filter(name=invoice)
@@ -904,7 +1250,7 @@ class SaveIncomeView(View):
             elif not save_inc==-1:
                 if Income.objects.filter(item=item_name).exists():
                     inc = Income.objects.filter(item=item_name).all()
-                    return render (self.request,"accounting/save_income.html",{"income_list": income_list, "id":id, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "operator":operator})
+                    return render (self.request,"accounts/save_income.html",{"income_list": income_list, "id":id, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "operator":operator})
                 else:
                    #save item	
                     cli = Vendor.objects.filter(name=invoice)
@@ -915,4 +1261,4 @@ class SaveIncomeView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounting/save_income.html",{"income_list": income_list, "id":id, "inc":inc, 'invoicd':invoice, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})           
+        return render (self.request,"accounts/save_income.html",{"income_list": income_list, "id":id, "inc":inc, 'invoicd':invoice, "invoice_list":invoice_list, 'desc_list':desc_list,"inc":inc, 'invoice':invoice, "client":client, "operator":operator})           
