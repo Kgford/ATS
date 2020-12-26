@@ -1,0 +1,150 @@
+﻿2,7,3,2,1,GSC.ATE.2017,Software Development,Site Design,Engineering,12/22/2017,3,65,195,FALSE
+3,8,3,2,1,GSC.ATE.2018,Software Development,Site Design,Engineering,1/26/2018,4.5,65,292.5,FALSE
+4,9,3,2,1,GSC.ATE.2018,Software Development,Site Design,Engineering,2/2/2018,4,65,260,FALSE
+5,10,3,2,1,GSC.ATE.2018,ATE Reference Guide,Documentation,Engineering,2/8/2018,5,65,325,FALSE
+6,10,3,2,1,GSC.ATE.2018,Software Help Guide,Documentation,Engineering,2/8/2018,21,65,1365,FALSE
+9,11,3,2,1,GSC.ATE.2018,ATE Development,Site Design,Engineering,3/2/2018,3,65,195,FALSE
+12,12,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,4/4/2019,4,65,260,FALSE
+13,12,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,4/9/2019,4,65,260,FALSE
+14,12,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,4/6/2019,5,65,325,FALSE
+15,12,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,4/13/2019,7,65,455,FALSE
+18,12,3,2,1,GSC.ATE.2018,Software Debug,Site Debug,Engineering,4/26/2019,3,65,195,FALSE
+19,12,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,4/27/2019,4,65,260,FALSE
+23,13,3,2,1,GSC.ATE.2018,Field Laptop Development,Field Design,Engineering,3/11/2018,4,65,260,FALSE
+24,13,3,2,1,GSC.ATE.2018,Field Testing Research,Field Design,Engineering,3/9/2018,4,65,260,FALSE
+25,13,3,2,1,GSC.ATE.2018,Software Development,Site Debug,Engineering,11/16/2018,3,65,195,FALSE
+26,13,3,2,1,GSC.ATE.2018,Software Development,Office Design,Engineering,11/17/2018,5,65,325,FALSE
+27,14,3,2,1,GSC.ATE.2018,Field Laptop Update,Field Design,Engineering,3/23/2018,4,65,260,FALSE
+28,14,3,2,1,GSC.ATE.2018,Data Model Development,Office Design,Engineering,3/27/2018,6,65,390,FALSE
+29,14,3,2,1,GSC.ATE.2018,On-Site Research,Site Design,Engineering,3/27/2018,2,65,130,FALSE
+30,15,3,2,1,GSC.ATE.2018,On site Support,Site Debug,Engineering,5/4/2018,6,65,390,FALSE
+31,15,3,2,1,IPP.OH.2018,On site Support,Site Debug,Engineering,4/27/2018,6,65,390,FALSE
+41,16,3,3,1,IPP.ATE.2018,Windows 10 Update,Site Design,Engineering,5/10/2019,3,60,180,FALSE
+42,17,3,1,1,SCS.ATE.2019,Noise Figure Test Development,Office Design,Engineering,5/7/2019,4,65,260,FALSE
+43,17,3,1,1,SCS.ATE.2019,ATE Debug,Office Debug,Engineering,5/10/2019,6,65,390,FALSE
+44,17,3,1,1,SCS.ATE.2019,SPA Instrument Library for Noise Figure,Office Debug,Engineering,5/13/2019,4,65,260,FALSE
+45,17,3,1,1,SCS.ATE.2019,Software Debug,Site Debug,Engineering,5/24/2019,3,65,195,FALSE
+46,17,3,1,1,SCS.ATE.2019,ATE Debug,Site Debug,Engineering,5/17/2019,6,65,390,FALSE
+47,18,3,3,1,SCS.ATE.2019,Windows 10 Update,Site Debug,Engineering,5/31/2019,4,60,240,FALSE
+48,19,3,3,1,IPP.CS.2019,Screen Shot Application,Office Design,Engineering,6/8/2019,15,60,900,FALSE
+49,19,3,3,1,IPP.CS.2019,Screen shot application debug,Field Debug,Engineering,6/28/2019,3,60,180,FALSE
+50,20,3,3,1,IPP.CS.2019,Screen Shot Application,Office Design,Engineering,7/20/2019,25,60,1500,FALSE
+51,20,3,3,1,IPP.CS.2019,Screen Shot Application Debug,Site Debug,Engineering,8/2/2019,4,60,240,FALSE
+52,21,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/6/2019,4,60,240,FALSE
+53,21,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/7/2019,4,60,240,FALSE
+54,21,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/12/2019,5,60,300,FALSE
+55,21,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Site Debug,Engineering,8/12/2019,2,60,120,FALSE
+56,21,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/8/2019,0,60,0,FALSE
+57,22,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/6/2019,4,60,240,FALSE
+58,23,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/6/2019,4,60,240,FALSE
+59,23,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/7/2019,4,60,240,FALSE
+60,23,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/8/2019,5,60,300,FALSE
+61,24,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/6/2019,4,60,240,FALSE
+62,24,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/7/2019,4,60,240,FALSE
+63,24,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/8/2019,5,60,300,FALSE
+64,25,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/6/2019,4,60,240,FALSE
+65,25,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/7/2019,4,60,240,FALSE
+66,25,3,3,1,IPP.CS.2019,8753C Screen Shot debug,Office Debug,Engineering,8/8/2019,5,60,300,FALSE
+67,25,3,3,1,IPP.CS.2019,On site Screen Shot debug,Site Debug,Engineering,8/9/2019,2,60,120,FALSE
+68,26,3,3,1,IPP.CS.2019,Screen Capture Instrument Local development,Office Design,Engineering,8/14/2019,4,60,240,FALSE
+69,26,3,3,1,IPP.CS.2019,Screen shot debug,Site Debug,Engineering,8/20/2019,4,60,240,FALSE
+70,27,3,3,1,IPP.CS.2019,Screen Capture Instrument Local development,Office Design,Engineering,8/14/2019,4,60,240,FALSE
+71,27,3,3,1,IPP.CS.2019,Screen shot debug,Site Debug,Engineering,8/16/2019,4,60,240,FALSE
+74,28,3,3,1,IPP.CS.2019,On Site 8753 Screen Shot,Site Debug,Engineering,8/23/2019,4,60,240,FALSE
+75,28,3,3,1,IPP.CS.2019,On site ENA Screen Shot,Site Debug,Engineering,8/30/2019,4,60,240,FALSE
+76,29,3,3,1,IPP.CS.2019,On Site Screen Capture debug,Site Debug,Engineering,10/25/2019,2,60,120,FALSE
+77,29,3,3,1,IPP.CS.2019,Screen Capture Resize improvement,Office Design,Engineering,10/30/2019,4,60,240,FALSE
+78,29,3,3,1,IPP.CS.2019,installation file development,Office Design,Engineering,11/4/2019,6,60,360,FALSE
+79,29,3,3,1,IPP.CS.2019,CADSHOT Installation file dev,Office Design,Engineering,11/5/2019,3,60,180,FALSE
+80,30,3,3,1,IPP.CS.2019,On Site Screen Capture debug,Site Debug,Engineering,10/25/2019,2,60,120,FALSE
+81,30,3,3,1,IPP.CS.2019,Screen Capture Resize improvement,Office Design,Engineering,10/30/2019,4,60,240,FALSE
+82,30,3,3,1,IPP.CS.2019,On Site Screen Capture debug,Site Design,Engineering,11/1/2019,3,60,180,FALSE
+83,30,3,3,1,IPP.ATE.2019,installation file development,Office Design,Engineering,11/4/2019,6,60,360,FALSE
+84,30,3,3,1,IPP.CS.2019,CADSHOT Installation file dev,Office Design,Engineering,11/5/2019,3,60,180,FALSE
+85,30,3,3,1,IPP.CS.2019,CADSHOT Installation file dev,Office Design,Engineering,11/6/2019,4,60,240,FALSE
+86,30,3,3,1,IPP.CS.2019,CADSHOT - SQL debug,Site Debug,Engineering,11/8/2019,4,60,240,FALSE
+87,31,3,3,1,IPP.CS.2019,On Site CADSHOT  debug,Site Debug,Engineering,12/6/2019,3.5,65,227.5,FALSE
+88,31,3,3,1,IPP.CS.2019,CADSHOT Development,Office Design,Engineering,12/7/2019,6,65,390,FALSE
+89,31,3,3,1,IPP.CS.2019,CADSHOT Development,Office Design,Engineering,12/8/2019,4,65,260,FALSE
+90,31,3,3,1,IPP.LM.2019,Label Maker design,Office Design,Engineering,12/9/2019,4,65,260,FALSE
+91,31,3,3,1,IPP.LM.2019,Label Maker design,Office Design,Engineering,12/10/2019,4,65,260,FALSE
+92,31,3,3,1,IPP.LM.2019,Label Maker design,Office Design,Engineering,12/11/2019,4,65,260,FALSE
+93,31,3,3,1,IPP.LM.2019,Label Maker design,Office Design,Engineering,12/12/2019,4,65,260,FALSE
+94,31,3,3,1,IPP.LM.2019,On Site Label Maker Debug,Site Debug,Engineering,12/13/2019,3.5,65,227.5,FALSE
+95,31,3,3,1,IPP.LM.2019,Label Maker design,Office Design,Engineering,12/14/2019,4,65,260,FALSE
+96,31,3,3,1,IPP.LM.2019,CADSHOT Design,Office Design,Engineering,12/15/2019,2,65,130,FALSE
+97,31,3,3,1,IPP.LM.2019,Label Maker Design,Office Design,Engineering,12/16/2019,4,65,260,FALSE
+98,31,3,3,1,IPP.LM.2019,Label Maker Design,Office Design,Engineering,12/19/2019,2,65,130,FALSE
+99,32,3,3,1,IPP.LM.2020,Label Maker design,Site Design,Engineering,1/3/2020,4,65,260,FALSE
+100,32,3,3,1,IPP.LM.2020,Label Maker design,Office Design,Engineering,1/3/2020,3,65,195,FALSE
+101,32,3,3,1,IPP.LM.2020,Label Maker design,Office Design,Engineering,1/9/2020,3,65,195,FALSE
+102,32,3,3,1,IPP.LM.2020,Label Maker Debug,Office Debug,Engineering,1/10/2020,3,65,195,FALSE
+103,32,3,3,1,IPP.LM.2020,Label Maker Debug/ATE Debug,Site Debug,Engineering,1/17/2020,4,65,260,FALSE
+104,32,3,3,1,IPP.LM.2020,Label Maker Debug,Site Debug,Engineering,1/10/2020,4,65,260,FALSE
+105,32,3,3,1,IPP.LM.2020,Label Maker design,Office Debug,Engineering,1/24/2020,3,65,195,FALSE
+106,33,3,3,1,IPP.LM.2020,Label Maker,Office Design,Engineering,2/1/2020,2,65,130,FALSE
+107,33,3,3,1,IPP.LM.2020,Label Maker,Site Debug,Engineering,1/31/2020,4,65,260,FALSE
+108,33,3,3,1,IPP.LM.2020,Label Maker,Site Debug,Engineering,2/14/2020,4,65,260,FALSE
+113,34,3,3,1,IPP.LM.2020,ATE Report Graph redesign,Office Design,Engineering,3/27/2020,4,65,260,FALSE
+114,34,3,3,1,IPP.ATE.2020,ATE Report Graph redesign,Office Design,Engineering,3/28/2020,4,65,260,FALSE
+115,34,3,3,1,IPP.ATE.2020,Dual Coupler Bug fix,Office Design,Engineering,4/2/2020,4,65,260,FALSE
+116,35,3,6,1,CPC.ATE.2020,Milestone 6.1 Test Equipment Communication,ATE Development,Engineering,3/12/2020,20,80,1600,FALSE
+117,35,3,6,1,CPC.ATE.2020,Milestone 6.2 Manual Panel GUI,ATE Development,Engineering,3/12/2020,20,80,1600,FALSE
+118,35,3,6,1,CPC.ATE.2020,Milestone 6.3 ATE Test,ATE Development,Engineering,3/12/2020,30,80,2400,FALSE
+119,35,3,6,1,CPC.ATE.2020,Milestone 6.4 ATE Report,ATE Development,Engineering,3/12/2020,10,80,800,FALSE
+120,36,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/22/2020,2,60,120,FALSE
+121,36,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/23/2020,2,60,120,FALSE
+122,36,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/24/2020,2,60,120,FALSE
+123,36,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/25/2020,2,60,120,FALSE
+124,36,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/26/2020,2,60,120,FALSE
+125,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/29/2020,2,60,120,FALSE
+126,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,6/30/2020,2,60,120,FALSE
+127,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/1/2020,2,60,120,FALSE
+128,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/2/2020,2,60,120,FALSE
+129,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/3/2020,2,60,120,FALSE
+130,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/6/2020,2,60,120,FALSE
+131,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/7/2020,2,60,120,FALSE
+132,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/8/2020,2,60,120,FALSE
+133,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/9/2020,2,60,120,FALSE
+134,37,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,7/10/2020,2,60,120,FALSE
+135,38,3,3,1,IPP.LM.2020,Label Maker upgrade,Office Design,Engineering,6/28/2020,4,65,260,FALSE
+136,39,3,3,1,IPP.CS.2020,CADSHOT Debug,Office Design,Engineering,7/10/2020,1,65,65,FALSE
+137,39,3,6,1,CPC.ATE.2020,ATE Software onsite debug,Field Debug,Engineering,7/6/2020,6,80,480,FALSE
+138,40,3,7,1,10688-01,Inventory Management software,Office Design,Engineering,6/28/2020,16,60,960,FALSE
+139,41,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,8/14/2020,16,60,960,FALSE
+140,41,3,7,1,10688-01,Onsite debug,Site Debug,Engineering,8/7/2020,4,60,240,FALSE
+141,41,3,7,1,10688-01,Onsite Debug,Site Debug,Engineering,8/14/2020,4,60,240,FALSE
+142,42,3,7,1,10688-01,Inventory Management Software,Assembly,Engineering,8/22/2020,16,60,960,FALSE
+143,43,3,3,1,IPP.ATE.2020,ATE Version 4.0.0.1 release,Office Design,Engineering,8/24/2020,4,65,260,FALSE
+144,43,3,3,1,IPP.ATE.2020,ATE Failure resolution,Office Design,Engineering,8/25/2020,2,65,130,FALSE
+145,43,3,3,1,IPP.ATE.2020,ATE Failure resolution2,Office Design,Engineering,8/31/2020,2,65,130,FALSE
+146,43,3,3,1,IPP.ATE.2020,ATE Version 4.0.0.1 verification,Office Design,Engineering,8/31/2020,1,65,65,FALSE
+147,44,3,7,1,10688-01,Inventory Management Software,Assembly,Engineering,9/5/2020,16,60,960,FALSE
+148,45,3,7,1,10688-01,Inventory  Management Software,Assembly,Engineering,9/19/2020,16,60,960,FALSE
+149,46,3,6,1,CPC.ATE.2020,ATE Integration,Site Debug,Engineering,9/19/2020,20,80,1600,FALSE
+150,46,3,6,1,CPC.ATE.2020,ATE Deployment,Site Debug,Engineering,9/19/2020,10,80,800,FALSE
+151,46,3,6,1,CPC.ATE.2020,On-Site Debug,Site Debug,Engineering,9/19/2020,6,80,480,FALSE
+152,47,3,7,1,10688-01,Inventory Management Software,Office Design,Engineering,9/30/2020,8,60,480,FALSE
+153,47,3,3,1,IPP.ATE.2020,Debug Report  Failures,Office Debug,Engineering,9/22/2020,2,65,130,FALSE
+154,47,3,3,1,IPP.ATE.2020,Debug Report Failures,Office Debug,Engineering,9/27/2020,2,65,130,FALSE
+155,47,3,3,1,IPP.ATE.2020,Code generation. Failures Handling,Office Design,Engineering,9/28/2020,8,65,520,FALSE
+156,47,3,3,1,IPP.ATE.2020,On site debug/deploy version 4.0.0.8,Site Debug,Engineering,10/2/2020,8,65,520,FALSE
+157,48,3,3,1,IPP.ATE.2020,Failure Handling/Supervisor,Office Design,Engineering,10/8/2020,4,65,260,FALSE
+158,48,3,3,1,IPP.ATE.2020,Supervisor Password,Field Debug,Engineering,10/9/2020,8,65,520,FALSE
+159,48,3,3,1,IPP.ATE.2020,Report Speed,Office Design,Engineering,10/10/2020,4,35,140,FALSE
+160,48,3,3,1,IPP.ATE.2020,Report Speed,Office Design,Engineering,10/16/2020,4,65,260,FALSE
+161,48,3,3,1,IPP.ATE.2020,Specifications expansion,Office Design,Engineering,10/18/2020,8,65,520,FALSE
+162,49,3,3,1,IPP.ATE.2020,Specifications Expansion,Office Design,Engineering,10/19/2020,3,65,195,FALSE
+163,49,3,3,1,IPP.ATE.2020,Artwork Rev / Report Expansion,Site Design,Engineering,10/20/2020,8,65,520,FALSE
+164,49,3,3,1,IPP.CS.2020,Screen Shot,Office Design,Engineering,10/27/2020,4,65,260,FALSE
+165,50,3,7,1,10688-01,Update Database Dyno,Office Design,Engineering,11/5/2020,4,60,240,FALSE
+166,50,3,7,1,10688-01,Adding Technician Table,Office Design,Engineering,11/3/2020,4,60,240,FALSE
+167,50,3,7,1,10688-01,On-Site Debug,Site Debug,Engineering,11/15/2020,3,60,180,FALSE
+168,50,3,7,1,10688-01,Report Search,Office Design,Engineering,11/14/2020,4,60,240,FALSE
+169,53,3,7,1,10688-01,Update Database Dyno,Office Design,Engineering,11/3/2020,2,60,120,FALSE
+170,53,3,3,1,IPP.ATE.2020,AB expansion debug,Office Debug,Engineering,11/7/2020,5,65,325,FALSE
+171,53,3,3,1,IPP.ATE.2020,CADSHOT Image Resizing,Assembly,Engineering,11/9/2020,4,65,260,FALSE
+172,53,3,3,1,IPP.ATE.2020,Dual Band Design,Site Design,Engineering,11/15/2020,3,65,195,FALSE
+173,53,3,3,1,IPP.ATE.2020,On-Site Development,Site Design,Engineering,11/13/2020,4,65,260,FALSE
+174,55,3,3,1,IPP.ATE.2020,Dual Band Split,Assembly,Engineering,12/2/2020,4,65,260,FALSE
+175,55,3,3,1,IPP.ATE.2020,Dual Band Split data,Site Debug,Engineering,11/22/2020,6,65,390,FALSE

@@ -45,6 +45,26 @@
 				  }
 			}
 			
+			function paid()
+			{
+			  if (document.getElementById('_paid').checked) 
+			  {
+				  document.getElementById("_paid_status").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;paid";
+			  } else {
+				  document.getElementById("_paid_status").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;unpaid";
+			  }
+			}
+			
+			function check_paid()
+			{
+				 if (document.getElementById('_paid').checked) 
+				  {
+					  document.getElementById("_paid_status").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;paid";
+				  } else {
+					  document.getElementById("_paid_status").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;unpaid";
+				  }
+			}
+			
 		
 		
 		</script>

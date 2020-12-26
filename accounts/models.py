@@ -10,7 +10,7 @@ class Charge_Code(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True) 
     last_update = models.DateField(null=True)
-   
+
 
 class ClassCodes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -76,7 +76,7 @@ class Invoice_Item(models.Model):
     item_date = models.DateField(null=True)
     item_desc = models.CharField("item description",max_length=100,null=True,unique=False,default='N/A')
     rate = models.FloatField("rate",null=True,unique=False)
-    quantity = models.IntegerField(null=True,unique=False)   
+    quantity = models.FloatField(null=True,unique=False)   
     total = models.FloatField("total",null=True,unique=False)
     active = models.BooleanField("active",unique=False,null=True,default=True)
     last_update = models.DateField(null=True)	

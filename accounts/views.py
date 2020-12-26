@@ -17,7 +17,8 @@ from django.views import View
 import datetime
 from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
-from django.db.models.functions import ExtractYear 
+from ATS.overhead import Equations
+from re import search
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -59,14 +60,9 @@ class ExpensesView(View):
     def get(self, *args, **kwargs):
         try:
             operator = str(self.request.user)
-            import csv
-            timestamp  = date.today()
-            CSV_PATH = 'C:\\SRC\\ATS\\accounts\\Expenses.csv'
-            print('csv = ',CSV_PATH)
-
             contSuccess = 0
             year = datetime.date.today().year
-            print('year',year)
+            print('year=',year)
             desc_list=-1
             type_list=-1
             item_name_list=-1
@@ -84,11 +80,13 @@ class ExpensesView(View):
             years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
             year_list=[]
             for year1 in years:
+                year1 = str(year1)
                 dt = year1.split('-')
                 year_list.append(dt[0])
             year_list = list(OrderedDict.fromkeys(year_list))
             print("in GET")
-            expense_list = Expenses.objects.all()
+            
+            expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             for expense in expense_list:
                 total=round(total+float(expense.total_cost),2)
             print(total)
@@ -120,22 +118,29 @@ class ExpensesView(View):
             year_c = request.POST.get('_year', -1)
             if year_c ==-1:
                 year_c = datetime.date.today().year
-            print('year =',year_c)
-            year = datetime.date.today().year
+                year = datetime.date.today().year
+            else:
+                year=year_c
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
             item_desc_list = Expenses.objects.order_by('item_desc').values_list('item_desc', flat=True).distinct()
             years = Expenses.objects.order_by('sale_date').values_list('sale_date', flat=True).distinct()
+            if year_c != 'all years':
+                expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
+            else:
+                expense_list = Expenses.objects.all()
+                
             year_list=[]
             for year1 in years:
+                year1 = str(year1)
                 dt = year1.split('-')
                 year_list.append(dt[0])
             year_list = list(OrderedDict.fromkeys(year_list))
             print("year_list",year_list) 
-            print('year',year_c)
+            print('year_c=',year_c)
+            print('year=',year)
             success = True
-            #expense_list = Expenses.objects.all() 
             if not search ==-1:
                 if  Expenses.objects.filter(vendor_id__icontains=search).exists():
                     expense_list = Expenses.objects.filter(vendor_id__icontains=search).all()
@@ -155,49 +160,63 @@ class ExpensesView(View):
                 elif Expenses.objects.filter(item_cost__icontains=search).exists():
                     expense_list = Expenses.objects.filter(item_cost__contains=search).all()
                     print('search 6=',expense_list)
-                elif Expenses.objects.filter(sale_date__contains=search).exists():
-                    expense_list = Expenses.objects.filter(sale_date__contains=search).all()
+                elif Expenses.objects.filter(year_c__contains=search).exists():
+                    expense_list = Expenses.objects.filter(year_c__contains=search).all()
                     print('esearch 7=',expense_list)
+                  
+            elif not year_c == 'all years': 
+                if not year_c == 'all years' and expense_type == "select menu"  and expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
+                elif  not year_c == 'all years' and not expense_type == "select menu"  and expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year, expense_type=expense_type).all()
+                elif  not year_c == 'all years' and not expense_type == "select menu"   and not expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year, expense_type=expense_type, expense_description__contains=expense_desc).all()  
+                elif  not year_c == 'all years' and not expense_type == "select menu"   and not expense_desc == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year, expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
+                elif  not year_c == 'all years' and not expense_type == "select menu"   and not expense_desc == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year, expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                print('expense_type =',expense_list)
             elif not expense_type =="select menu": 
-                if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                if expense_desc == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(expense_type=expense_type).all()
-                if not expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu":  
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc).all()  
-                if not expense_desc == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and not item_name == "select menu" and item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
-                if not expense_desc == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
-                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and not item_name == "select menu" and not item_desc == "select menu" and not year_c == 'all years': 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year_c, expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
                 print('expense_type =',expense_list)
             elif not expense_desc =="select menu": 
-                if expense_type == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                if expense_type == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(expense_description=expense_desc).all()
-                if not expense_type == "select menu" and item_name == "select menu" and item_desc == "select menu":  
+                elif not expense_type == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu":  
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc).all()  
-                if not expense_type == "select menu" and not item_name == "select menu" and item_desc == "select menu": 
+                elif not expense_type == "select menu" and not expense_type == "select menu"   and not item_name == "select menu" and item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
-                if not expense_type == "select menu" and not item_name == "select menu" and not item_desc == "select menu": 
-                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
-                print('expense_desc =',expense_list)
+                elif not expense_type == "select menu" and not item_name == "select menu" and not item_desc == "select menu" and not year_c == 'all years': 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year_c, expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all() 
+                elprint('expense_desc =',expense_list)
             elif not item_name =="select menu": 
-                if item_name == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                if item_name == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(item=item_name).all()
-                if not item_name == "select menu" and expense_desc == "select menu" and item_desc == "select menu":  
+                elif not item_name == "select menu" and not expense_type == "select menu"   and expense_desc == "select menu" and item_desc == "select menu":  
                     expense_list = Expenses.objects.filter(item=item_name, expense_description__contains=expense_desc).all()  
-                if not item_name == "select menu" and not expense_desc == "select menu" and item_desc == "select menu": 
+                elif not item_name == "select menu" and not expense_type == "select menu"   and not expense_desc == "select menu" and item_desc == "select menu": 
                     expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name).all()  
-                if not item_name == "select menu" and not expense_desc == "select menu" and not item_desc == "select menu": 
-                    expense_list = Expenses.objects.filter(expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all()
+                elif not item_name == "select menu" and not expense_type == "select menu"   and not expense_desc == "select menu" and not item_desc == "select menu"  and not year_c == 'all years': 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year_c, expense_type=expense_type, expense_description__contains=expense_desc, item__contains=item_name, item_desc__contains=item_desc).all()
                 print('item_name =',expense_list)
             elif not item_desc =="select menu": 
-                if expense_desc == "select menu" and item_name == "select menu" and item_desc == "select menu" :
+                if expense_desc == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and item_desc == "select menu" :
                     expense_list = Expenses.objects.filter(item_desc=item_desc).all()
-                if not expense_desc == "select menu" and item_name == "select menu" and expense_type == "select menu":  
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and item_name == "select menu" and expense_type == "select menu":  
                     expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc).all()  
-                if not expense_desc == "select menu" and not item_name == "select menu" and expense_type == "select menu": 
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and not item_name == "select menu" and expense_type == "select menu": 
                     expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name).all()  
-                if not expense_desc == "select menu" and not item_name == "select menu" and not expense_type == "select menu": 
-                    expense_list = Expenses.objects.filter(item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name, expense_type__contains=expense_type).all() 
+                elif not expense_desc == "select menu" and not expense_type == "select menu"   and not item_name == "select menu" and not expense_type == "select menu"  and not year_c == 'all years': 
+                    expense_list = Expenses.objects.filter(sale_date__icontains=year_c, item_desc=item_desc, expense_description__contains=expense_desc, item__contains=item_name, expense_type__contains=expense_type).all() 
                 print('item_desc =',expense_list)
+            
             #print('desc_list =',desc_list)
             #print('expense_list =',expense_list)
             for expense in expense_list:
@@ -519,6 +538,7 @@ class SearchInvoiceView(View):
     success_url = reverse_lazy('accounts:invoice')
     def get(self, *args, **kwargs):
         try:
+            
             invoice_list =[]
             invoice = -1
             client_list = -1
@@ -542,9 +562,7 @@ class SearchInvoiceView(View):
                 dt = year1.split('-')
                 year_list.append(dt[0])
             year_list = list(OrderedDict.fromkeys(year_list))
-            
-            
-           
+                      
             print("in GET")
         except IOError as e:
             print ("Lists load Failure ", e)
@@ -724,11 +742,34 @@ class CreateInvoiceView(View):
                 item = Invoice_Item.objects.filter(id=item_id)
                 item = item[0] 
                 item_desc = item.item_desc
-                
-                client_id = invoice.client_id
+                item_date = item.item_desc
+                resource_type = item.resource_type
+                contractor_id = item.contractor_id
+                client_id = item.client_id
                 client = Clients.objects.filter(id=client_id)
                 client = client[0].name
                 Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
+                # Add travel costs to Expenses if required
+                if search('SITE', resource_type.upper()) or search('SITE', item_desc.upper()):
+                    travel_rate = 0.545
+                    distance = Equations.travel_distance(client_id,contractor_id)
+                    print('distance =',distance)
+                    expense_type = 'Travel Expenses'
+                    expense_description = 'Travel'
+                    item_desc = 'Travel Distance = ', round(distance, 2)
+                    exp_item = 'Travel'
+                    quantity = 1
+                    item_cost =  round(distance * TravelRate, 3)
+                    total_cost = item_cost
+                    if Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).exists():
+                        if active==False:
+                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).delete()
+                        else:
+                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).update(item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                    else:
+                        Expenses.objects.create(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id, item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                        
+                    
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
                 invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=0).all()
@@ -950,6 +991,7 @@ class ReconsileInvoiceView(View):
             invoice_item_list = []
             invoice_list = []
             total=0
+            paid = 'off'
             
             timestamp = date.today()
             operator = str(self.request.user)
@@ -972,21 +1014,25 @@ class ReconsileInvoiceView(View):
                 invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
                 if invoice:
                     invoice=invoice[0]
+                    this_date = invoice.invoice_date
+                    paid=invoice.paid
+                    if paid == True:
+                        save_paid = 'on'
+                    else:
+                        save_paid = 'off'
                 total=0
                 for subtotal in invoice_item:
                     total=round(total+float(subtotal.total),2)
                     print(total)
-                print('client_list=',client_list)
-                print('invoice_id_list=',invoice_id_list)
-                print('invoice_list=',invoice_list)
-                print('invoice_item_list=',invoice_item_list)
-                print('invoice=',invoice.id)
+                print('this_date=',this_date)
+                print('paid=', paid)
+                print('save_paid=', save_paid)
                 
                                     
             print('active =',active)
             print('client_list =',client_list)
             print('invoice_list =',invoice_list)
-            print('invoice_list =',invoice_list)
+            print('invoice_item_list=',invoice_item_list)
             print('invoice_id_list =',invoice_id_list)
             print('invoice_id =',invoice_id)
             print('client=',client)    
@@ -998,7 +1044,7 @@ class ReconsileInvoiceView(View):
             print ("Lists load Failure ", e)
             print('error = ',e) 
         return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
-                        'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
+                        'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':save_paid, 'this_date':this_date})
 
     def post(self, request, *args, **kwargs):
         contractor_list = []
@@ -1009,104 +1055,168 @@ class ReconsileInvoiceView(View):
         vendor =-1
         
         try: 
+            client = -1
+            invoice = -1
+            invoice_id = -1
+            client_id = -1
+            invoice_id_list =  [] 
+            invoice_list = []
+            invoice_item_list = []
+            client_list = []
+            invoice = -1
+            invoice_item = -1
+            total = -1
+            
+            charge_code = -1
             print("in POST")
             timestamp = date.today()
             operator = str(self.request.user)
-            charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
-            contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
-            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
-            invoice_list = Invoice.objects.all()  
-                        
-            search = request.POST.get('search', -1)
-            print('search =',search)
-            invoice_id = request.POST.get('_invoice_id', -1 )
-            print('invoice_id =',invoice_id)
-            contractor = request.POST.get('_contractor', -1 )#service_provider
-            print('contractor = ',contractor)
-            service_type = request.POST.get('_service_type', -1)
-            print('service_type = ',service_type)
-            resource_type = request.POST.get('_res_type', -1)
-            print('resource_type = ',resource_type)
-            client = request.POST.get('_cust', -1)
+            
+            invoice_id = request.POST.get('_invoice_id',-1)
+            print('invoice_id=',invoice_id)
+            client = request.POST.get('_client', -1)
             print('client =',client)
-            charge = request.POST.get('_charge', -1)
-            print('charge =',charge)
-            invoice_desc = request.POST.get('_invoice_desc', -1)
+            client_id = Clients.objects.filter(name=client).all()
+            print('client_id =',client_id)
+            client_id = client[0]
+            print('client_id =',client_id)
+            
+            
+            invoice_desc = request.POST.get('_invoice_desc',-1)
             print('invoice_desc =',invoice_desc)
-            cost_type = request.POST.get('_invoice_cost_type', -1)
-            print('cost_type =',cost_type)
-            quantity = request.POST.get('_quantity', -1)
-            print('quantity =',quantity)
-            rate = request.POST.get('_invoice_cost', -1)
-            print('rate =',rate)
-            total_cost = request.POST.get('_total_cost', -1)
-            print('total_cost =',total_cost)
-            invoice_date = request.POST.get('_invoice_date', -1)
-            print('invoice_date =',invoice_date)
-            invoice = request.POST.get('_invoice', -1)
+            invoice_charge = request.POST.get('_invoice_charge',-1)
+            print('invoice_charge =',invoice_charge)
+            charge_code = invoice_charge
+            if charge_code =="":
+                split_charge = invoice_date.split("-")
+                print('split_charge =',split_charge)
+                charge_code = split_charge[1] + split_charge[2] + split_charge[0]
+                print('charge_code =',charge_code)
+            invoice = request.POST.get('_invoice',-1)
             print('invoice =',invoice)
             active = request.POST.get('_active', False)
             print('active =',active)
             
-            save_invoice = request.POST.get('_save', -1)
+            paid = request.POST.get('_paid', -1)
+            print('paid =',paid)
+            if paid=='on':
+                save_paid = True
+            else:
+                save_paid = False
+            
+            save_invoice = request.POST.get('_save',-1)
             print('save_invoice =',save_invoice)
-            update_invoice = request.POST.get('_update', -1)
+            update_invoice = request.POST.get('_update',-1)
             print('update_exp =',update_invoice)
-            del_invoice = request.POST.get('_delete', -1)
+            del_invoice = request.POST.get('_delete',-1)
             print('del_invoice =',del_invoice)
-            quantity = request.POST.get('_quantity', -1)
+            clear_invoice = request.POST.get('_clear',-1)
+            print('clear_invoice =',clear_invoice)
+           
+
+            quantity = request.POST.get('_quantity',-1)
             print('quantity =',quantity)
             success = True
-                       
-            if active =='on':
-                active_save = True
+            
+            print('invoice_id=',invoice_id)          
+            if  invoice_id :
+                invoice = Invoice.objects.filter(id=invoice_id)
+                invoice = invoice[0] 
+                print('invoice-',invoice)
+                client_id = invoice.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=0).all()
+                print('invoice_item_list =',invoice_item_list)
+                invoice_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                print('invoice_list =',invoice_list)
+                invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
+                staff_id=self.request.user.id
+                if invoice:
+                    invoice=invoice[0]
+                    this_date = invoice.invoice_date
+                total=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                    
             else:
-                active_save = False
-                
-                
-            client_id = Clients.objects.filter(name=client).first()
-            client_id = client_id.id
-            contractor_id = Contractors.objects.filter(name=contractor).first()
-            contractor_id = contractor_id.id
-            charge_id = Charge_Code.objects.filter(charge=charge).first()
-            charge_id = charge_id.id
-            invoice = Invoice.objects.all()
-            invoice = invoice[0]
+                print('client=',client)
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                print('client_id=',client_id)
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_item = Invoice_Item.objects.filter(client_id=client_id, active=True).all()
+                staff_id=self.request.user.id
+            
+            print('staff_id =',staff_id)
+            print('active =',active)
+            print('client_list =',client_list)
+            print('invoice_list =',invoice_list)
+            print('invoice_id_list =',invoice_id_list)
+            print('invoice_id =',invoice_id)
+            print('client=',client)    
+            print('invoice=', invoice)
             
                                 
-            print('active_save=',active_save)
             if not del_invoice==-1:
                 try:
-                   #update invoice	
+                   #reset items	
+                    invoice_items = Invoice_Item.objects.filter(invoice_id=invoice_id).all()
+                    for item in invoice_items:
+                        Invoice_Item.objects.filter(id=item.id).update(active=True,invoice_id=0)# Reset Invoice_Item
+                        print('item ',item.id, ' cleared')
+                    #delete invoice    
                     Invoice.objects.filter(id=invoice_id).delete()
                     print('delete complete')
                     invoice=-1
                 except IOError as e:
                     print ("Events Save Failure ", e)
-                    return HttpResponseRedirect(reverse('accounts:expenses'))
+              
+            elif not clear_invoice==-1:
+                try:
+                   #reset items	
+                    invoice_items = Invoice_Item.objects.filter(invoice_id=invoice_id).all()
+                    for item in invoice_items:
+                        Invoice_Item.objects.filter(id=item.id).update(active=True,invoice_id=0)# Reset Invoice_Item
+                        print('item ',item.id, ' cleared')
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    
+
             elif not update_invoice==-1:
                 #update invoice	
                 print('client_id=',client_id)
-                print('contractor_id=',contractor_id)
-                print('charge_id=',charge_id)
-                Invoice.objects.filter(id=invoice_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, 
-                                        cost_type=cost_type,invoice_date=invoice_date,invoice_desc=invoice_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
-                exp=-1
-            elif not save_invoice==-1:
-                if Invoice.objects.filter(id=invoice_id).exists():
-                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
-                else:
-                   #save invoice	
-                    print('client_id=',client_id)
-                    print('contractor_id=',contractor_id)
-                    print('charge_id=',charge_id)
-                    Invoice.objects.create(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,service_type=service_type, 
-                                        cost_type=cost_type,invoice_date=invoice_date,invoice_desc=invoice_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
+                Invoice.objects.filter(id=invoice_id).update(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=save_paid, invoice_date=this_date, last_update=timestamp)
+                
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=0).all()
+                print('invoice_item_list =',invoice_item_list)
+                invoice_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                print('invoice_list =',invoice_list)
+                invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
+                if invoice:
+                    invoice=invoice[0]
+                total=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                print('client_list=',client_list)
+                print('invoice_id_list=',invoice_id_list)
+                print('invoice_list=',invoice_list)
+                print('invoice_item_list=',invoice_item_list)
+                print('invoice=',invoice.id)
+                                 
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, "id":id, 'client_list':client_list, 'invoice_list':invoice_list,
-                        'charge':charge, 'client':client, "invoice":invoice, "operator":operator,'active':active,'invoice_id':invoice_id})
+        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+                        'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':paid, 'this_date':this_date})
                         
                         
 class Charge_codeView(View):
@@ -1213,23 +1323,32 @@ class Charge_codeView(View):
 
         
 def save_expenses_csv(delete):               
-    #~~~~~~~~~~~Load vendor database from csv. must put this somewhere else later"
-   # Remove all data from Table
+    #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
+    operator = str(self.request.user)
+    import csv
+    timestamp  = date.today()
+    CSV_PATH = 'C:\\src\\ats\\accounts\\Expenses.csv'
+    print('csv = ',CSV_PATH)
+    
+    # Remove all data from Table
     if delete=='yes':
         Expenses.objects.all().delete()
-      
+        
     f = open(CSV_PATH)
     reader = csv.reader(f)
     print('reader = ',reader)
-    for vendor, expense_type, expense_desc, sale_date, item_name, item_desc, quantity, item_cost, total_cost, interval_save, interval_time in reader:
+    for id, vendor, expense_type, expense_desc, sale_date, item_name, item_desc, quantity, item_cost, total_cost, interval_save, interval_time in reader:
+        print('ID=',id)
         if vendor=='ï»¿Vani Kapor':
             vendor='Vani Kapor'
         print('vendor=',vendor)
         print('expense_type=',expense_type)
         print('expense_desc=',expense_desc)
-        #format_str = '%mm/%dd/%YYYY' # The format
-        #sale_date = datetime.datetime.strptime(sale_date, format_str)
-        #print('sale_date=',sale_date)
+        split_date = sale_date.split("/")
+        print('split_date =',split_date)
+        
+        sale_date = split_date[2] + "-" + split_date[0] + "-" + split_date[1] # Formate 'YYYY-MM-DD'
+        print('sale_date=',sale_date)
         
         
         print('item_name=',item_name)
@@ -1248,9 +1367,100 @@ def save_expenses_csv(delete):
         else:
             interval_save = True
         print('interval_save=',interval_save)
-        Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc,  item=item_name, item_desc=item_desc,
+        Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc,  item=item_name, item_desc=item_desc, sale_date=sale_date,
                             quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                                     
+                             
+                                   
+
+def save_invoices_csv(delete):               
+    #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
+    import csv
+    timestamp  = date.today()
+    CSV_PATH = 'C:\\src\\ats\\accounts\\Invoices.csv'
+    print('csv = ',CSV_PATH)
+   
+   # Remove all data from Table
+    if delete=='yes':
+        Invoice.objects.all().delete()
+      
+    f = open(CSV_PATH)
+    reader = csv.reader(f)
+    print('reader = ',reader)
+    for id, invoice_desc, client_id, staff_id, invoice_date, paid in reader:
+        print('id=',id)
+        print('client_id=',client_id)
+        print('staff_id=',staff_id)
+        print('invoice_date=',invoice_date)
+        print('paid=',paid)
+        split_date = invoice_date.split("/")
+        print('split_date =',split_date)
+        
+        invoice_date = split_date[2] + "-" + split_date[0] + "-" + split_date[1] # Formate 'YYYY-MM-DD'
+        charge_code =  split_date[0] + split_date[1] + split_date[2] # Format 'MMDDYYYY'
+        print('invoice_date =',invoice_date)
+        print('charge_code =',charge_code)
+        
+        
+        if paid=='FALSE':
+            paid = False
+        else:
+            paid = True
+        print('interval_save=',interval_save)
+        Invoice.objects.create(client_id=client_id, staff_id=staff_id, invoice_desc=invoice_desc,  charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
+        
+def save_invoice_item_csv(delete):               
+    #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
+    import csv
+    timestamp  = date.today()
+    CSV_PATH = 'C:\\src\\ats\\accounts\\Invoce_items.csv'
+    print('csv = ',CSV_PATH)
+   
+         
+    f = open(CSV_PATH)
+    reader = csv.reader(f)
+    print('reader = ',reader)
+    for id, invoice_id, contractor_id, client_id, staff_id, charge_code, resource_name, resource_type, service_type, item_date, quantity, rate, total, active in reader:
+        print('id=',id)
+        print('contractor_id=',contractor_id)
+        print('invoice id=',invoice_id)
+        print('client_id=',client_id)
+        print('staff_id=',staff_id)
+        print('charge_code=',charge_code)
+        charge = Charge_Code.objects.filter(charge=charge_code)
+        print('charge=',charge)
+        charge_id = charge[0].id
+        print('charge_id=',charge_id)
+        
+        service = Contractors.objects.filter(id=contractor_id)
+        service_provider= service[0].name
+        
+        print('resource_name=',resource_name)
+        print('resource_type=',resource_type)
+        print('service_provider=',service_provider)
+        print('service_type=',service_type)
+        print('quantity=',quantity)
+        print('rate=',rate)
+        print('total=',total)
+        print('active=',active)
+        split_date = item_date.split("/")
+        print('split_date =',split_date)
+        
+        item_date = split_date[2] + "-" + split_date[0] + "-" + split_date[1] # Formate 'YYYY-MM-DD'
+        print('item_date=',item_date)
+        
+        cost_type= 'Per Hour'
+        print('cost_type =',cost_type)
+        print('charge_code =',charge_code)
+        
+        
+        if active=='FALSE':
+            active = False
+        else:
+            active = True
+        
+        Invoice_Item.objects.create(invoice_id=invoice_id, client_id=client_id, charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,  service_type=service_type,
+                                service_provider=service_provider ,cost_type=cost_type,  rate=rate, quantity=quantity, total=total, active=active, item_date=item_date, last_update=timestamp)
+
 
 class IncomeView(View):
   

@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-<body onload="check_start()">
+<body >
    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@
 			</div>
 		</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<form action = "{% url 'accounts:new_invoice' %}" method="post">
+	<form action = "{% url 'accounts:invoice_update' %}" method="post">
 		{% csrf_token %}
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-invoices-center pt-3 pb-2 mb-3 border-bottom">
 			<h2 class="text-center">Reconsile Invoice</h2>
@@ -134,9 +134,9 @@
 				<div class="form-group">
 					<label for="_quantity">Invoice Date</label>
 					{% if invoice == -1 %}
-						<input type = "date" id = "_invoice_date"  name = "_invoice_date" input class="form-control"  required>
+						<input type = "date"  id = "_invoice_date"  name = "_invoice_date" input class="form-control"  required>
 					{% else %}
-						<input  id = "_invoice_date"  name = "_invoice_date" input class="form-control"  value = "{{invoice.invoice_date}}" required>
+						<input id = "_invoice_date"  name = "_invoice_date" input class="form-control"  value = "{{this_date}}" required>
 					{% endif %}
 				</div>	
 			</div>
@@ -217,6 +217,19 @@
 					{% endif %}
 				</div>	
 			</div>
+			<div class="col-sm-1 col-lg-2 grid-col">
+					<div class="form-group">
+						<div class="form-check">
+							{% if paid == 'on' %}
+								<input type="checkbox" class="form-check-input" id="_paid" name="_paid" checked = 'checked' onclick="paid();"/>
+								<label class="form-check-label" id ="_paid_status" >&nbsp;&nbsp;&nbsp;&nbsp;Paid</label>
+							{% else %}
+								<input type="checkbox" class="form-check-input" id="_paid" name="_paid"  onclick="paid();"/>
+								<label class="form-check-label" id ="_paid_status">&nbsp;&nbsp;&nbsp;&nbsp;Unpaid</label>
+							{% endif %}
+						</div>
+					</div>	
+				</div>
 			<div class="col-sm-1 col-lg-1 grid-col">
 				<div class="form-group"></div>	
 			</div>
@@ -225,7 +238,6 @@
 					<button type="submit" id = "_delete" name = "_print"  class="btn btn-info">Print Invoice&nbsp;</button>
 				</div>
 			</div>
-			
 		</div>
 	</form>
 		<div class="table-responsive" Method = "POST">
