@@ -138,8 +138,21 @@
     </div>
     </nav>
     <div class="container-fluid">
-        <div class="d-sm-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-uppercase text-dark mb-0"><strong>Dashboard</strong></h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
+		<form action = "{% url 'dashboard:dashboard' %}" method="post">
+			{% csrf_token %}
+			<div class="d-sm-flex justify-content-between align-items-center mb-4">
+				<h3 class="text-uppercase text-dark mb-0"><strong>Dashboard</strong></h3>
+				{% if send_date == -1%}
+					<a>select new date
+					<input type="date" onchange="this.form.submit()" id = "_date" name = "_date" value = '{{send_date}}' >
+				{% else %}
+					<a>selected date
+					<input type="date" onchange="this.form.submit()" id = "_date" name = "_date" value = '{{send_date}}' >
+				{% endif %}	
+				</a>
+		</form>
+			
+			<a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
         <div
             class="row">
             <div class="col-md-6 col-xl-3 mb-4">
@@ -147,8 +160,8 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue (monthly)</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">$40,000</span></div>
+                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{rev_month}}</span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -160,8 +173,8 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Profit (Monthly)</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">$215,000</span></div>
+                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Expenses ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">${{exp_month}}</span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -173,8 +186,8 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Quantity of Invoices</span></div>
-                                <div class="row no-gutters align-items-center"><span style="color: #ffffff;height: 25;font-size: 50;"><strong>9</strong></span></div>
+                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{year}})</span></div>
+                                <div class="row no-gutters align-items-center"><span style="color: #ffffff;height: 25;font-size: 50;"><strong>${{rev_year}}</strong></span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -186,8 +199,8 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Value of Stock</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">$982,156</span></div>
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Profit ({{year}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{profit}}</span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -197,129 +210,110 @@
     </div>
     <div class="row">
         <div class="col">
-            <h5 class="text-uppercase"><strong>This Month Invoices Status</strong></h5>
+            <h5 class="text-uppercase"><strong>{{month_full}} Invoices</strong></h5>
             <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase d-xl-flex justify-content-xl-start">Customer</th>
-                            <th class="text-uppercase">Status</th>
-                            <th class="text-uppercase">Order Date</th>
-                            <th class="text-uppercase d-xl-flex justify-content-xl-center">Order ID</th>
-                            <th class="text-uppercase">Items</th>
-                            <th class="text-uppercase">Cost</th>
-                            <th class="text-uppercase">Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="d-xl-flex justify-content-xl-start">Cell 1</td>
-                            <td>Cell 2</td>
-                            <td>Cell 3</td>
-                            <td class="d-xl-flex justify-content-xl-center">Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 6</td>
-                            <td>Cell 6</td>
-                        </tr>
-                        <tr>
-                            <td>Cell 1</td>
-                            <td>Cell 2</td>
-                            <td>Cell 3</td>
-                            <td class="d-xl-flex justify-content-xl-center">Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 6</td>
-                            <td>Cell 6</td>
-                        </tr>
-                        <tr>
-                            <td>Cell 3</td>
-                            <td>Cell 4</td>
-                            <td>Cell 3</td>
-                            <td class="d-xl-flex justify-content-xl-center">Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 6</td>
-                            <td>Cell 6</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <table id = "table_id" class="table table-striped table-sm">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>CLIENT ID</th>
+							<th>INVOICE DESCRIPTION</th>
+							<th>CHARGE CODE</th>
+							<th>INVOICE DATE</th>
+							<th>TOTAL</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in invoice_month %}
+							<tr>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.id}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.client_id}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.invoice_desc}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.charge_code}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.invoice_date}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.total}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
             </div>
-            <h5 class="text-uppercase"><strong>Active Client Income</strong></h5>
+            <h5 class="text-uppercase"><strong>Unpaid Invoices</strong></h5>
             <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase">Client ID</th>
-                            <th class="text-uppercase">Name</th>
-                            <th class="text-uppercase">Address</th>
-                            <th class="text-uppercase">Number Ordered</th>
-                            <th class="text-uppercase">Stock Quantity</th>
-                            <th class="text-uppercase">Cost Per Item</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Cell 1</td>
-                            <td>Cell 2</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                        </tr>
-                        <tr>
-                            <td>Cell 3</td>
-                            <td>Cell 4</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                            <td>Cell 3</td>
-                        </tr>
-                        <tr>
-                            <td>Cell 1</td>
-                            <td>Cell 2</td>
-                            <td>Cell 3</td>
-                            <td>Cell 4</td>
-                            <td>Cell 5</td>
-                            <td>Cell 6</td>
-                        </tr>
-                        <tr></tr>
-                    </tbody>
-                </table>
+                <table id = "table_id" class="table table-striped table-sm">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>CLIENT ID</th>
+							<th>INVOICE DESCRIPTION</th>
+							<th>CHARGE CODE</th>
+							<th>INVOICE DATE</th>
+							<th>TOTAL</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in invoice_unpaid %}
+							<tr>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.id}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.client_id}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.invoice_desc}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.charge_code}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.invoice_date}}</td>
+								<td><a class="nav-link" href="{% url 'accounts:invoice_update' %}?invoice_id={{item.id}}">{{item.total}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
             </div>
         </div>
     </div>
     <div class="row">
+		<input type='hidden' id ='_labels' name = '_labels' value = "{{months}}" />
+		<input type='hidden' id ='_x1' name = '_x1' value = "{{expen}}" />
+		<input type='hidden' id ='_x2' name = '_x2' value = "{{incom}}" />
         <div class="col-lg-7 col-xl-8">
             <div class="card shadow mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="text-primary font-weight-bold m-0">Year to Date Income Report</h6>
+                    <h6 class="text-primary font-weight-bold m-0">Year to Date Income Report  ({{year}})</h6>
                     <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
                         <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
                             <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
                             <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a></div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas data-bs-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Earnings&quot;,&quot;fill&quot;:true,&quot;data&quot;:[&quot;0&quot;,&quot;10000&quot;,&quot;5000&quot;,&quot;15000&quot;,&quot;10000&quot;,&quot;20000&quot;,&quot;15000&quot;,&quot;25000&quot;],&quot;backgroundColor&quot;:&quot;rgba(78, 115, 223, 0.05)&quot;,&quot;borderColor&quot;:&quot;rgba(78, 115, 223, 1)&quot;}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false},&quot;title&quot;:{},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;],&quot;drawOnChartArea&quot;:false},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;padding&quot;:20}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;]},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;padding&quot;:20}}]}}}"></canvas></div>
-                </div>
+                <div style="width:68%;">
+					<canvas id="canvas"></canvas>
+				</div>
             </div>
         </div>
         <div class="col-lg-5 col-xl-4">
-            <div class="card shadow mb-4"></div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="text-primary font-weight-bold m-0">Most Purchased Products</h6>
+                    <h6 class="text-primary font-weight-bold m-0">Most Purchased Products ({{year}})</h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small font-weight-bold">Simba Program<span class="float-right">20%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="sr-only">5%</span></div>
+                    <h4 class="small font-weight-bold">Windows Appications<span class="float-right">{{win}}%</span></h4>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{win}}%;"><span class="sr-only">{{win}}%</span></div>
                     </div>
-                    <h4 class="small font-weight-bold">ATE Application<span class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="sr-only">80%</span></div>
+                    <h4 class="small font-weight-bold">ATE Applications<span class="float-right">{{ate}}%</span></h4>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ate}}%;"><span class="sr-only">{{ate}}%</span></div>
                     </div>
-                    <h4 class="small font-weight-bold">Web Applications<span class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="sr-only">20%</span></div>
+                    <h4 class="small font-weight-bold">Web Applications<span class="float-right">{{web}}%</span></h4>
+                    <div class="progress mb-5">
+                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{web}}%;"><span class="sr-only">{{web}}%</span></div>
+                    </div>
+					<h4 class="small font-weight-bold">Manual Test Fixtures<span class="float-right">{{man}}%</span></h4>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-warning" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{man}}%;"><span class="sr-only">{{man}}%</span></div>
+                    </div>
+					<h4 class="small font-weight-bold">Automated Test Fixtures<span class="float-right">{{auto}}%</span></h4>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-success progress-bar-striped" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{auto}}%;"><span class="sr-only">{{auto}}%</span></div>
+                    </div>
+					<h4 class="small font-weight-bold">Robot Test Fixtures<span class="float-right">{{robot}}%</span></h4>
+                    <div class="progress mb-2">
+                        <div class="progress-bar progress-bar-striped active" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{robot}}%;"><span class="sr-only">{{robot}}%</span></div>
                     </div>
                 </div>
             </div>

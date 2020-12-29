@@ -8,6 +8,7 @@ from atspublic import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^', include("background_app.urls")),
     url(r'^$',views.index,name='public'),
     path('staff/', include("users.urls")),
     path('', include("atspublic.urls")),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('accounts/', include("accounts.urls")),
     path('dashboard/', include("dashboard.urls")),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 #if settings.DEBUG:
     #urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  

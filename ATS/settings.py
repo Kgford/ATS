@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'vendor',
     'background_task',
+    'background_app',
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',

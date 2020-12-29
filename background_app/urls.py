@@ -1,0 +1,1 @@
+from django.conf.urls import urlfrom .views import background_viewurlpatterns = [url(r'^/',background_view,name='background_view'), ]

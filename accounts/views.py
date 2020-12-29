@@ -389,6 +389,8 @@ class InvoiceItemView(View):
                 active = item.active
                 if active=='on':
                     active = True
+                date= item.item_date
+                print('date=',date)
                 contractor_id = item.contractor_id
                 contractor = Contractors.objects.filter(id=contractor_id)
                 contractor = contractor[0].name
@@ -473,6 +475,8 @@ class InvoiceItemView(View):
             print('invoice =',invoice)
             active = request.POST.get('_active', False)
             print('active =',active)
+            invoice_id = request.POST.get('_invoice_id', -1)
+            print('invoice_id  =',invoice_id )
             
             save_item = request.POST.get('_save', -1)
             print('save_item =',save_item)
@@ -515,7 +519,7 @@ class InvoiceItemView(View):
                 print('client_id=',client_id)
                 print('contractor_id=',contractor_id)
                 print('charge_id=',charge_id)
-                Invoice_Item.objects.filter(id=item_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, invoice_id=0, 
+                Invoice_Item.objects.filter(id=item_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, invoice_id=invoice_id, 
                                         cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
                 exp=-1
             elif not save_item==-1:
@@ -526,7 +530,7 @@ class InvoiceItemView(View):
                     print('client_id=',client_id)
                     print('contractor_id=',contractor_id)
                     print('charge_id=',charge_id)
-                    Invoice_Item.objects.create(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,service_type=service_type, invoice_id=0,
+                    Invoice_Item.objects.create(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,service_type=service_type,
                                         cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
         except IOError as e:
             print ("Lists load Failure ", e)
@@ -558,7 +562,6 @@ class SearchInvoiceView(View):
             year_list=[]
             for year1 in years:
                 year1 = str(year1)
-                print('year1=',year1)
                 dt = year1.split('-')
                 year_list.append(dt[0])
             year_list = list(OrderedDict.fromkeys(year_list))
@@ -601,7 +604,6 @@ class SearchInvoiceView(View):
             year_list=[]
             for year1 in years:
                 year1 = str(year1)
-                print('year1=',year1)
                 dt = year1.split('-')
                 year_list.append(dt[0])
             year_list = list(OrderedDict.fromkeys(year_list))
@@ -742,7 +744,8 @@ class CreateInvoiceView(View):
                 item = Invoice_Item.objects.filter(id=item_id)
                 item = item[0] 
                 item_desc = item.item_desc
-                item_date = item.item_desc
+                item_date = item.item_date
+                print('item_date=',item_date)
                 resource_type = item.resource_type
                 contractor_id = item.contractor_id
                 client_id = item.client_id
@@ -750,24 +753,29 @@ class CreateInvoiceView(View):
                 client = client[0].name
                 Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
                 # Add travel costs to Expenses if required
+                print('resource_type.upper()=',resource_type.upper())
+                print(search(resource_type.upper(),'SITE'))
                 if search('SITE', resource_type.upper()) or search('SITE', item_desc.upper()):
                     travel_rate = 0.545
-                    distance = Equations.travel_distance(client_id,contractor_id)
+                    get_distance = Equations(client_id,contractor_id)
+                    distance = get_distance.travel_distance()
                     print('distance =',distance)
                     expense_type = 'Travel Expenses'
-                    expense_description = 'Travel'
+                    expense_description = 'Travel to ' + client
                     item_desc = 'Travel Distance = ', round(distance, 2)
                     exp_item = 'Travel'
                     quantity = 1
-                    item_cost =  round(distance * TravelRate, 3)
+                    item_cost =  round(distance * travel_rate, 3)
                     total_cost = item_cost
                     if Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).exists():
+                        print('expense exists. update existing')
                         if active==False:
                             Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).delete()
                         else:
-                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).update(item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).update(expense_description=expense_description,item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
                     else:
-                        Expenses.objects.create(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id, item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                        print('expense does not exist. create new')
+                        Expenses.objects.create(expense_description=expense_description,expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id, item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
                         
                     
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
@@ -826,11 +834,7 @@ class CreateInvoiceView(View):
             print('invoice_id=',invoice_id)
             client = request.POST.get('_client', -1)
             print('client =',client)
-            client_id = Clients.objects.filter(name=client).all()
-            print('client_id =',client_id)
-            client_id = client[0]
-            print('client_id =',client_id)
-            
+                      
             
             invoice_desc = request.POST.get('_invoice_desc',-1)
             print('invoice_desc =',invoice_desc)
@@ -844,6 +848,7 @@ class CreateInvoiceView(View):
                 print('split_charge =',split_charge)
                 charge_code = split_charge[1] + split_charge[2] + split_charge[0]
                 print('charge_code =',charge_code)
+            
             invoice = request.POST.get('_invoice',-1)
             print('invoice =',invoice)
             active = request.POST.get('_active', False)
@@ -867,6 +872,7 @@ class CreateInvoiceView(View):
             if  invoice_id :
                 invoice = Invoice.objects.filter(id=invoice_id)
                 invoice = invoice[0] 
+                invoice_date = invoice.invoice_date
                 print('invoice-',invoice)
                 client_id = invoice.client_id
                 client = Clients.objects.filter(id=client_id)
@@ -896,6 +902,7 @@ class CreateInvoiceView(View):
                 invoice_item = Invoice_Item.objects.filter(client_id=client_id, active=True).all()
                 staff_id=self.request.user.id
             
+            print('client_id =',client_id)
             print('staff_id =',staff_id)
             print('active =',active)
             print('client_list =',client_list)
@@ -933,10 +940,8 @@ class CreateInvoiceView(View):
             elif not update_invoice==-1:
                 #update invoice	
                 print('client_id=',client_id)
-                print('contractor_id=',contractor_id)
-                print('charge_id=',charge_id)
                 Invoice.objects.filter(id=invoice_id).update(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
-                exp=-1
+                return HttpResponseRedirect(reverse('accounts:invoice'))
             elif not save_invoice==-1 :
                 if Invoice.objects.filter(invoice_desc=invoice_desc, charge_code=charge_code, invoice_date=invoice_date).exists():
                     invoice_id = Invoice.objects.filter(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp).first()  
@@ -969,6 +974,7 @@ class CreateInvoiceView(View):
                 print('invoice_list=',invoice_list)
                 print('invoice_item_list=',invoice_item_list)
                 print('invoice=',invoice.id)
+                
                                  
         except IOError as e:
             print ("Lists load Failure ", e)
@@ -1190,7 +1196,7 @@ class ReconsileInvoiceView(View):
             elif not update_invoice==-1:
                 #update invoice	
                 print('client_id=',client_id)
-                Invoice.objects.filter(id=invoice_id).update(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=save_paid, invoice_date=this_date, last_update=timestamp)
+                Invoice.objects.filter(id=invoice_id).update(total=total, client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=save_paid, invoice_date=this_date, last_update=timestamp)
                 
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
@@ -1211,6 +1217,7 @@ class ReconsileInvoiceView(View):
                 print('invoice_list=',invoice_list)
                 print('invoice_item_list=',invoice_item_list)
                 print('invoice=',invoice.id)
+                return HttpResponseRedirect(reverse('accounts:invoice'))
                                  
         except IOError as e:
             print ("Lists load Failure ", e)
