@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate
 from accounts.models import Expenses, Invoice_Item, Charge_Code, Income, Invoice
 from dashboard.models import Income_report
 import datetime
-import numpy as np
 import time
 
 
