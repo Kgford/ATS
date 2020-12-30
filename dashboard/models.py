@@ -4,12 +4,25 @@ from datetime import datetime
 class Income_report(models.Model):
     id = models.AutoField(primary_key=True)
     client_id = models.IntegerField(null=True,unique=False)
+    month_str = models.CharField("month_str",max_length=100,null=False,unique=False) 
+    month = models.IntegerField(null=False,unique=False)
+    year = models.IntegerField(null=False,unique=False)
+    income_paid = models.FloatField("income_paid", null=True,unique=False)
+    income_unpaid = models.FloatField("income_unpaid", null=True,unique=False)
+    income_total = models.FloatField("income_total", null=True,unique=False)
+    expense = models.FloatField("expense",max_length=100,null=True,unique=False) 
+    last_update = models.DateField(default=datetime.now,null=True)
+    
+class IncomeExpense_report(models.Model):
+    id = models.AutoField(primary_key=True)
+    client_id = models.IntegerField(null=True,unique=False)
     month_str = models.CharField("charge_type",max_length=100,null=False,unique=False) 
     month = models.IntegerField(null=False,unique=False)
     year = models.IntegerField(null=False,unique=False)
     income_paid = models.FloatField("income_paid", null=True,unique=False)
     income_unpaid = models.FloatField("income_unpaid", null=True,unique=False)
-    expense = models.CharField("charge code",max_length=100,null=True,unique=False,default='N/A') 
+    income_total = models.FloatField("income", null=True,unique=False)
+    expense = models.FloatField("expense",max_length=100,null=True,unique=False) 
     last_update = models.DateField(default=datetime.now,null=True)
 
 

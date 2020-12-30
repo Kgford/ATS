@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Income Manager</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-incanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
@@ -18,25 +18,21 @@
 				<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'accounts:income' %}" aria-disabled="true">Income&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				<li class="nav-item  ">
-					<span data-feather="clipboard"></span>
-					<a class="nav-link" href="{% url 'accounts:new_income' %}">New Income</a>
+				<li class="nav-item ">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'client:client' %}">Client&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
 					<span data-feather="dollar-sign"></span>
-					<a class="nav-link" href="{% url 'client:client' %}">New Client&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-item ">
-				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
-				</li>
-				<li class="nav-item ">
-				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
+					<a class="nav-link" href="{% url 'vendor:vendor' %}">Vendor or Store&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
 				<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
+				<li class="nav-item ">
+				<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>
 			<form class="form-inline mt-4 mt-md-0 col-lg-4" method="post" action="{% url 'accounts:income' %}">
@@ -87,7 +83,7 @@
 		</div>	
 	</div>
 	<h4 class="text-center">ATS Income Search</h4>
-		<a class="nav-link text-center" href="{% url 'accounts:new_income' %}">Add New Income</a>
+		<a class="nav-link text-center" href="{% url 'accounts:income' %}">Add New Income</a>
 		<p>&nbsp;</p>
         <form method="post" id="selectForm" dropdown-url="{% url 'accounts:income' %}" action="{% url 'accounts:income' %}" >
 			{% csrf_token %}
@@ -99,7 +95,7 @@
 						<select id='_year' name = "_year" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
 							{% if year != -1 %}
 								<option selected>{{year}}</option>
-								<option data-desc = 'model', value = "select menu">all years</option>
+								<option data-desc = 'model', value = "all years">all years</option>
 							{% else %}
 								<option selected>all years</option>
 							{% endif %}	
@@ -111,87 +107,61 @@
 				</div>
 				<div class="col-sm-2 col-lg-2 grid-col">
 					<div class="form-group">
-						<label>Income Type <span class="k-required"></span></label>
+						<label>Month <span class="k-required"></span></label>
 						<input type='hidden' name='yearl' data-select='model'/>
-						<select id='_inc_type' name = "_inc_type" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
-							{% if income_type != -1 %}
-								<option selected>{{income_type}}</option>
-								<option data-desc = 'inc_type', value = "select menu">select menu</option>
+						<select id='_month' name = "_month" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
+							{% if month != -1 %}
+								<option selected>{{month}}</option>
+								<option data-desc = 'inc_type', value = "all months">all months</option>
 							{% else %}
-								<option selected>select menu</option>
+								<option selected>all months</option>
 							{% endif %}	
-							{% for type in type_list %}
-								<option data-desc = 'inc_type', value = "{{type}}">{{type}}</option>
+							{% for mon in month_list %}
+								<option data-desc = 'inc_type', value = "{{mon}}">{{mon}}</option>
 							{% endfor %}
 						</select>
 					</div>	
 				</div>
-				<div class="col-sm-2 col-lg-2 grid-col">
-					<div class="form-group">
-						<label>Income Description <span class="k-required"></span></label>
-						<input type='hidden' name='inc_desc' data-select='model'/>
-						<select id='_inc_desc' name = "_inc_desc" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
-							{% if income_desc != -1 %}
-								<option selected>{{income_desc}}</option>
-								<option data-desc = 'inc_desc', value = "select menu">select menu</option>
-							{% else %}
-								<option selected>select menu</option>
-							{% endif %}	
-							{% for desc in desc_list %}
-								<option data-desc = 'inc_desc', value = "{{desc}}">{{desc}}</option>
-							{% endfor %}
-						</select>
-					</div>	
-				</div>
-				<div class="col-sm-2 col-lg-2 grid-col">
-					<div class="form-group">
-						<label>Client <span class="k-required"></span></label>
-						<input type='hidden' name='inc_desc' data-select='model'/>
-						<select id='_client' name = "_client" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
-							{% if client != -1 %}
-								<option selected>{{client}}</option>
-								<option data-desc = 'client', value = "select menu">select menu</option>
-							{% else %}
-								<option selected>select menu</option>
-							{% endif %}	
-							{% for cli in client_list %}
-								<option data-desc = 'inc_desc', value = "{{cli}}">{{cli}}</option>
-							{% endfor %}
-						</select>
-					</div>	
-				</div>
+				
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
 						<label>Income Total<span class="k-required"></span></label>
 						<input  name='_total' id='_total' value = "${{total}}"/>
 					</div>
 				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label>Expense Total<span class="k-required"></span></label>
+						<input  name='_total' id='_total' value = "${{exp_total}}"/>
+					</div>
+				</div>
 			</div>	
+	
 	</form>	
 		<h2 class="text-center">Income List</h2>
 		<div class="table-responsive" Method = "POST">
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
 					<tr>
-					  <th>Income Type</th>
-					  <th>Income Descripton</th>
-					  <th>Income Date</th>
-					  <th>Item Description</th>
-					  <th>Quantity</th>
-					  <th>Item Cost</th>
-					  <th>Total Cost</th>
+					  <th>Income id</th>
+					  <th>Income Month</th>
+					  <th>Income Year</th>
+					  <th>Paid</th>
+					  <th>Unpaid</th>
+					  <th>Total</th>
+					  <th>Expense</th>
 					</tr>
 			    </thead>
 				<tbody>
-					{% for inc1 in income_list %}
+					{% for inc1 in income %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.income_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.income_description}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.sale_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.quantity}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.item_cost}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_income' %}?income_id={{inc1.id}}&invoice_id={{inc1.invoice_id}}&client_id={{inc1.client_id}}">{{inc1.total_cost}}</td>
+							<td><a class="nav-link">{{inc1.id}}</td>
+							<td><a class="nav-link">{{inc1.month_str}}</td>
+							<td><a class="nav-link">{{inc1.year}}</td>
+							<td><a class="nav-link">{{inc1.income_paid}}</td>
+							<td><a class="nav-link">{{inc1.income_unpaid}}</td>
+							<td><a class="nav-link">{{inc1.income_total}}</td>
+							<td><a class="nav-link">{{inc1.expense}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

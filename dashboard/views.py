@@ -5,15 +5,132 @@ from django.urls import reverse,  reverse_lazy
 from django.views import View
 from django.contrib.auth import authenticate
 from accounts.models import Expenses, Invoice_Item, Charge_Code, Income, Invoice
+from dashboard.models import Income_report
 import datetime
+import numpy as np
+import time
 
 
 class DashboardView(View):
     template_name = "index.html"
     success_url = reverse_lazy('dashboard:dashboard')
-        
     def get(self, *args, **kwargs):
         try:
+            
+            
+            
+            '''
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            thisyear = dt.year
+            thismonth = dt.month
+            thisday = dt.day
+            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            monthstr = months[str(thismonth)]
+            invoices = Invoice.objects.all()
+            print('invoices=',invoices)
+            for y in range(2017, int(dt.year) + 1):
+                for m in range(1, int(dt.month) + 1):
+                    temp_date = str(y) + "-" + str(m)  + "-" + str(1)
+                    invoices = Invoice_Item.objects.filter(item_date__month=m, item_date__year=y).all()
+                    print(invoices)
+                    total=0
+                    if invoices:
+                        for inv in invoices:
+                            total = inv.total
+                            invoice_date = inv.item_date
+                            print('invoice_date =',invoice_date)
+                            client_id = inv.client_id
+                            print('client_id =',client_id)
+                            if inv.total:
+                                total = total + float(inv.total)
+                            print('total =',total)
+                            paid = True
+                            print('paid =',paid)
+                            income = total
+                            if paid:
+                                income_paid = total
+                                income_unpaid = 0
+                            else:
+                                income_paid = 0
+                                income_unpaid = total
+                            
+                            print('invoice_date =',invoice_date)
+                            invoice_date=str(invoice_date)
+                            split_date = invoice_date.split("-")
+                            year = int(split_date[0])
+                            print('year =',year)
+                            month = int(split_date[1])
+                            print('month =',month)
+                            day = int(split_date[2])
+                            print('day =',day)
+                            temp_year = year
+                            temp_month = month
+                            monthstr = months[str(temp_month)]
+                            temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
+                                              
+                        monthstr = months[str(m)]
+                        temp_date = str(y) + "-" + str(m)  + "-" + str(day)
+                        if not Income_report.objects.filter(month=m, year=y).exists():
+                            Income_report.objects.create(client_id=client_id, month_str=monthstr, month=m, year=y,
+                                                  income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
+                        else:
+                            Income_report.objects.filter(month=temp_month, year=y).update(income_total=income, income_paid=income_paid, income_unpaid=income_unpaid)
+                            
+                        if not Income.objects.filter(month=m, year=y).exists():
+                            Income_report.objects.create(client_id=client_id, month_str=monthstr, month=m, year=y,
+                                                  income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
+                        else:
+                            Income_report.objects.filter(month=temp_month, year=y).update(income_total=income, income_paid=income_paid, income_unpaid=income_unpaid)
+                        
+                        print('income_total =',income)                          
+                        print('updated income report for date: ',temp_date)
+                        #time.sleep(5)
+                
+            
+            for y in range(2017, int(dt.year) + 1):
+                for m in range(1, int(dt.month) + 1):
+                    expenses = Expenses.objects.filter(sale_date__month=m, sale_date__year=y).all()
+                    temp_date = str(y) + "-" + str(m)  + "-" + str(1)
+                    print('expenses=',expenses)
+                    if expenses:
+                        total = 0
+                        for exp in expenses:
+                            sale_date = exp.sale_date
+                            print('sale_date =',sale_date)
+                            if exp.total_cost:
+                                total = total + float(exp.total_cost)
+                            print('expense_total =',total)
+                            sale_date=str(sale_date)
+                            split_date = sale_date.split("-")
+                            year = int(split_date[0])
+                            print('year =',year)
+                            month = int(split_date[1])
+                            print('month =',month)
+                            day = 1
+                            print('day =',day)
+                            temp_year = year
+                            temp_month = month
+                            temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
+                            print('temp_date =',temp_date)
+                            print('total =',total)
+                            
+                        
+                        Income_report.objects.filter(month=m, year=y).update(expense=total)
+                        print('updated income report expenses for date: ',temp_date)
+                        print('total =',total)
+                        #time.sleep(5)
+                        '''          
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             send_date = -1
             timestamp = date.today()
             dt = datetime.datetime.today()
@@ -28,6 +145,7 @@ class DashboardView(View):
             month_full = full_months[str(thismonth)]
             print('month =',month)
             operator = str(self.request.user)
+            avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             #search for monthly invoices
             invoice_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
             
@@ -59,15 +177,27 @@ class DashboardView(View):
             #search for all unpaid invoices
             invoice_unpaid = Invoice.objects.filter(paid=False).all()
             
-            #search for income report chart data
+            #calculate yearly profit
             profit = round(float(rev_year)-float(exp_year),2)
-            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
-            expen = [10, 30, 20, 100, 200, 20, 500, 3, 20, 5, 100]
-            incom = [102, 50, 20, 12, 500, 40, 100, 60, 50, 10, 300]
             
+            #search for income report chart data
+            income_report = Income_report.objects.filter(year=thisyear)
+            months = []
+            expen = []
+            incom = []
+            montharray = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            for report in income_report:
+                months.append(montharray[str(report.month)])
+                expen.append(float(report.income_paid))
+                incom.append(float(report.expense))
+            print('months=',months)
+            print('expen=',expen)
+            print('incom=',incom)
+            #time.sleep(5)
+            
+           
             #search for most purchased Products for the year
             items_month = Invoice_Item.objects.filter(item_date__year=thisyear)
-            rev_month=0
             ate=0
             win=0
             web=0
@@ -101,7 +231,7 @@ class DashboardView(View):
            print('error = ',e) 
         return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
                                                             'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+                                                             'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
  
     def post(self, request, *args, **kwargs):
         try:
@@ -136,6 +266,7 @@ class DashboardView(View):
             month_full = full_months[str(thismonth)]
             #print('month =',month)
             operator = str(self.request.user)
+            avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             #search for monthly invoices
             invoice_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
             
@@ -209,7 +340,7 @@ class DashboardView(View):
            print('error = ',e) 
         return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
                                                             'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+                                                             'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
                                
                                                             
                                                             

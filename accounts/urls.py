@@ -10,7 +10,6 @@ from accounts.views import (
     ExpensesView,
     SaveExpensesView,
     IncomeView,
-    SaveIncomeView,
     InvoiceItemView,
     CreateInvoiceView,
     SearchInvoiceView,
@@ -25,8 +24,7 @@ urlpatterns =[
     path('expenses', login_required(ExpensesView.as_view(template_name="expense.html")), name='expenses'),
     path('new_expense', login_required(SaveExpensesView.as_view(template_name="save_expenses.html")), name='new_expense'),
     path('income', login_required(IncomeView.as_view(template_name="income.html")), name='income'),
-    path('new_income', login_required(SaveIncomeView.as_view(template_name="save_income.html")), name='new_income'),
-    
+        
     path('invoice', login_required(SearchInvoiceView.as_view(template_name="invoice.html")), name='invoice'),
     path('invoice_item', login_required(InvoiceItemView.as_view(template_name="invoice_item.html")), name='invoice_item'),
     path('new_invoice', login_required(CreateInvoiceView.as_view(template_name="create_invoice.html")), name='new_invoice'),

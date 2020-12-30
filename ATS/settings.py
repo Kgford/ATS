@@ -16,8 +16,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
 STATIC_URL = '/static/'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'users/user_login'
-LOGOUT_REDIRECT_URL = 'users/user_login' 
+LOGIN_REDIRECT_URL = 'staff/user_login'
+LOGOUT_REDIRECT_URL = 'staff/user_login' 
 
 
 # Quick-start development settings - unsuitable for production
@@ -150,4 +150,4 @@ USE_TZ = True
 SESSION_EXPIRE_SECONDS = 3600  # 1 hour
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60
-SESSION_TIMEOUT_REDIRECT = 'users/user_login'
+SESSION_TIMEOUT_REDIRECT = 'staff/user_login'
