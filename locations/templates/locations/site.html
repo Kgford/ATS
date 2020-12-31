@@ -13,12 +13,16 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 				<li class="nav-item">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'inventory:inven' %}" aria-disabled="true">Inventory&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'inventory:items' %}" aria-disabled="true">Inventory Items&nbsp;&nbsp;&nbsp;</a>
 				</li><li class="nav-item">
 					<span data-feather="clipboard"></span>
@@ -29,16 +33,16 @@
 					<a class="nav-link" href="{% url 'equipment:newmodel' %}">New Equipment&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item  active">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'locations:location' %}" aria-disabled="true">Equipment Locations&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>

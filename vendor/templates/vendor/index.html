@@ -13,8 +13,12 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 				<li class="nav-item">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'accounts:expenses' %}" aria-disabled="true">Expense&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
@@ -30,11 +34,11 @@
 					<a class="nav-link" href="{% url 'vendor:vendor' %}">New Vendor or Store&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>

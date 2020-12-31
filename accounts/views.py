@@ -17,7 +17,6 @@ from contractors.models import Contractors
 from django.views import View
 import datetime
 from collections import OrderedDict
-from django.contrib.auth.decorators import login_required
 from ATS.overhead import Equations
 from re import search
 
@@ -231,7 +230,7 @@ class ExpensesView(View):
         return render (self.request,"accounts/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
-           
+       
 class SaveExpensesView(View):
     template_name = "save_expenses.html"
     success_url = reverse_lazy('accounts:new_expense')
@@ -370,7 +369,6 @@ class SaveExpensesView(View):
             print('error = ',e) 
         return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
         
-
 class InvoiceItemView(View):
     template_name = "invoice_item.html"
     success_url = reverse_lazy('accounts:invoice_item')
@@ -537,6 +535,7 @@ class InvoiceItemView(View):
             print ("Lists load Failure ", e)
             print('error = ',e) 
         return HttpResponseRedirect(reverse('accounts:invoice_item'))
+
 
 class SearchInvoiceView(View):
     template_name = "invoice.html"
@@ -714,6 +713,7 @@ class SearchInvoiceView(View):
             print('error = ',e) 
         return render (self.request,"accounts/invoice.html",{"invoice_list": invoice_list, "client_list":client_list, "desc_list":desc_list, "id_list":id_list, "year_list":year_list,
                         "invoice":invoice, 'client':client, "year":year, "paid":paid})                       
+
 
 class CreateInvoiceView(View):
     template_name = "create_invoice.html"
@@ -982,7 +982,8 @@ class CreateInvoiceView(View):
             print('error = ',e) 
         return render (self.request,"accounts/create_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
                         'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
-        
+ 
+
 class ReconsileInvoiceView(View):
     template_name = "reconsile_invoice.html"
     success_url = reverse_lazy('accounts:invoice_update')
@@ -1226,7 +1227,7 @@ class ReconsileInvoiceView(View):
         return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
                         'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':paid, 'this_date':this_date})
                         
-                        
+                     
 class Charge_codeView(View):
     template_name = "charge.html"
     success_url = reverse_lazy('accounts:charge_code')
@@ -1329,7 +1330,7 @@ class Charge_codeView(View):
             print('error = ',e) 
         return HttpResponseRedirect(reverse('accounts:charge_code'))
 
-        
+     
 def save_expenses_csv(delete):               
     #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
     operator = str(self.request.user)
@@ -1415,7 +1416,8 @@ def save_invoices_csv(delete):
             paid = True
         print('interval_save=',interval_save)
         Invoice.objects.create(client_id=client_id, staff_id=staff_id, invoice_desc=invoice_desc,  charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
-        
+ 
+
 def save_invoice_item_csv(delete):               
     #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
     import csv

@@ -14,7 +14,10 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 				<li class="nav-invoice">
 					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'accounts:invoice' %}" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
@@ -38,7 +41,6 @@
 				<li class="nav-item ">
 				<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'client:client' %}" aria-disabled="true">Clients&nbsp;&nbsp;&nbsp;</a>
-				</li>
 				</li>
 				<li class="nav-item ">
 				<span data-feather="log-out"></span>

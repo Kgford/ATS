@@ -6,6 +6,7 @@ from django.views import View
 from django.contrib.auth import authenticate
 from accounts.models import Expenses, Invoice_Item, Charge_Code, Income, Invoice
 from dashboard.models import Income_report
+from django.contrib.auth.decorators import login_required
 import datetime
 import time
 

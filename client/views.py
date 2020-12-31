@@ -8,6 +8,7 @@ from datetime import date
 from django.urls import reverse,  reverse_lazy
 from client.models import Clients
 from django.views import View
+from django.contrib.auth.decorators import login_required
 site_id = 0
 
 

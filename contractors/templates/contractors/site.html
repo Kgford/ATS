@@ -14,16 +14,20 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 				<li class="nav-item">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="" aria-disabled="true">Reconsile Invoice&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'accounts:invoice_item' %}" aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
 				</li><li class="nav-item ">
 					<span data-feather="clipboard"></span>
@@ -34,16 +38,12 @@
 					<a class="nav-link" href="{% url 'contractors:contractor' %}">Contractors&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'client:client' %}" aria-disabled="true">Clients&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				</li>
 				<li class="nav-item ">
-				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
-				</li>
-				<li class="nav-item ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>

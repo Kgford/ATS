@@ -102,7 +102,7 @@ def save_csv(delete):
     print(f'{str(contSuccess)} inserted successfully! ')
     
              
-    	
+   	
 def site(request,location_id):
     sites = []
     site = []

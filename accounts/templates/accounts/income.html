@@ -14,8 +14,12 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
 				<li class="nav-item active">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'accounts:income' %}" aria-disabled="true">Income&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-item ">
@@ -25,10 +29,6 @@
 				<li class="nav-item ">
 					<span data-feather="dollar-sign"></span>
 					<a class="nav-link" href="{% url 'vendor:vendor' %}">Vendor or Store&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-item ">
-				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
 				</li>
 				<li class="nav-item ">
 				<span data-feather="log-out"></span>
