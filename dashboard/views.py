@@ -297,15 +297,27 @@ class DashboardView(View):
             #search for all unpaid invoices
             invoice_unpaid = Invoice.objects.filter(paid=False).all()
             
-            #search for income report chart data
+            #calculate yearly profit
             profit = round(float(rev_year)-float(exp_year),2)
-            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
-            expen = [10, 30, 20, 100, 200, 20, 500, 3, 20, 5, 100]
-            incom = [102, 50, 20, 12, 500, 40, 100, 60, 50, 10, 300]
             
+           #search for income report chart data
+            income_report = Income_report.objects.filter(year=thisyear)
+            months = []
+            expen = []
+            incom = []
+            montharray = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            for report in income_report:
+                months.append(montharray[str(report.month)])
+                expen.append(float(report.income_paid))
+                incom.append(float(report.expense))
+            print('months=',months)
+            print('expen=',expen)
+            print('incom=',incom)
+            #time.sleep(5)
+            
+           
             #search for most purchased Products for the year
             items_month = Invoice_Item.objects.filter(item_date__year=thisyear)
-            rev_month=0
             ate=0
             win=0
             web=0

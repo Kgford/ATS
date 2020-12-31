@@ -34,8 +34,35 @@
 	 <div class="d-flex flex-column" id="content-wrapper">
         <div id="content">
             <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-                <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button><a href="#"></a>
-                    <picture><img class="img-fluid d-xl-flex flex-grow-1 flex-shrink-1 flex-fill justify-content-center align-content-center align-self-center flex-nowrap justify-content-xl-center" src="{% static 'dashboard/images/atsrf_logo.jpg' %}" width="150" ></picture>
+                <div class="container-fluid">
+					<button class="btn btn-link collapsed d-md-none rounded-circle mr-3" type="button" data-toggle="collapse" data-target="#collapseExample" id="sidebarToggleTop" ><i class="fas fa-bars"></i></button><a href="#"></a>
+                     
+					
+					
+					
+					<div class="collapse" id="collapseExample">
+						<div class="card card-header">
+							<ul class="nav navbar-nav text-light nav flex-column" id="accordionSidebar">
+							<li class="nav-item active"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
+							<li class="nav-item"></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'accounts:expenses' %}"><i class="fas fa-book-open"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+							<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-male"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'contractors:contractor' %}"><i class="fa fa-wrench"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Contractors</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'vendor:vendor' %}"><i class="fab fa-connectdevelop"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Vendors</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'users:base' %}"><i class="fas fa-tachometer-alt"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Home</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="far fa-sun"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Settings</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'atspublic:public' %}"><i class="fa fa-bomb"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Website</span></a></li>
+						</ul>
+						</div>
+					</div>
+					
+					
+					
+					<picture><img class="img-fluid d-xl-flex flex-grow-1 flex-shrink-1 flex-fill justify-content-center align-content-center align-self-center flex-nowrap justify-content-xl-center" src="{% static 'dashboard/images/atsrf_logo.jpg' %}" width="150" ></picture>
                     <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <div class="input-group-append"></div>
@@ -125,18 +152,25 @@
 					</div>
                     <div class="shadow dropdown-list dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown"></div>
                 </li>
-                <div class="d-none d-sm-block topbar-divider"></div>
-                <li class="nav-item dropdown no-arrow">
-                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle d-xl-flex justify-content-xl-center nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="text-uppercase d-none d-lg-inline mr-2 text-gray-600 small">{{operator}}</span><img class="border rounded-circle img-profile" src="{% static avatar %}" loading="eager"></a>
-                        <div
-                            class="dropdown-menu shadow dropdown-menu-right animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item"
-                                href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
-        </div>
-        </li>
+                <!-- Avitar Pulldown menu-->
+				<div class="d-none d-sm-block topbar-divider"></div>
+				<li class="nav-item dropdown no-arrow">
+					<div class="nav-item dropdown no-arrow">
+						<a class="dropdown-toggle d-xl-flex justify-content-xl-center nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
+							<span class="text-uppercase d-none d-lg-inline mr-2 text-gray-600 small">{{operator}}</span>
+							<img class="border rounded-circle img-profile" src="{% static avatar %}" loading="eager">
+						</a>
+						<div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
+							<a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a>
+							<a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+							<a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
+							<div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
+						</div>
+					</div>	
+				</li>
+				<!-- Avitar Pulldown menu-->
         </ul>
-    </div>
-    </nav>
+	</nav>
     <div class="container-fluid">
 		<form action = "{% url 'dashboard:dashboard' %}" method="post">
 			{% csrf_token %}
