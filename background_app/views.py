@@ -92,8 +92,8 @@ def update_Income_report():
     monthstr = months[str(thismonth)]
     invoices = Invoice.objects.all()
     print('invoices=',invoices)
-    for y in range(2017, int(dt.year)):
-        for m in range(1, int(dt.month)):
+    for y in range(2017, int(dt.year) + 1):
+        for m in range(1, int(dt.month) + 1):
             temp_date = str(y) + "-" + str(m)  + "-" + str(1)
             invoices = Invoice_Item.objects.filter(item_date__month=m, item_date__year=y).all()
             print(invoices)
@@ -131,52 +131,33 @@ def update_Income_report():
                     temp_month = month
                     monthstr = months[str(temp_month)]
                     temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
+                                      
+                monthstr = months[str(m)]
+                temp_date = str(y) + "-" + str(m)  + "-" + str(day)
+                if not Income_report.objects.filter(month=m, year=y).exists():
+                    Income_report.objects.create(client_id=client_id, month_str=monthstr, month=m, year=y,
+                                          income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
+                else:
+                    Income_report.objects.filter(month=temp_month, year=y).update(income_total=income, income_paid=income_paid, income_unpaid=income_unpaid)
+                    
+                if not Income_report.objects.filter(month=m, year=y).exists():
+                    Income_report.objects.create(client_id=client_id, month_str=monthstr, month=m, year=y,
+                                          income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
+                else:
+                    Income_report.objects.filter(month=temp_month, year=y).update(income_total=income, income_paid=income_paid, income_unpaid=income_unpaid)
                 
-                print('temp_date =',temp_date)
-                print('income_total =',income)
-                time.sleep(3)
-                
-                if temp_year<thisyear: # this catches up all entries from the start date
-                    temp_month = 1
-                    while temp_month<=month:
-                        temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
-                        if not Income_report.objects.filter(month=temp_month, year=thisyear).exists():
-                            Income_report.objects.create(client_id=client_id, month_str=monthstr, month=temp_month, year=thisyear,
-                                                  income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
-                        else:
-                            Income_report.objects.filter(month=temp_month, year=thisyear).update(income_total=income, income_paid=income_paid)
-                                                  
-                        temp_month +=1
-                    temp_year +=1
-                    print('updated income report for date: ',temp_date)
-                elif temp_month<thismonth: # this catches up on all months for this year
-                    while temp_month<=month:
-                        temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
-                        if not Income_report.objects.filter(month=temp_month, year=thisyear).exists():
-                            Income_report.objects.create(client_id=client_id, month_str=monthstr, month=temp_month, year=thisyear,
-                                                  income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
-                        else:
-                            Income_report.objects.filter(month=temp_month, year=thisyear).update(income_total=income, income_paid=income_paid)
-                        
-                        temp_month +=1
-                        print('updated income report for date: ',temp_date)
-                else: # this updates for the month if not done already
-                    temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
-                    if not Income_report.objects.filter(month=temp_month, year=thisyear).exists():
-                        Income_report.objects.create(client_id=client_id, month_str=monthstr, month=temp_month, year=thisyear,
-                                              income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
-                    else:
-                        Income_report.objects.filter(month=temp_month, year=thisyear).update(income_total=income, income_paid=income_paid)
-                        print('updated income report for date: ',temp_date)
+                print('income_total =',income)                          
+                print('updated income report for date: ',temp_date)
+                time.sleep(5)
         
     
-    for y in range(2017, int(dt.year)):
-        for m in range(1, int(dt.month)):
+    for y in range(2017, int(dt.year) + 2):
+        for m in range(1, int(dt.month) + 2):
             expenses = Expenses.objects.filter(sale_date__month=m, sale_date__year=y).all()
             temp_date = str(y) + "-" + str(m)  + "-" + str(1)
             print('expenses=',expenses)
-            total = 0
             if expenses:
+                total = 0
                 for exp in expenses:
                     sale_date = exp.sale_date
                     print('sale_date =',sale_date)
@@ -193,13 +174,15 @@ def update_Income_report():
                     print('day =',day)
                     temp_year = year
                     temp_month = month
-                    temp_date = str(thisyear) + "-" + str(temp_month)  + "-" + str(day)
+                    temp_date = str(temp_year) + "-" + str(temp_month)  + "-" + str(day)
                     print('temp_date =',temp_date)
                     print('total =',total)
                     
-                time.sleep(3)
-                Income_report.objects.filter(month=temp_month, year=thisyear).update(expense=total)
+                
+                Income_report.objects.filter(month=m, year=y).update(expense=total)
                 print('updated income report expenses for date: ',temp_date)
+                print('total =',total)
+                time.sleep(5)
     
     
     

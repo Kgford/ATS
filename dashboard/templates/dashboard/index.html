@@ -172,7 +172,7 @@
 					</a>
 				{% else %}
 					<a style = 'color:red; font-weight: 900;'>Selected Report Date</a>
-						<input class = 'disabled' id = "_date" name = "_date" value = '{{send_date}}' >
+						<input type="date" onchange="this.form.submit()"  id = "_date" name = "_date" value = '{{send_date}}' >
 					</a>
 				{% endif %}	
 				
