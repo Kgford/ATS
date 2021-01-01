@@ -17,12 +17,14 @@ class DashboardView(View):
     def get(self, *args, **kwargs):
         try:
             send_date = -1
+            today_date =-1
             timestamp = date.today()
             dt = datetime.datetime.today()
             thisyear = dt.year
             thismonth = dt.month
             thisday = dt.day
             send_month = str(thismonth)
+            today_date = str(thisyear) + '-' + str(thismonth) + '-' + str(thisday)
             print('send_date=',send_date)
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
@@ -124,7 +126,7 @@ class DashboardView(View):
            print('error = ',e) 
         return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
                                                             'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+                                                             'today_date':today_date, 'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
  
     def post(self, request, *args, **kwargs):
         try:
@@ -140,7 +142,15 @@ class DashboardView(View):
                 print('split_date =',split_date)
                 thisyear = int(split_date[0])
                 thismonth = int(split_date[1])
+                if thismonth>12:
+                    thismonth=12
                 thisday = int(split_date[2])
+                if thismonth == 2 and thisday > 29:
+                    thisday=29
+                elif (thismonth==9 or thismonth==4 or thismonth==5) and thisday > 30:
+                    thisday=30
+                elif thisday > 31:
+                    thisday=31
             else:
                 thisyear = dt.year
                 thismonth = dt.month

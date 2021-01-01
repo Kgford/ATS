@@ -167,12 +167,12 @@
 			<div class="d-sm-flex justify-content-between align-items-center mb-4">
 				<h3 class="text-uppercase text-dark mb-0"><strong>Dashboard</strong></h3>
 				{% if send_date == -1%}
-					<a style = 'color:green; font-weight: 900;'>Todays Report</a>
-						<input type="date" onchange="this.form.submit()" id = "_date" name = "_date"  >
+					<a style = 'color:green; font-weight: 900;'>Todays Report (yyyy-mm-dd)</a>
+						<input onkeyup="this.form.submit()" id = "_date" name = "_date" value = '{{today_date}}' >
 					</a>
 				{% else %}
-					<a style = 'color:red; font-weight: 900;'>Selected Report Date</a>
-						<input type="date" onchange="this.form.submit()"  id = "_date" name = "_date" value = '{{send_date}}' >
+					<a style = 'color:blue; font-weight: 900;'>Selected Report Date (yyyy-mm-dd)</a>
+						<input onkeyup="this.form.submit()"  id = "_date" name = "_date" value = '{{send_date}}' >
 					</a>
 				{% endif %}	
 				
