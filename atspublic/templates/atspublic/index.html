@@ -15,6 +15,15 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 			  <ul class="navbar-nav mr-auto">
+				{% if user.is_authenticated %}
+				<li class="nav-item">
+				  <a class="nav-link" href="{% url 'dashboard:dashboard' %}"  tabindex="-1" >Dashboard&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+				  <a class="nav-link disabled" href="{% url 'dashboard:dashboard' %}"  tabindex="-1" >Dashboard Disabled&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				{% endif %}
 				<li class="nav-item active">
 				  <a class="nav-link" href="{% url 'atspublic:public' %}">&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp; <span class="sr-only">(current)</span></a>
 				</li>
@@ -39,11 +48,7 @@
 				<li class="nav-item">
 				  <a class="nav-link" href="{% url 'atspublic:news' %}"  tabindex="-1" >ATS Blog&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				{% if user.is_authenticated %}
-				<li class="nav-item">
-				  <a class="nav-link" href="{% url 'dashboard:dashboard' %}"  tabindex="-1" >Dashboard&nbsp;&nbsp;&nbsp;</a>
-				</li>
-				{% endif %}
+				
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown03">

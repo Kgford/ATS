@@ -77,7 +77,7 @@ class DashboardView(View):
                         else:
                             Income_report.objects.filter(month=temp_month, year=y).update(income_total=income, income_paid=income_paid, income_unpaid=income_unpaid)
                             
-                        if not Income.objects.filter(month=m, year=y).exists():
+                        if not Income_report.objects.filter(month=m, year=y).exists():
                             Income_report.objects.create(client_id=client_id, month_str=monthstr, month=m, year=y,
                                                   income_total=income, income_paid=income_paid, income_unpaid=income_unpaid, last_update=timestamp)
                         else:
@@ -85,11 +85,11 @@ class DashboardView(View):
                         
                         print('income_total =',income)                          
                         print('updated income report for date: ',temp_date)
-                        #time.sleep(5)
+                        time.sleep(5)
                 
             
-            for y in range(2017, int(dt.year) + 1):
-                for m in range(1, int(dt.month) + 1):
+            for y in range(2017, int(dt.year) + 2):
+                for m in range(1, int(dt.month) + 2):
                     expenses = Expenses.objects.filter(sale_date__month=m, sale_date__year=y).all()
                     temp_date = str(y) + "-" + str(m)  + "-" + str(1)
                     print('expenses=',expenses)
@@ -119,8 +119,8 @@ class DashboardView(View):
                         Income_report.objects.filter(month=m, year=y).update(expense=total)
                         print('updated income report expenses for date: ',temp_date)
                         print('total =',total)
-                        #time.sleep(5)
-                        '''          
+                        time.sleep(5)
+                        '''         
             
             
             
@@ -138,6 +138,7 @@ class DashboardView(View):
             thismonth = dt.month
             thisday = dt.day
             send_month = str(thismonth)
+            send_date = str(thisyear) + '-' + str(thisday) + '-' + send_month
             print('send_date=',send_date)
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
@@ -187,9 +188,16 @@ class DashboardView(View):
             incom = []
             montharray = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             for report in income_report:
-                months.append(montharray[str(report.month)])
-                expen.append(float(report.income_paid))
-                incom.append(float(report.expense))
+                if report.month:
+                    months.append(montharray[str(report.month)])
+                if report.income_paid:
+                    expen.append(float(report.income_paid))
+                else:
+                    expen.append(0.00)
+                if report.expense:
+                    incom.append(float(report.expense))
+                else:
+                    expen.append(0.00)
             print('months=',months)
             print('expen=',expen)
             print('incom=',incom)
@@ -220,12 +228,13 @@ class DashboardView(View):
                 if item.service_type=='Robot Test Fixture':
                     robot=robot+1
                 
-            ate = round(ate/total * 100,2)
-            win = round(win/total * 100,2)
-            web = round(web/total * 100,2)
-            auto = round(auto/total * 100,2)
-            man = round(man/total * 100,2)
-            robot = round(robot/total * 100,2)
+            if total !=0:
+                ate = round(ate/total * 100,2)
+                win = round(win/total * 100,2)
+                web = round(web/total * 100,2)
+                auto = round(auto/total * 100,2)
+                man = round(man/total * 100,2)
+                robot = round(robot/total * 100,2)
            
         except IOError as e:
            print('error = ',e) 
@@ -235,16 +244,19 @@ class DashboardView(View):
  
     def post(self, request, *args, **kwargs):
         try:
-            
+            refresh = request.POST.get('_select', -1)
             new_date = request.POST.get('_date', -1)
             print('new_date',new_date)
+            print('refresh',refresh)
             timestamp = date.today()
             print('timestamp',timestamp)
-            if new_date ==-1:
-                dt = datetime.datetime.today()
-                thisyear = dt.year
-                thismonth = dt.month
-                thisday = dt.day
+            
+            if new_date !=-1:
+                split_date = new_date.split("-")
+                print('split_date =',split_date)
+                thisyear = int(split_date[0])
+                thismonth = int(split_date[2])
+                thisday = int(split_date[1])
             else:
                 split_date = new_date.split("-")
                 print('split_date =',split_date)
@@ -308,9 +320,17 @@ class DashboardView(View):
             incom = []
             montharray = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             for report in income_report:
-                months.append(montharray[str(report.month)])
-                expen.append(float(report.income_paid))
-                incom.append(float(report.expense))
+                if report.month:
+                    months.append(montharray[str(report.month)])
+                    print('report.month=',report.month)
+                if report.income_paid:
+                    expen.append(float(report.income_paid))
+                else:
+                    expen.append(0.00)
+                if report.expense:
+                    incom.append(float(report.expense))
+                else:
+                    expen.append(0.00)
             print('months=',months)
             print('expen=',expen)
             print('incom=',incom)
@@ -341,12 +361,13 @@ class DashboardView(View):
                 if item.service_type=='Robot Test Fixture':
                     robot=robot+1
                 
-            ate = round(ate/total * 100,2)
-            win = round(win/total * 100,2)
-            web = round(web/total * 100,2)
-            auto = round(auto/total * 100,2)
-            man = round(man/total * 100,2)
-            robot = round(robot/total * 100,2)
+            if total !=0:
+                ate = round(ate/total * 100,2)
+                win = round(win/total * 100,2)
+                web = round(web/total * 100,2)
+                auto = round(auto/total * 100,2)
+                man = round(man/total * 100,2)
+                robot = round(robot/total * 100,2)
            
         except IOError as e:
            print('error = ',e) 
