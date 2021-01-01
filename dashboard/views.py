@@ -16,16 +16,15 @@ class DashboardView(View):
     success_url = reverse_lazy('dashboard:dashboard')
     def get(self, *args, **kwargs):
         try:
-            send_date = -1
-            today_date =-1
+            month_list = -1
+            year_list = -1
             timestamp = date.today()
             dt = datetime.datetime.today()
             thisyear = dt.year
             thismonth = dt.month
             thisday = dt.day
-            send_month = str(thismonth)
-            today_date = str(thisyear) + '-' + str(thismonth) + '-' + str(thisday)
-            print('send_date=',send_date)
+            print('thismonth=',thismonth)
+            print('thisyear=',thisyear)
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
             month = months[str(thismonth)]
@@ -33,6 +32,8 @@ class DashboardView(View):
             print('month =',month)
             operator = str(self.request.user)
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
+            year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
+            month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
             #search for monthly invoices
             invoice_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
             
@@ -126,51 +127,30 @@ class DashboardView(View):
            print('error = ',e) 
         return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
                                                             'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'today_date':today_date, 'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+                                                             'avatar':avatar, 'year_list':year_list, 'month_list':month_list, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
  
     def post(self, request, *args, **kwargs):
         try:
-            refresh = request.POST.get('_select', -1)
-            new_date = request.POST.get('_date', -1)
-            print('new_date',new_date)
-            print('refresh',refresh)
+            thisyear = request.POST.get('_year', -1)
+            month = request.POST.get('_month', -1)
+            year=thisyear
+            print('year',year)
+            print('month',month)
             timestamp = date.today()
             print('timestamp',timestamp)
+            month_list = -1
+            year_list = -1
             
-            if new_date !=-1:
-                split_date = new_date.split("-")
-                print('split_date =',split_date)
-                thisyear = int(split_date[0])
-                thismonth = int(split_date[1])
-                if thismonth>12:
-                    thismonth=12
-                thisday = int(split_date[2])
-                if thismonth == 2 and thisday > 29:
-                    thisday=29
-                elif (thismonth==9 or thismonth==4 or thismonth==5) and thisday > 30:
-                    thisday=30
-                elif thisday > 31:
-                    thisday=31
-            else:
-                thisyear = dt.year
-                thismonth = dt.month
-                thisday = dt.day
-                
-            send_month = str(thismonth)
-            if len(send_month)==1:
-                send_month = '0' + send_month
-            send_day = str(thisday)
-            if len(send_day )==1:
-                send_day  = '0' + send_day     
-            send_date = str(thisyear) + '-' + str(thismonth) + '-' + str(thisday)
-            print('send_date=',send_date)
-            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
-            full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
-            month = months[str(thismonth)]
-            month_full = full_months[str(thismonth)]
+            months = {'Jan': "1", 'Feb': "2",  'Mar': "3", 'Apr': '4', 'May': "5", 'Jun': "6", 'Jul': "7", 'Aug': "8", 'Sept': "9", 'Oct': "10", 'Nov': "11", 'Dec': "12"}
+            full_months = {'Jan': "January", 'Feb': "February",  'Mar': "March", 'Apr': 'April', 'May': "May", 'Jun': "June", 'Jul': "July", 'Aug': "August", 'Sept': "September", 'Oct': "October", 'Nov': "November", 'Dec': "December"}
+            thismonth = months[str(month)]
+            print('thismonth',thismonth)
+            month_full = full_months[str(month)]
             print('month =',month)
             operator = str(self.request.user)
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
+            year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
+            month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
             #search for monthly invoices
             invoice_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
             
@@ -267,7 +247,7 @@ class DashboardView(View):
            print('error = ',e) 
         return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
                                                             'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'avatar':avatar, 'send_date':send_date, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+                                                             'avatar':avatar, 'year_list':year_list, 'month_list':month_list, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
                                
                                                             
                                                             

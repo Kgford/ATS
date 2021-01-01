@@ -15,7 +15,7 @@ MEDIA_URL = '/ATS/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
 STATIC_URL = '/static/'
-LOGIN_URL = 'login'
+LOGIN_URL = 'staff/user_login'
 LOGIN_REDIRECT_URL = 'staff/user_login'
 LOGOUT_REDIRECT_URL = 'staff/user_login' 
 
