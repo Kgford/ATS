@@ -93,6 +93,8 @@ class DashboardView(View):
             salarys = 0
             supplies = 0
             services = 0
+            hardware = 0
+            robot = 0
             for item in expense_month:
                 exp_month = exp_month + float(item.total_cost)
                 print('item-',item)
@@ -108,19 +110,23 @@ class DashboardView(View):
                 elif search('TRAVEL', item.expense_type.upper()):
                     travel = travel + 1
                     print('travel =',travel)
-                elif search('VEHICAL', item.expense_description.upper()):
-                    travel = vehical + 1
-                    print('travel =',travel)
+                elif search('VEHICLE', item.expense_description.upper()):
+                    vehicle = vehicle + 1
+                    print('vehicle =',vehicle)
                 elif search('SALARYS', item.expense_type.upper()):
                     salarys = salarys + 1 
                     print('salarys =',salarys)                    
                 elif search('TAXES', item.expense_description.upper()):
                     taxes = taxes + 1
                     print('taxes =',taxes) 
-                elif search('SUPPLIES', item.expense_description.upper()) or search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('ROBOT', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                elif search('SUPPLIES', item.expense_description.upper()):
                     supplies = supplies + 1
-                    print('supplies =',supplies) 
-            expense_list_month =  [services,insurance,travel,vehicle,supplies]
+                elif search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    hardware = hardware + 1
+                elif search('ROBOT', item.expense_description.upper()):
+                    robot = robot + 1
+                    #print('supplies =',supplies)
+            expense_list_month = [services,insurance,travel,vehicle,taxes,supplies,hardware,robot]
             print('expense_list_month=',expense_list_month)
                            
             #search for yearly expenses
@@ -128,10 +134,13 @@ class DashboardView(View):
             exp_year=0
             insurance = 0
             travel = 0
+            vehicle = 0
             taxes = 0 
             salarys = 0
             supplies = 0
             services = 0
+            hardware = 0
+            robot = 0
             for item in expense_year:
                 #print('item-',item)
                 exp_year= exp_year + float(item.total_cost)
@@ -147,8 +156,8 @@ class DashboardView(View):
                 elif search('TRAVEL', item.expense_type.upper()):
                     travel = travel + 1
                     #print('travel =',travel)
-                elif search('VEHICAL', item.expense_description.upper()):
-                    travel = vehical + 1
+                elif search('VEHICLE', item.expense_description.upper()):
+                    vehicle = vehicle + 1
                     #print('travel =',travel)
                 elif search('SALARYS', item.expense_type.upper()):
                     salarys = salarys + 1 
@@ -156,11 +165,15 @@ class DashboardView(View):
                 elif search('TAXES', item.expense_description.upper()):
                     taxes = taxes + 1
                     #print('taxes =',taxes) 
-                elif search('SUPPLIES', item.expense_description.upper()) or search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('ROBOT', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                elif search('SUPPLIES', item.expense_description.upper()):
                     supplies = supplies + 1
+                elif search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    hardware = hardware + 1
+                elif search('ROBOT', item.expense_description.upper()):
+                    robot = robot + 1
                     #print('supplies =',supplies) 
                    
-            expense_list_year  =  [services,insurance,travel,vehicle,supplies]
+            expense_list_year  =  [services,insurance,travel,vehicle,taxes,supplies,hardware,robot]
             print('expense_list_year=',expense_list_year)
                 
             #search for all unpaid invoices
