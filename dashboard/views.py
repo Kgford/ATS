@@ -9,8 +9,40 @@ from dashboard.models import Income_report
 from django.contrib.auth.decorators import login_required
 import datetime
 import time
+from re import search
 
-
+class UserLogin(View):
+    template_name = "user_login.html"
+    success_url = reverse_lazy('client:login')
+        
+    def get(self, *args, **kwargs):
+        try:
+            operator = str(self.request.user)
+        
+        except IOError as e:
+           print('error = ',e) 
+        return render(request, 'client/user_login.html', {})
+ 
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request,user)
+                    redirect_to = resolve_url(LOGIN_REDIRECT_URL)
+                    print('redirect =',LOGIN_REDIRECT_URL)
+                    return render(request,'client/index.html')
+                else:
+                    return render(request, 'client/user_login.html', {'message':'Login Failed!!'})
+            else:
+                print("Someone tried to login and failed.")
+                print("They used username: {} and password: {}".format(username,password))
+            return render(request, 'client/user_login.html', {'message':'Login Failed!!'})
+        else:
+            return render(request, 'client/user_login.html', {})
+            
 class DashboardView(View):
     template_name = "index.html"
     success_url = reverse_lazy('dashboard:dashboard')
@@ -52,16 +84,85 @@ class DashboardView(View):
                             
             #search for monthly expenses
             expense_month = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth)
+            print('expense_month=',expense_month)
             exp_month=0
+            insurance = 0
+            travel = 0
+            vehicle = 0
+            taxes = 0 
+            salarys = 0
+            supplies = 0
+            services = 0
             for item in expense_month:
-               exp_month = exp_month + float(item.total_cost)
+                exp_month = exp_month + float(item.total_cost)
+                print('item-',item)
+                if search('INSURANCE', item.expense_description.upper()):
+                    insurance = insurance + 1
+                    print('insurance=',insurance)
+                elif search('DATABASE', item.expense_description.upper()) or search('CONTRACTOR', item.expense_description.upper()) :
+                    services = services + 1
+                    print('services=',services)
+                elif search('TRAVEL', item.expense_description.upper()):
+                    travel = travel + 1
+                    print('travel =',travel)
+                elif search('TRAVEL', item.expense_type.upper()):
+                    travel = travel + 1
+                    print('travel =',travel)
+                elif search('VEHICAL', item.expense_description.upper()):
+                    travel = vehical + 1
+                    print('travel =',travel)
+                elif search('SALARYS', item.expense_type.upper()):
+                    salarys = salarys + 1 
+                    print('salarys =',salarys)                    
+                elif search('TAXES', item.expense_description.upper()):
+                    taxes = taxes + 1
+                    print('taxes =',taxes) 
+                elif search('SUPPLIES', item.expense_description.upper()) or search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('ROBOT', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    supplies = supplies + 1
+                    print('supplies =',supplies) 
+            expense_list_month =  [services,insurance,travel,vehicle,supplies]
+            print('expense_list_month=',expense_list_month)
                            
             #search for yearly expenses
             expense_year = Expenses.objects.filter(sale_date__year=thisyear)
             exp_year=0
+            insurance = 0
+            travel = 0
+            taxes = 0 
+            salarys = 0
+            supplies = 0
+            services = 0
             for item in expense_year:
+                #print('item-',item)
                 exp_year= exp_year + float(item.total_cost)
-               
+                if search('INSURANCE', item.expense_description.upper()):
+                    insurance = insurance + 1
+                    #print('insurance=',insurance)
+                elif search('DATABASE', item.expense_description.upper()) or search('CONTRACTOR', item.expense_description.upper()) :
+                    services = services + 1
+                    #print('services=',services)
+                elif search('TRAVEL', item.expense_description.upper()):
+                    travel = travel + 1
+                    #print('travel =',travel)
+                elif search('TRAVEL', item.expense_type.upper()):
+                    travel = travel + 1
+                    #print('travel =',travel)
+                elif search('VEHICAL', item.expense_description.upper()):
+                    travel = vehical + 1
+                    #print('travel =',travel)
+                elif search('SALARYS', item.expense_type.upper()):
+                    salarys = salarys + 1 
+                    #print('salarys =',salarys)                    
+                elif search('TAXES', item.expense_description.upper()):
+                    taxes = taxes + 1
+                    #print('taxes =',taxes) 
+                elif search('SUPPLIES', item.expense_description.upper()) or search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('ROBOT', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    supplies = supplies + 1
+                    #print('supplies =',supplies) 
+                   
+            expense_list_year  =  [services,insurance,travel,vehicle,supplies]
+            print('expense_list_year=',expense_list_year)
+                
             #search for all unpaid invoices
             invoice_unpaid = Invoice.objects.filter(paid=False).all()
             
@@ -125,8 +226,8 @@ class DashboardView(View):
            
         except IOError as e:
            print('error = ',e) 
-        return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
-                                                            'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
+        return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,'rev_year':rev_year, 'profit':profit, 
+                                                             'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom, 'expense_list_month':expense_list_month, 'expense_list_year':expense_list_year,
                                                              'avatar':avatar, 'year_list':year_list, 'month_list':month_list, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
  
     def post(self, request, *args, **kwargs):
@@ -169,20 +270,102 @@ class DashboardView(View):
                             
             #search for monthly expenses
             expense_month = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth)
+            print('expense_month=',expense_month)
             exp_month=0
+            insurance = 0
+            travel = 0
+            vehicle = 0
+            taxes = 0 
+            salarys = 0
+            supplies = 0
+            services = 0
+            hardware = 0
+            robot = 0
             for item in expense_month:
-               exp_month = exp_month + float(item.total_cost)
+                exp_month = exp_month + float(item.total_cost)
+                print('item-',item)
+                if search('INSURANCE', item.expense_description.upper()):
+                    insurance = insurance + 1
+                    print('insurance=',insurance)
+                elif search('DATABASE', item.expense_description.upper()) or search('CONTRACTOR', item.expense_description.upper()) :
+                    services = services + 1
+                    print('services=',services)
+                elif search('TRAVEL', item.expense_description.upper()):
+                    travel = travel + 1
+                    print('travel =',travel)
+                elif search('TRAVEL', item.expense_type.upper()):
+                    travel = travel + 1
+                    print('travel =',travel)
+                elif search('VEHICLE', item.expense_description.upper()):
+                    vehicle = vehicle + 1
+                    print('vehicle =',vehicle)
+                elif search('SALARYS', item.expense_type.upper()):
+                    salarys = salarys + 1 
+                    print('salarys =',salarys)                    
+                elif search('TAXES', item.expense_description.upper()):
+                    taxes = taxes + 1
+                    print('taxes =',taxes) 
+                elif search('SUPPLIES', item.expense_description.upper()):
+                    supplies = supplies + 1
+                elif search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    hardware = hardware + 1
+                elif search('ROBOT', item.expense_description.upper()):
+                    robot = robot + 1
+                    #print('supplies =',supplies)
+            expense_list_month = [services,insurance,travel,vehicle,taxes,supplies,hardware,robot]
+            print('expense_list_month=',expense_list_month)
                            
             #search for yearly expenses
             expense_year = Expenses.objects.filter(sale_date__year=thisyear)
             exp_year=0
+            insurance = 0
+            travel = 0
+            vehicle = 0
+            taxes = 0 
+            salarys = 0
+            supplies = 0
+            services = 0
+            hardware = 0
+            robot = 0
             for item in expense_year:
+                #print('item-',item)
                 exp_year= exp_year + float(item.total_cost)
-               
+                if search('INSURANCE', item.expense_description.upper()):
+                    insurance = insurance + 1
+                    #print('insurance=',insurance)
+                elif search('DATABASE', item.expense_description.upper()) or search('CONTRACTOR', item.expense_description.upper()) :
+                    services = services + 1
+                    #print('services=',services)
+                elif search('TRAVEL', item.expense_description.upper()):
+                    travel = travel + 1
+                    #print('travel =',travel)
+                elif search('TRAVEL', item.expense_type.upper()):
+                    travel = travel + 1
+                    #print('travel =',travel)
+                elif search('VEHICLE', item.expense_description.upper()):
+                    vehicle = vehicle + 1
+                    #print('travel =',travel)
+                elif search('SALARYS', item.expense_type.upper()):
+                    salarys = salarys + 1 
+                    #print('salarys =',salarys)                    
+                elif search('TAXES', item.expense_description.upper()):
+                    taxes = taxes + 1
+                    #print('taxes =',taxes) 
+                elif search('SUPPLIES', item.expense_description.upper()):
+                    supplies = supplies + 1
+                elif search('FIXTURES', item.expense_description.upper()) or search('ELECTRONICS', item.expense_description.upper()) or search('COMPUTERS', item.expense_description.upper()):
+                    hardware = hardware + 1
+                elif search('ROBOT', item.expense_description.upper()):
+                    robot = robot + 1
+                    #print('supplies =',supplies) 
+                   
+            expense_list_year  =  [services,insurance,travel,vehicle,taxes,supplies,hardware,robot]
+            print('expense_list_year=',expense_list_year)
+            
             #search for all unpaid invoices
             invoice_unpaid = Invoice.objects.filter(paid=False).all()
-            
-            #calculate yearly profit
+           
+           #calculate yearly profit
             profit = round(float(rev_year)-float(exp_year),2)
             
             #search for income report chart data
@@ -194,7 +377,7 @@ class DashboardView(View):
             for report in income_report:
                 if report.month:
                     months.append(montharray[str(report.month)])
-                    print('report.month=',report.month)
+                    #print('report.month=',report.month)
                 if report.income_paid:
                     expen.append(float(report.income_paid))
                 else:
@@ -245,9 +428,10 @@ class DashboardView(View):
             print(thisyear)
         except IOError as e:
            print('error = ',e) 
-        return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,
-                                                            'rev_year':rev_year, 'profit':profit,  'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom,
-                                                             'avatar':avatar, 'year_list':year_list, 'month_list':month_list, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+        return render(self.request, 'dashboard/index.html', {'operator':operator,'month_full':month_full,'month':month,'year':thisyear, 'invoice_month':invoice_month, 'invoice_unpaid':invoice_unpaid,'rev_year':rev_year, 'profit':profit, 
+                                                     'rev_month':rev_month, 'exp_month':exp_month, 'months':months, 'expen':expen, 'incom':incom, 'expense_list_month':expense_list_month, 'expense_list_year':expense_list_year,
+                                                     'avatar':avatar, 'year_list':year_list, 'month_list':month_list, 'ate':ate, 'win':win, 'web':web, 'auto':auto, 'man':man,'robot':robot })
+
                                
                                                             
                                                             
