@@ -7,7 +7,10 @@
 
 {% block body %}
 <body id="page-top">
-    <div class="container-fluid">
+	<div class="container-fluid">
+			<div style = 'text-align:center'>
+				<picture class="center" ><img src="{% static 'dashboard/images/atsrf_logo.jpg' %}"  ></picture>
+			</div>
 			<h1 class='text-center'>Revenue Report for {{month_full}} &nbsp; {{year}}</h1>
         <div
             class="row">
@@ -19,7 +22,7 @@
                                 <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{month}})</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{rev_month}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>
@@ -45,7 +48,7 @@
                                 <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{year}})</span></div>
                                 <div class="row no-gutters align-items-center"><span style="color: #ffffff;height: 25;font-size: 50;"><strong>${{rev_year}}</strong></span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>
@@ -58,7 +61,7 @@
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Profit ({{year}})</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{profit}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>

@@ -181,7 +181,7 @@
 			<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
 			<div
             class="row">
-            <div class="col-md-6 col-xl-3 mb-4">
+            <div class="col-md-6 col-xl-3 mb-4" >
                 <div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
@@ -189,13 +189,13 @@
                                 <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{month}})</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{rev_month}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow d-xl-flex justify-content-xl-center border-left-success py-2" style="background-color: #02d2a5;line-height: 1;">
+                <div class="card shadow d-xl-flex justify-content-xl-center border-left-success py-2" href="{% url 'accounts:expenses' %}" style="background-color: #02d2a5;line-height: 1;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
@@ -215,7 +215,7 @@
                                 <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Revenue ({{year}})</span></div>
                                 <div class="row no-gutters align-items-center"><span style="color: #ffffff;height: 25;font-size: 50;"><strong>${{rev_year}}</strong></span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>
@@ -228,7 +228,7 @@
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Profit ({{year}})</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{profit}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
                     </div>
                 </div>
