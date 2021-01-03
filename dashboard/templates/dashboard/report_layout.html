@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="icon" type="image/x-icon" href="{% static 'contractors/images/rings_16X16.ico' %}">
+		<title>Automated Test Solutions</title>	
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Vendor Management page">
+		<script type="text/javascript" src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="{% static 'dashboard/css/bootstrap.css' %}">
+		<link rel="stylesheet" href="{% static 'dashboard/css/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+		<link rel="stylesheet" href="{% static 'dashboard/fonts/fontawesome-all.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'dashboard/fonts/font-awesome.min.css' %}" />
+		<link rel="stylesheet" href="{% static 'dashboard/js/income_report.js' %}" />
+		<script src="{% static 'dashboard/js/moment.js' %}"></script>
+		<script src="{% static 'dashboard/js/chart.min.js' %}"></script>
+		<script src="{% static 'dashboard/js/utils.js' %}"></script>
+		<script type="application/javascript" src="{% static 'dashboard/js/charts.js' %}"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script
+		  src="https://code.jquery.com/jquery-2.2.4.min.js"
+		  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+		  crossorigin="anonymous"></script>
+		
+		<style>
+			canvas {
+				-moz-user-select: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+			}
+		</style>
+		<script type="text/javascript">
+			$(window).load(function(){
+				window.print();
+			});
+			
+			window.onafterprint = function(e){
+				closePrintView();
+			};
+			
+			function closePrintView() {
+				window.location.href = "{% url 'dashboard:dashboard' %}";   
+			}
+		
+	   </script>
+		</head>
+	<body>
+	   {% block body %}
+	   {% endblock %}
+	</body>
+</html>
