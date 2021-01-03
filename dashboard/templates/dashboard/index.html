@@ -35,7 +35,7 @@
         <div id="content">
             <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
                 <div class="container-fluid">
-					<<a class="btn btn-link collapsed d-md-none rounded-circle mr-3 nav-link" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" ><i class="fas fa-bars"></i></a>
+					<button class="btn btn-link collapsed d-md-none rounded-circle mr-3" type="button"  data-toggle="dropdown" data-target="#collapseExample" ><i class="fas fa-bars"></i></button>
 						<div class="collapse" id="collapseExample" >
 						<li class="dropdown">
 							<div class="dropdown-menu  animated--grow-in" >
@@ -103,8 +103,7 @@
                         <div class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in">
                             <h6 class="dropdown-header">alerts center</h6>
                             <a class="d-flex align-items-center dropdown-item" href="#">
-                                <div class="dropdown-list-image mr-3"><img class="rounded-circle" 
-								">
+                                <div class="dropdown-list-image mr-3"><img class="rounded-circle">
                                     <div class="bg-success status-indicator"></div>
                                 </div>
                                 <div class="font-weight-bold">
