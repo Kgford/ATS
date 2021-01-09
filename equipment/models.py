@@ -24,7 +24,7 @@ class Model(models.Model):
     photo= models.ImageField(upload_to='media/', blank=True)
         
     def __str__(self):
-        return self.description
+        return self.id
         
     def get_absolute_url(self):
         return reverse('model', kwargs={'slug': self.id})

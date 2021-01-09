@@ -60,6 +60,8 @@ class LocationView(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             timestamp = date.today()
+            type = request.POST.get('_type', -1)
+            print('type=',type)
             name = request.POST.get('_name', -1)
             address = request.POST.get('_addr', -1)
             city = request.POST.get('_city', -1)
@@ -70,11 +72,23 @@ class LocationView(View):
             lng = request.POST.get('_lng', -1)
             email = request.POST.get('_email', -1)
             website = request.POST.get('_web', -1)
+            save = request.POST.get('_save', -1)
+            update = request.POST.get('_update', -1)
+            delete = request.POST.get('_delete', -1)
+            id = request.POST.get('_id', -1)
+            print('id=',id)
             inventory_id = None
             active=True
             try:        
-               Location.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
-                        active=active, inventory_id=inventory_id, created_on=timestamp, last_entry=timestamp, lat=lat, lng=lng)
+                if save !=-1:
+                    Location.objects.create(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
+                            active=active, inventory_id=inventory_id, created_on=timestamp, last_entry=timestamp, lat=lat, lng=lng,type=type)
+                elif update !=-1:
+                    Location.objects.filter(id=id).update(name=name, address=address, city=city, state=state, zip_code=zip_code, phone=phone, email=email, website=website,
+                                active=active, inventory_id=inventory_id, created_on=timestamp, last_entry=timestamp, lat=lat, lng=lng,type=type)
+                elif delete !=-1:
+                    Location.objects.filter(id=id).delete()
+
             except IOError as e:
                 print ("location Save Failure ", e)	
         return render (self.request,"locations/index.html",{"index_type":"SIGNIN", "UserN":self.request.user, "index_type":"SITE LOCATIONS"})
@@ -124,7 +138,7 @@ def site(request,location_id):
     except IOError as e:
         print ("load model Failure ", e)
         print('error = ',e) 
-    return render(request,"locations/site.html",{"sites": sites, "site": site, "lat":lat, "lng":lng, "index_type":"Model"})
+    return render(request,"locations/site.html",{"sites": sites, "site": site, "lat":lat, "lng":lng, "index_type":"Model",'location_id':location_id})
 	
 def searchsite(request):
     json_data = []

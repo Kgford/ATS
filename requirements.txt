@@ -9,4 +9,6 @@ Pillow
 django-session-timeout
 django-storages
 django-background-tasks
+pygooglevoice
+django-phone-field
 

@@ -166,7 +166,7 @@ def newmodel(request):
             mod = -1
             models=Model.objects.all()
             image_file = 'inv1.jpg'
-            uploaded_file_url = '/tcli/media/inv1.jpg'
+            uploaded_file_url = '/ATS/media/inv1.jpg'
                        
         except IOError as e:
             print ("load model Failure ", e)
@@ -188,10 +188,10 @@ def showimage(request):
         #print('imagefile =',imagefile)
         media_folder = settings.MEDIA_URL
         print('media_folder = ',media_folder)
-        #file_path = media_folder+image_file
-        #image_file = media_folder + imagefile
+        file_path = media_folder+image_file
+        image_file = media_folder + imagefile
         
-        #os.rename(file_path,image_file)
+        os.rename(file_path,image_file)
        
         if form.is_valid(): 
             form.save() 
@@ -257,7 +257,7 @@ def savemodel(request):
             print(image_file)
             
         if uploaded_file_url == None or uploaded_file_url =="":
-            uploaded_file_url='/tcli/media/inv1.jpg' 
+            uploaded_file_url='/ATS/media/inv1.jpg' 
             image_file='inv1.jpg'
         
         timestamp = date.today()

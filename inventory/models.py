@@ -18,6 +18,9 @@ class Inventory(models.Model):
     model_id = models.IntegerField(null=True,unique=False)
     location_id = models.IntegerField(null=True,unique=False)
     shelf_id = models.IntegerField(null=True,unique=False)
+    
+    def __str__(self):
+        return self.id
 
     def serialize(self):
         return {

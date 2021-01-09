@@ -18,6 +18,7 @@ STATIC_URL = '/static/'
 LOGIN_URL = 'staff/user_login'
 LOGIN_REDIRECT_URL = 'staff/user_login'
 LOGOUT_REDIRECT_URL = 'staff/user_login' 
+AUTH_PROFILE_MODULE = 'users.UserProfileInfo'
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['automatedtestsolutions.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['automatedtestsolution.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -44,7 +45,9 @@ INSTALLED_APPS = [
     'inventory',
     'atspublic',
     'accounts',
+    'assets',
     'vendor',
+    'phone_field',
     'background_task',
     'background_app',
     'whitenoise.runserver_nostatic',

@@ -1,6 +1,76 @@
 import math
 from client.models import Clients
 from contractors.models import Contractors
+from googlevoice import Voice
+#from googlevoice.util import input
+from six.moves import input
+import sys
+
+
+
+#https://sphinxdoc.github.io/pygooglevoice/examples.html#send-sms-messages
+class Comunication:
+    def __init__ (self, number,message):
+        print('number=',number)
+        
+        self.number = number
+        self.message = message
+    
+
+    def send_sms(self):
+        user = 'atetestalerts@gmail.com'
+        password = 'Gadget2021'
+        print('self.number=',self.number)
+        voice = Voice()
+        print('voice=',voice)
+        voice.login(user, password)
+        print('in communication')
+
+        #number = input('Number to send message to: ') # use these for command method
+        #message = input('Message text: ')
+
+        voice.send_sms(self.number, self.message)
+        
+    def call(self):
+        user = 'atetestalerts@gmail.com'
+        password = 'Gadget2021'
+        print('self.number=',self.number)
+        voice = Voice()
+        print('voice=',voice)
+        print(voice.login(user, password))
+        print('in communication')
+        outgoingNumber = input('Number to call: ')
+        forwardingNumber = input('Number to call from [optional]: ') or None
+
+        voice.call(outgoingNumber, forwardingNumber)
+
+        if input('Calling now... cancel?[y/N] ').lower() == 'y':
+            voice.cancel(outgoingNumber, forwardingNumber)
+    
+    def voice_mails(self):
+        user = 'atetestalerts@gmail.com'
+        password = 'Gadget2021'
+        print('self.number=',self.number)
+        voice = Voice()
+        print('voice=',voice)
+        print(voice.login(user, password))
+        print('in communication')
+        for message in voice.voicemail().messages:
+            util.print_(message)
+        
+    def delete_messages(self):
+        user = 'atetestalerts@gmail.com'
+        password = 'Gadget2021'
+        print('self.number=',self.number)
+        voice = Voice()
+        print('voice=',voice)
+        print(voice.login(user, password))
+        print('in communication')
+        for message in voice.sms().messages:
+            if message.isRead:
+                message.delete()
+        
+    
 
 #https://www.programiz.com/python-programming/modules/math
 class Equations:

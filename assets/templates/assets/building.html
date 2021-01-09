@@ -1,0 +1,271 @@
+{% extends "equipment/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ index_type }}
+{% endblock %}
+
+{% block body %}
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Building Manager</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'assets:assets' %}" aria-disabled="true">Assets&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'assets:vehicle' %}">Vehicles&nbsp;&nbsp;</a>>
+				</li>
+				<li class="nav-item active ">
+					<span data-feather="clipboard"></span>
+					<a class="nav-link" href="{% url 'assets:building' %}">Commercial Space</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'locations:location' %}" aria-disabled="true">Building Locations&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'assets:personnel' %}">Personnel&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar navbar-dark bg-dark sidebar collapse" >
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand text-left sidebar-brand m-0" href="#">
+				<span class="text-left d-lg-flex flex-wrap justify-content-lg-start" style="font-size: 12;">ATS Navigation</span>
+				<div class="sidebar-brand-icon rotate-n-15"></div><div class="sidebar-brand-text mx-3"></div></a>
+				<hr class="sidebar-divider my-0">
+				<ul class="nav navbar-nav text-light nav flex-column" id="accordionSidebar">
+					<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
+					<li class="nav-item"></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Assets</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-user"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'contractors:contractor' %}"><i class="fa fa-wrench"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Contractors</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'vendor:vendor' %}"><i class="fab fa-connectdevelop"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Vendors</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'locations:location' %}"><i class="far fa-building"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Locations</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'users:base' %}"><i class="fas fa-tachometer-alt"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Home</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="far fa-sun"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Settings</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'atspublic:public' %}"><i class="fa fa-male"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Website</span></a></li>
+				</ul>
+				<div class="text-center d-none d-md-inline"></div>
+			</div>
+		</nav>
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+	    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			{% if build_space == -1 %}
+				<h1 class="h2">Create new Comercial Space</h1>
+			{% else %}
+			<h1 class="h2">Modify Comercial Space</h1>
+				{% endif %}
+			<div class="btn-toolbar mb-2 mb-md-0">
+				<div class="btn-group mr-2">
+					<a style = "color:#CCD1D1" > {{operator}} logged in</a>
+				</div>
+			</div>
+		</div>
+		<form action = "{% url 'assets:vehicle' %}"  method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<input type='hidden' id = 'm_id' name='m_id' value = {{mod.id}} data-select='inventory_id'/>
+			<input type='hidden' id = 'model' name='model' value = {{mod.model}} data-select='model'/>
+            <div class="row">
+				<div class="col-sm-1 col-lg-2 grid-col">
+					<div class="form-group">
+						<label>Building <span class="k-required"></span></label>
+						<input type='hidden' name='models' data-select='_band'/>
+						<select id='_band' name = "_building" value = "{{build_space.name}}" class="browser-default custom-select custom-select-lg mb-3" >
+							{% if build_space == -1 %}
+								<option selected>select building</option>
+							{% else %}
+								<option selected>{{build_space.name}}</option>
+							{% endif %}
+							{% for building in buildings_list %}
+								<option data-desc = 'building', value = "{{building}}">{{building}}</option>
+							{% endfor %}on>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-2 grid-col">
+					 <div class="form-group">
+						<label>Type<span class="k-required"></span></label>
+						<input type='hidden' name='category' data-select='category'/>
+						<select id='_category' name = "_category" value = "{{mod.category}}" class="browser-default custom-select custom-select-lg mb-3" >
+							{% if build_space == -1 %}
+								<option selected>select type</option>
+							{% else %}
+								<option selected>{{build_space.type}}</option>
+							{% endif %}
+							<option data-desc = 'building', data-val = "OFFICE">OFFICE</option>
+							<option data-desc = 'building', data-val = "CONFERENCE ROOM">CONFERENCE ROOM</option>
+							<option data-desc = 'building', data-val = "LAB">LAB</option>
+							<option data-desc = 'building', data-val = "STORAGE">STORAGE</option>
+							<option data-desc = 'building', data-val = "MACHINE SHOP">MACHINE SHOP</option>
+							<option data-desc = 'building', data-val = "ASSEMBLY">ASSEMBLY</option>
+						</select>
+					</div>	
+				</div>	
+			</div>
+			<div class="row">
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_desc">Space %</label>
+						{% if build_space == -1 %}
+							<input id = "_space" name = "_space" input class="form-control" placeholder="% space use"  required >
+						{% else %}
+							<input id = "_space" name = "_space" input class="form-control" value = "{{build_space.space_percentage}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_desc">Power %</label>
+						{% if build_space == -1 %}
+							<input id = "_power" name = "_power" input class="form-control" placeholder="% of Power"  required >
+						{% else %}
+							<input id = "_power" name = "_power" input class="form-control" value = "{{build_space.power_percentage}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_desc">Internet %</label>
+						{% if build_space == -1 %}
+							<input id = "_desc" name = "_model" input class="form-control" placeholder="% of Internet"  required >
+						{% else %}
+							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.internet_percentage}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_desc">Insurance %</label>
+						{% if build_space == -1 %}
+							<input id = "_desc" name = "_model" input class="form-control" placeholder="% Insurance"  required >
+						{% else %}
+							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.insurance_percentage}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_desc">Fuel %</label>
+						{% if build_space == -1 %}
+							<input id = "_desc" name = "_model" input class="form-control" placeholder="% Fuel"  required >
+						{% else %}
+							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.fuel_percentage}}"  required >
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="row">	
+				<div class="col-sm-3 col-lg-4 grid-col">
+					<div class="form-group">
+					    <label for="_upload"> Select an Equipment Image</label> 
+						<input type="file" name="_upload" id="_upload"> 
+						
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2 col-lg-3 grid-col">
+					<div class="thumbnail">
+					    <img src="{{ uploaded_file_url }}" class="img-responsive" alt="Cinque Terre">
+						<div class="caption" >
+							{% if mod == -1 %}
+								<p id = "_md" name = '_md' >Model:</p>
+							{% else %}
+								<p id = "_md" name = '_md' >Model: {{mod.model}}</p>
+							{% endif %}
+							
+						</div>
+					</div>	
+				</div>
+			</div>
+			<div class="row">
+			    {% if mod == -1 %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<input type="submit" id = "_save" name = "_save" data-search="save"  value="Save Model">
+						</div>
+					</div>
+				{% else %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<input type="submit" id = "_update" name = "_update" data-update="save"  value="Update Model">
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<input type="submit" id = "_delete" name = "_delete" data-update="save"  value="Delete Model">
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</form>
+		{% if uploaded_file_url %}
+			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+		{% endif %}
+		<h2 class="text-center">Equipment List</h2>
+		<div class="table-responsive" Method = "POST">
+			 <table id = "table_id" class="table table-striped table-sm">
+			    <thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Description</th>
+					  <th>Category</th>
+					  <th>Band</th>
+					  <th>Model</th>
+					  <th>Vendor</th>
+					  <th>Status</th>
+					</tr>
+			    </thead>
+				<tbody>
+					{% for model in models %}
+						<tr>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.id}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.description}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.category}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.band}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.model}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.vendor}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id">{{model.status}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+    </main>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
+</body>
+{% endblock %}
+
+</html>

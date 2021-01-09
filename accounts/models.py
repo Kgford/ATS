@@ -82,16 +82,6 @@ class Invoice_Item(models.Model):
     last_update = models.DateField(null=True)	
     invoice_id = models.IntegerField(null=True,unique=False)
     
-class ChargeCode(models.Model):
-    id = models.AutoField(primary_key=True)
-    client_id = models.IntegerField(null=True,unique=False)  
-    charge_code = models.CharField("charge",max_length=100,null=True,unique=False,default='N/A')
-    charge_desc = models.CharField("charge",max_length=255,null=True,unique=False,default='N/A')
-    service_type = models.CharField("service type",max_length=100,null=True,unique=False,default='N/A')
-    active_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-    last_update = models.DateField(null=True)
-    backup_index = models.IntegerField(null=True,unique=False)
         
 class Contractor_Quote(models.Model):
     id = models.AutoField(primary_key=True)

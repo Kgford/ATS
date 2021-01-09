@@ -17,7 +17,6 @@ from contractors.models import Contractors
 from django.views import View
 import datetime
 from collections import OrderedDict
-from ATS.overhead import Equations
 from re import search
 
 class UserLogin(View):
@@ -54,7 +53,6 @@ class UserLogin(View):
 
 
 class ExpensesView(View):
-  
     template_name = "expense.html"
     success_url = reverse_lazy('accounts:expenses')
     def get(self, *args, **kwargs):
@@ -72,6 +70,7 @@ class ExpensesView(View):
             expense_desc =-1
             item_name = -1
             item_desc =-1
+            vehicle =-1
             operator = str(self.request.user)
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
@@ -237,13 +236,15 @@ class SaveExpensesView(View):
     def get(self, *args, **kwargs):
         try:
             vendor = -1
+            vehicle = -1
+            year = datetime.date.today().year
             interval = 'off'
             exp_id = self.request.GET.get('expense_id', -1)
             vendor_id = self.request.GET.get('vendor_id', -1)
             print('exp_id =',exp_id)
             print('vendor_id =',vendor_id)
             operator = str(self.request.user)
-            expense_list = Expenses.objects.all()
+            expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             vendor_list =  Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
             print('vendor_list =',vendor_list)
@@ -268,7 +269,7 @@ class SaveExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
+        return render (self.request,"accounts/save_expenses.html",{'year':year, 'vehicle':vehicle,"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
 
     def post(self, request, *args, **kwargs):
         vendor_list = []
@@ -282,8 +283,9 @@ class SaveExpensesView(View):
             timestamp = date.today()
             operator = str(self.request.user)
             exp_id = request.POST.get('e_id', -1)
+            year = datetime.date.today().year
             print('exp_id =',exp_id)
-            expense_list = Expenses.objects.all()
+            expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             vendor_list =  Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
             if exp_id !=-1 and exp_id != '':
@@ -298,10 +300,7 @@ class SaveExpensesView(View):
             print('expense_type = ',expense_type)
             expense_desc = request.POST.get('_exp_desc', -1)
             print('expense_desc =',expense_desc)
-            item_name = request.POST.get('_item_name', -1)
-            print('item_name =',item_name)
-            item_desc = request.POST.get('_item_desc', -1)
-            print('item_desc =',item_desc)
+            
             quantity = request.POST.get('_quantity', -1)
             print('quantity =',quantity)
             item_cost = request.POST.get('_item_cost', -1)
@@ -314,7 +313,6 @@ class SaveExpensesView(View):
             print('invoice =',invoice)
             interval = request.POST.get('_interval', False)
             print('interval =',interval)
-            
             interval_time = request.POST.get('_interval_time', -1)
             print('interval_time =',interval_time)
             save_exp = request.POST.get('_save', -1)
@@ -325,6 +323,24 @@ class SaveExpensesView(View):
             print('del_exp =',del_exp)
             quantity = request.POST.get('_quantity', -1)
             print('quantity =',quantity)
+            vehicle = request.POST.get('_vehicle', -1)
+            print('vehicle =',vehicle)
+            building = request.POST.get('_building', -1)
+            print('building =',building)
+            building_space = request.POST.get('_building_space', -1)
+            print('vehicle =',vehicle)
+            item_name = request.POST.get('_item_name', -1)
+            print('item_name =',item_name)
+            item_desc = request.POST.get('_item_desc', -1)
+            print('item_desc =',item_desc)
+            
+            if item_name ==-1 and building ==-1:
+                item_name = vehicle
+                item_desc = vehicle_desc
+            elif item_name ==-1 and vehicle ==-1:
+                item_name = building
+                item_desc = building_space
+            
             success = True
             if interval_time=='select option':
                 interval_time = "N/A"
@@ -367,7 +383,7 @@ class SaveExpensesView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
+        return render (self.request,"accounts/save_expenses.html",{'year':year, 'vehicle':vehicle,"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
         
 class InvoiceItemView(View):
     template_name = "invoice_item.html"
