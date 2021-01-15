@@ -22,6 +22,7 @@ from collections import OrderedDict
 from ATS.overhead import Equations
 from re import search
 from ATS.overhead import Comunication
+from django.contrib.auth.decorators import login_required
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -294,7 +295,35 @@ def newmodel(request):
         except IOError as e:
             print ("load model Failure ", e)
             print('error = ',e) 
-        return render(request,"equipment/model.html",{"models": models, "mod": mod, "uploaded_file_url":uploaded_file_url, "image_file":image_file,  "index_type":"Model"})
+        return render(request,"assets/model.html",{"models": models, "mod": mod, "uploaded_file_url":uploaded_file_url, "image_file":image_file,  "index_type":"Model"})
+
+@login_required
+def showimage(request):
+    image_file = -1
+    if request.method == 'POST': 
+        form = ModelsForm(request.POST, request.FILES)
+        print('form =',form)
+        model_id=308
+        print('model_id =',model_id)       
+        instance = Model.objects.get(id=model_id)
+        print('instance =',instance) 
+        form = ModelsForm(request.POST or None, instance=instance)
+            
+        #print('imagefile =',imagefile)
+        media_folder = settings.MEDIA_URL
+        print('media_folder = ',media_folder)
+        #file_path = media_folder+image_file
+        #image_file = media_folder + imagefile
+        
+        #os.rename(file_path,image_file)
+       
+        if form.is_valid(): 
+            form.save() 
+    else: 
+        form = ModelsForm()
+        imagefile = request.POST.get('photo',-1)
+        #print('imagefile =',imagefile)
+    return render(request, 'assets/images.html', {'form' : form}) 
         
         
 def loadpersonnel(request, model_id):

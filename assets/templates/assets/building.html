@@ -230,7 +230,7 @@
 		{% if uploaded_file_url %}
 			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
 		{% endif %}
-		<h2 class="text-center">Equipment List</h2>
+		<h2 class="text-center">Comercial Space List</h2>
 		<div class="table-responsive" Method = "POST">
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
@@ -247,13 +247,13 @@
 				<tbody>
 					{% for model in models %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.id}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.description}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.category}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.band}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.model}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.vendor}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id">{{model.status}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.id}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.description}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.category}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.band}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.model}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.vendor}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id">{{model.status}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

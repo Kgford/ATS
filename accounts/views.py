@@ -18,6 +18,7 @@ from django.views import View
 import datetime
 from collections import OrderedDict
 from re import search
+from ATS.overhead import Equations
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -534,7 +535,7 @@ class InvoiceItemView(View):
                 print('client_id=',client_id)
                 print('contractor_id=',contractor_id)
                 print('charge_id=',charge_id)
-                Invoice_Item.objects.filter(id=item_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, invoice_id=invoice_id, 
+                Invoice_Item.objects.filter(id=item_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, 
                                         cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
                 exp=-1
             elif not save_item==-1:
@@ -569,8 +570,10 @@ class SearchInvoiceView(View):
             year =-1
             paid =-1
             timestamp = date.today()
+            dt = datetime.datetime.today()
+            year = dt.year
             operator = str(self.request.user)
-            invoice_list = Invoice.objects.all()
+            invoice_list = Invoice.objects.filter(invoice_date__contains=year).all()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             years = Invoice.objects.order_by('invoice_date').values_list('invoice_date', flat=True).distinct()
@@ -754,8 +757,29 @@ class CreateInvoiceView(View):
             item_invoice = self.request.GET.get('item_invoice', -1)
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             total=0
-            
-            if invoice_id !=-1:
+            print('invoice_id =',invoice_id)
+            if invoice_id == 'x': #item_id but no invoice_id
+                item = Invoice_Item.objects.filter(id=item_id).first()
+                print('item=',item)
+                client_id=item.client_id
+                print('client_id=',client_id)
+                client = Clients.objects.filter(id=client_id).first()
+                print('client=',client)
+                client = client.name
+                print('client=',client)
+                print('client_id=',client_id)
+                print('invoice_id =',invoice_id)
+                print('client=',client)
+                invoice = -1
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()  
+                invoice_list = -1
+                print('invoice_list =',invoice_list)
+            elif invoice_id ==-1 or invoice_id == None:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            else:
+                print("IN Invoice Active")
                 invoice = Invoice.objects.filter(id=invoice_id)
                 invoice = invoice[0] 
                 item = Invoice_Item.objects.filter(id=item_id)
@@ -766,9 +790,18 @@ class CreateInvoiceView(View):
                 resource_type = item.resource_type
                 contractor_id = item.contractor_id
                 client_id = item.client_id
+                print('client_id=',client_id)
                 client = Clients.objects.filter(id=client_id)
                 client = client[0].name
-                Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)# Update Invoice_Item
+                print('client=',client)
+                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update Invoice_Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                Invoice_Item.objects.filter(id=item_id).update(active=active,invoice_id=item_invoice)
+                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update Invoice_Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all() 
+                print('invoice_list =',invoice_list)
+                print('item_id=',item_id)
                 # Add travel costs to Expenses if required
                 print('resource_type.upper()=',resource_type.upper())
                 print(search(resource_type.upper(),'SITE'))
@@ -795,12 +828,7 @@ class CreateInvoiceView(View):
                         Expenses.objects.create(expense_description=expense_description,expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id, item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
                         
                     
-                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
-                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
-                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=0).all()
                 print('invoice_item_list =',invoice_item_list)
-                invoice_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
-                print('invoice_list =',invoice_list)
                 invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
                 invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
                 if invoice:
@@ -816,10 +844,9 @@ class CreateInvoiceView(View):
             print('invoice_list =',invoice_list)
             print('invoice_list =',invoice_list)
             print('invoice_id_list =',invoice_id_list)
-            print('invoice_id =',invoice_id)
             print('client=',client)    
             print('invoice=', invoice)
-            print("in GET")
+            
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
@@ -851,8 +878,14 @@ class CreateInvoiceView(View):
             print('invoice_id=',invoice_id)
             client = request.POST.get('_client', -1)
             print('client =',client)
-                      
-            
+            save_invoice = request.POST.get('_save',-1)
+            print('save_invoice =',save_invoice)
+            update_invoice = request.POST.get('_update',-1)
+            print('update_invoice =',update_invoice)
+            del_invoice = request.POST.get('_delete',-1)
+            print('del_invoice =',del_invoice)
+            clear_invoice = request.POST.get('_clear',-1)
+            print('clear_invoice =',clear_invoice)
             invoice_desc = request.POST.get('_invoice_desc',-1)
             print('invoice_desc =',invoice_desc)
             invoice_charge = request.POST.get('_invoice_charge',-1)
@@ -860,6 +893,18 @@ class CreateInvoiceView(View):
             charge_code = invoice_charge
             invoice_date = request.POST.get('_invoice_date',-1)
             print('invoice_date =',invoice_date)
+            # update invoice items list with customer selection
+            if save_invoice ==-1 and update_invoice ==-1 and del_invoice ==-1 and clear_invoice==-1 and client !=-1:
+                print('we are here')
+                invoice_id = 'x'
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()         
+                return render (self.request,"accounts/create_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+                            'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
+            
             if charge_code =="":
                 split_charge = invoice_date.split("-")
                 print('split_charge =',split_charge)
@@ -870,23 +915,22 @@ class CreateInvoiceView(View):
             print('invoice =',invoice)
             active = request.POST.get('_active', False)
             print('active =',active)
-            
-            save_invoice = request.POST.get('_save',-1)
-            print('save_invoice =',save_invoice)
-            update_invoice = request.POST.get('_update',-1)
-            print('update_exp =',update_invoice)
-            del_invoice = request.POST.get('_delete',-1)
-            print('del_invoice =',del_invoice)
-            clear_invoice = request.POST.get('_clear',-1)
-            print('clear_invoice =',clear_invoice)
-           
-
             quantity = request.POST.get('_quantity',-1)
             print('quantity =',quantity)
             success = True
             
             print('invoice_id=',invoice_id)          
-            if  invoice_id :
+            if invoice_id == 'x':
+                print('invoice_id =',invoice_id)
+                invoice = -1
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()  
+                invoice_list = Invoice_Item.objects.filter(client_id=client_id).all()
+                print('invoice_list =',invoice_list) 
+            elif invoice_id :
                 invoice = Invoice.objects.filter(id=invoice_id)
                 invoice = invoice[0] 
                 invoice_date = invoice.invoice_date
@@ -1030,7 +1074,7 @@ class ReconsileInvoiceView(View):
                 client = client[0].name
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
-                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=0).all()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active=True).all()
                 print('invoice_item_list =',invoice_item_list)
                 invoice_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
                 print('invoice_list =',invoice_list)
@@ -1583,3 +1627,89 @@ class IncomeView(View):
             print('error = ',e) 
         return render (self.request,"accounts/income.html",{'income':income, "year":year, "month":month, "year_list":year_list, "month_list":month_list, "operator":operator, "total":total, 'exp_total':exp_total})
      
+     
+class ReportView(View):
+    template_name = "report.html"
+    success_url = reverse_lazy('accounts:report')
+    def get(self, *args, **kwargs):
+        try:
+            invoice_item = -1
+            client = -1
+            charge_code = -1
+            item_charge_code = []
+            invoice = -1
+            charge = -1
+            client_list = -1
+            active = 'off'
+            invoice_id_list = -1
+            invoice_list = []
+            total=0
+            paid = 'off'
+            x=0
+            
+            report_type = 'Invoice'
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            thisyear = dt.year
+            thismonth = dt.month
+            thisday = dt.day
+            print('thismonth=',thismonth)
+            print('thisyear=',thisyear)
+            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
+            month = months[str(thismonth)]
+            month_full = full_months[str(thismonth)]
+            print('month =',month)
+                
+            operator = str(self.request.user)
+            invoice_id = self.request.GET.get('invoice_id', -1)
+            report_type = self.request.GET.get('report_type', -1)
+            print('invoice_id',invoice_id)
+            print('report_type',report_type)
+            company = 'Automated Test Solutions'
+            company_address = 'West Babylon, NY 11704'
+            
+            if invoice_id !=-1:
+                invoice = Invoice.objects.filter(id=invoice_id)
+                invoice = invoice[0] 
+                charge_code = invoice.charge_code
+                client_id = invoice.client_id
+                client = Clients.objects.filter(id=client_id).first()
+                invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
+                print('invoice_item =',invoice_item)
+                invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
+                operator = str(self.request.user)
+                if invoice:
+                    invoice=invoice[0]
+                    this_date = invoice.invoice_date
+                    paid=invoice.paid
+                    if paid == True:
+                        save_paid = 'on'
+                    else:
+                        save_paid = 'off'
+                total=0
+                index1=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    item = Charge_Code.objects.filter(id=subtotal.charge_id)
+                    item_charge_code.append(item[0].charge)
+                    print(total)
+                    print('item_charge_code=',item_charge_code)
+                print('this_date=',this_date)
+                print('paid=', paid)
+                print('save_paid=', save_paid)
+                
+                                    
+            print('active =',active)
+            print('client_list =',client_list)
+            print('invoice_list =',invoice_list)
+            print('invoice_item_list=',invoice_item)
+            print('invoice_id =',invoice_id)
+            print('client=',client)    
+            print('invoice=', invoice)
+            print("in GET")
+           
+        except IOError as e:
+           print('error = ',e) 
+        return render(self.request, 'accounts/report.html', {'operator':operator, 'company':company, 'company_address':company_address,'client':client,'thisyear':thisyear,'month':month,'thisday':thisday,
+                                                       'report_type':report_type,'charge_code':charge_code, 'total':total, 'item_charge_code':item_charge_code, 'invoice_item':invoice_item,'invoice':invoice,'paid':paid,'x':x}) 
