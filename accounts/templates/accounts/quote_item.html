@@ -8,7 +8,7 @@
 {% block body %}
 <body onload="check_start()">
    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Quote Manager</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -20,15 +20,15 @@
 				</li>
 				<li class="nav-invoice">
 					<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:invoice' %}" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
+					<a class="nav-link" href="{% url 'accounts:quote' %}" aria-disabled="true">Search Quote&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-invoice">
 					<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:new_invoice' %}" aria-disabled="true">Create Invoice&nbsp;&nbsp;&nbsp;</a>
+					<a class="nav-link" href="{% url 'accounts:new_quote' %}" aria-disabled="true">Create Quote&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-invoice active">
-				<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:invoice_item' %}" aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'accounts:quote_item' %}" aria-disabled="true">Quote Items&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-invoice ">
 					<span data-feather="clipboard"></span>
@@ -66,7 +66,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
 					<li class="nav-item"></li>
 					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Assets</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
@@ -84,13 +84,13 @@
 			</div>
 		</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<form action = "{% url 'accounts:invoice_item' %}" method="post">
+	<form action = "{% url 'accounts:quote_item' %}" method="post">
 		{% csrf_token %}
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 			{% if item == -1 %}
-				<h1 class="h2">Create new Invoice Item</h1>
+				<h1 class="h2">Create new Quote Item</h1>
 			{% else %}
-				<h1 class="h2">Modify Invoice Item</h1>
+				<h1 class="h2">Modify Quote Item</h1>
 			{% endif %}
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<a style = "color:#CCD1D1" > {{operator}} logged in</a>
@@ -207,8 +207,8 @@
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					{% if item != -1 %}
-						<label for="_quantity">Invoice ID</label>
-						<input id = "_invoice_id"  name = "_invoice_id" input class="form-control" value = "{{item.invoice_id}}"  required>
+						<label for="_quantity">Quote ID</label>
+						<input id = "_quote_id"  name = "_quote_id" input class="form-control" value = "{{item.quote_id}}"  required>
 					{% endif %}
 				</div>	
 			</div>
@@ -332,7 +332,7 @@
 			    <thead>
 					<tr>
 					  <th>ID</th>
-					  <th>Invoice ID</th>
+					  <th>Quote ID</th>
 					  <th>Client ID</th>
 					  <th>Resource Type</th>
 					  <th>Service Type</th>
@@ -345,15 +345,15 @@
 				<tbody>
 					{% for item1 in item_list %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.id}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.invoice_id}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.client_id}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.resource_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.service_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.total}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:invoice_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.active}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.quote_id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.client_id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.total}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:quote_item' %}?item_id={{item1.id}}&charge_id={{item1.charge_id}}&client_id={{item1.client_id}}">{{item1.active}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

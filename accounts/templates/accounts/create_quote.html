@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block body %}
-<body >
+<body onload="check_start()">
    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Invoice Manager</a>
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Quote Manager</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -20,15 +20,15 @@
 				</li>
 				<li class="nav-invoice">
 					<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:invoice' %}" aria-disabled="true">Search Invoice&nbsp;&nbsp;&nbsp;</a>
+					<a class="nav-link" href="{% url 'accounts:quote' %}" aria-disabled="true">Search Quote&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-invoice active">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'accounts:new_quote' %}" aria-disabled="true">Create Quote&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-invoice">
 					<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:new_invoice' %}" aria-disabled="true">Create Invoice&nbsp;&nbsp;&nbsp;</a>
-				</li>
-				<li class="nav-invoice">
-					<span data-feather="log-out"></span>
-					<a class="nav-link" href="{% url 'accounts:invoice_item' %}" aria-disabled="true">Invoice Items&nbsp;&nbsp;&nbsp;</a>
+					<a class="nav-link" href="{% url 'accounts:quote_item' %}" aria-disabled="true">Quote Items&nbsp;&nbsp;&nbsp;</a>
 				</li>
 				<li class="nav-invoice ">
 					<span data-feather="clipboard"></span>
@@ -44,7 +44,7 @@
 				</li>
 				</li>
 				<li class="nav-invoice ">
-				<span data-feather="log-out"></span>
+					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
 				</li>
 			</ul>
@@ -63,7 +63,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
 					<li class="nav-item"></li>
 					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Assets</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
@@ -81,48 +81,48 @@
 			</div>
 		</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<form action = "{% url 'accounts:invoice_update' %}" method="post">
+	<form action = "{% url 'accounts:new_quote' %}" method="post">
 		{% csrf_token %}
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-invoices-center pt-3 pb-2 mb-3 border-bottom">
-			<h2 class="text-center">Reconcile Invoice</h2>
+			<h2 class="text-center">Create new Quote</h2>
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<a style = "color:#CCD1D1" > {{operator}} logged in</a>
 			</div>
 		</div>
-		{% if invoice == -1 %}
-			<input type='hidden' id = '_invoice_id' name='_invoice_id' />
+		{% if quote == -1 %}
+			<input type='hidden' id = '_quote_id' name='_quote_id' />
 		{% else %}
-			<input type='hidden' id = '_invoice_id' name='_invoice_id' value = "{{invoice.id}}" />
+			<input type='hidden' id = '_quote_id' name='_quote_id' value = "{{quote.id}}" />
 		{% endif %}
 		
 		<div class="row">
 			<div class="col-sm-1 col-lg-1 grid-col">
 				<div class="form-group">
-					<!-- invoice id-->
-					<label>Invoice ID<span class="k-required"></span></label>
-					{% if invoice == -1 %}
+					<!-- quote id-->
+					<label>Quote ID<span class="k-required"></span></label>
+					{% if quote == -1 %}
 						<input disabled="disabled" input class="form-control" placeholder="Automatic" >
 					{% else %}
-						<input disabled="disabled" input class="form-control" value ="{{invoice.id}}" >
+						<input disabled="disabled" input class="form-control" value ="{{quote.id}}" >
 					{% endif %}
 				</div>
 			</div>
 			<div class="col-sm-1 col-lg-4 grid-col">
 				<div class="form-group">
-					<label for="_invoice_desc">Invoice Title</label>
-					{% if invoice == -1 %}
-						<input id = "_invoice_desc" name = "_invoice_desc" input class="form-control" placeholder="Enter Invoice Title"  required >
+					<label for="_quote_desc">Quote Title</label>
+					{% if quote == -1 %}
+						<input id = "_quote_desc" name = "_quote_desc" input class="form-control" placeholder="Enter Quote Title"  required >
 					{% else %}
-						<input id = "_invoice_desc" name = "_invoice_desc" input class="form-control" value = "{{invoice.invoice_desc}}"  required >
+						<input id = "_quote_desc" name = "_quote_desc" input class="form-control" value = "{{quote.quote_desc}}"  required >
 					{% endif %}
 				</div>
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					<!-- Customer-->
-					<label>Customer<span class="k-required"></span></label>
+					<label>Client<span class="k-required"></span></label>
 					<input type='hidden' name='_client' data-select='cust'/>
-					<select id='_client' name ='_client' class="browser-default custom-select custom-select-lg mb-3" required>
+					<select id='_client' name ='_client' onchange='this.form.submit()' class="browser-default custom-select custom-select-lg mb-3" required>
 						{% if client == -1%}
 							<option data-desc = '_client', value = "select menu">select menu</option>
 						{% else %}
@@ -136,18 +136,18 @@
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<label for="_quantity">Invoice Date</label>
-					{% if invoice == -1 %}
-						<input type = "date"  id = "_invoice_date"  name = "_invoice_date" input class="form-control"  required>
+					<label for="_quantity">Quote Date</label>
+					{% if quote == -1 %}
+						<input type = "date" id = "_quote_date"  name = "_quote_date" input class="form-control"  required>
 					{% else %}
-						<input id = "_invoice_date"  name = "_invoice_date" input class="form-control"  value = "{{this_date}}" required>
+						<input  id = "_quote_date"  name = "_quote_date" input class="form-control"  value = "{{quote.quote_date}}" required>
 					{% endif %}
 				</div>	
 			</div>
-			{% if invoice == -1 %}
+			{% if quote == -1 %}
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label  for="_quantity">New Invoice</label>
+						<label  for="_quantity">New Quote</label>
 						<button type="submit" id = "_save" name = "_save"  class="btn btn-success">&nbsp;&nbsp;Create&nbsp;&nbsp;</button>
 					</div>
 				</div>
@@ -155,7 +155,7 @@
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
 						<label  for="_quantity">&nbsp;</label>
-						<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update Invoice</button>
+						<button type="submit" id = "_update" name = "_update"  class="btn btn-primary">Update Quote</button>
 					</div>
 				</div>
 			{% endif %}
@@ -176,74 +176,61 @@
 					</tr>
 			    </thead>
 				<tbody>
-					{% for item in invoice_item_list %}
+					{% for item in quote_item_list %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.id}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.resource_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.service_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.item_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.total}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.active}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.item_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.total}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=False&item_quote={{quote_id}}">{{item.active}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 		</div>
-		<h2>Invoice</h2>
+		<h2>Quote</h2>
 		
 		<div class="row">
 			<div class="col-sm-1 col-lg-1 grid-col">
 				<div class="form-group">
-					<button type="submit" id = "_clear" name = "_clear"  class="btn btn-warning">Clear Invoice</button>
+					<button type="submit" id = "_clear" name = "_clear"  class="btn btn-warning">Clear Quote</button>
 				</div>
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete Invoice&nbsp;</button>
+					<button type="submit" id = "_delete" name = "_delete"  class="btn btn-danger">Delete Quote&nbsp;</button>
 				</div>
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					{% if invoice == -1 %}
-						<input id = "_invoice_charge"  name = "_invoice_charge" placeholder = 'Invoice Charge Code' input class="form-control">
+					{% if quote == -1 %}
+						<input id = "_quote_charge"  name = "_quote_charge" placeholder = 'Quote Charge Code' input class="form-control">
 					{% else %}
-						<input id = "_invoice_charge"  name = "_invoice_charge" value = "{{invoice.charge_code}}" input class="form-control">
+						<input id = "_quote_charge"  name = "_quote_charge" value = "{{quote.charge_code}}" input class="form-control">
 					{% endif %}
 				</div>	
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
 					{% if total == -1 %}
-						<input id = "_total_charge"  name = "_total_charge" placeholder = 'Invoice Total Charge' input class="form-control">
+						<input id = "_total_charge"  name = "_total_charge" placeholder = 'Quote Total Charge' input class="form-control">
 					{% else %}
 						<input id = "_total_charge"  name = "_total_charge" value = "Total = ${{total}}" input class="form-control">
 					{% endif %}
 				</div>	
 			</div>
-			<div class="col-sm-1 col-lg-2 grid-col">
-					<div class="form-group">
-						<div class="form-check">
-							{% if paid == 'on' %}
-								<input type="checkbox" class="form-check-input" id="_paid" name="_paid" checked = 'checked' onclick="paid();"/>
-								<label class="form-check-label" id ="_paid_status" >&nbsp;&nbsp;&nbsp;&nbsp;Paid</label>
-							{% else %}
-								<input type="checkbox" class="form-check-input" id="_paid" name="_paid"  onclick="paid();"/>
-								<label class="form-check-label" id ="_paid_status">&nbsp;&nbsp;&nbsp;&nbsp;Unpaid</label>
-							{% endif %}
-						</div>
-					</div>	
-				</div>
 			<div class="col-sm-1 col-lg-1 grid-col">
 				<div class="form-group"></div>	
 			</div>
-		</form>
-			<div class="col-sm-1 col-lg-1 grid-col">
-				<div class="form-group">
-					<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'accounts:report' %}?invoice_id={{invoice.id}}&report_type=Invoice" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
-				</div>
+		</form>		
+		<div class="col-sm-1 col-lg-1 grid-col">
+			<div class="form-group">
+				<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'accounts:report' %}?quote_id ={{quote.id}}}&report_type=Quote" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
 			</div>
-			<div class="table-responsive" Method = "POST">
+		</div>
+		<div class="table-responsive" Method = "POST">
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
 					<tr>
@@ -257,15 +244,15 @@
 					</tr>
 			    </thead>
 				<tbody>
-					{% for item in invoice_list %}
+					{% for item in quote_list %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.id}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.resource_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.service_type}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.item_date}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.item_desc}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.total}}</td>
-							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.active}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.resource_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.service_type}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.item_date}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.item_desc}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.total}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_quote' %}?quote_id={{quote_id}}&item_id={{item.id}}&active=True&item_quote=0">{{item.active}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -279,10 +266,10 @@
 	$(document).ready(function() {
 		// Get value on button click and show alert
 		$("#_quantity").keyup(calc);
-		$("#_invoice_cost").keyup(calc);
+		$("#_quote_cost").keyup(calc);
 		function calc() {
 		  $('#_total_cost').val(
-			parseInt($('#_quantity').val(), 10) * parseFloat($('#_invoice_cost').val(), 10)
+			parseInt($('#_quantity').val(), 10) * parseFloat($('#_quote_cost').val(), 10)
 		);
 	}
 	});

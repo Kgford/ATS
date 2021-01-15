@@ -10,7 +10,7 @@ from equipment.models import Model
 from locations.models import Location
 from client.models import Clients
 from inventory.models import Inventory, Events
-from accounts.models import Expenses, Invoice_Item, Charge_Code, Invoice
+from accounts.models import Expenses, Invoice_Item, Charge_Code, Invoice, Quote, Quote_Item
 from dashboard.models import Income_report
 from vendor.models import Vendor
 from contractors.models import Contractors
@@ -399,6 +399,9 @@ class InvoiceItemView(View):
             item_id = self.request.GET.get('item_id', -1)
             charge_id = self.request.GET.get('charge_id', -1)
             client_id = self.request.GET.get('client_id', -1)
+            dt = datetime.datetime.today()
+            year = dt.year
+            operator = str(self.request.user)
             if item_id !=-1:
                 item = Invoice_Item.objects.filter(id=item_id)
                 item = item[0] 
@@ -430,7 +433,7 @@ class InvoiceItemView(View):
                 
             contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
             
-            item_list = Invoice_Item.objects.all()
+            item_list = Invoice_Item.objects.filter(item_date__contains=year).all()
             print('item_list =',item_list)
             print('item_id =',item_id)
             print('charge_id =',charge_id)
@@ -1287,6 +1290,910 @@ class ReconsileInvoiceView(View):
         return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
                         'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':paid, 'this_date':this_date})
                         
+                        
+class QuoteItemView(View):
+    template_name = "quote_item.html"
+    success_url = reverse_lazy('accounts:quote_item')
+    def get(self, *args, **kwargs):
+        try:
+            contractor = -1
+            client = -1
+            item = -1
+            charge = -1
+            active = 'off'
+            dt = datetime.datetime.today()
+            year = dt.year
+            item_id = self.request.GET.get('item_id', -1)
+            charge_id = self.request.GET.get('charge_id', -1)
+            client_id = self.request.GET.get('client_id', -1)
+            if item_id !=-1:
+                item = Quote_Item.objects.filter(id=item_id)
+                item = item[0] 
+                active = item.active
+                if active=='on':
+                    active = True
+                date= item.item_date
+                print('date=',date)
+                contractor_id = item.contractor_id
+                contractor = Contractors.objects.filter(id=contractor_id)
+                contractor = contractor[0].name
+                cust_id = item.client_id
+                client = Clients.objects.filter(id=cust_id)
+                client = client[0].name
+            if charge_id !=-1:   
+                charge = Charge_Code.objects.filter(id=charge_id)
+                charge = charge[0].charge
+                print('charge=',charge)
+            if client_id !=-1:
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+            else:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+                
+            operator = str(self.request.user)
+            if client_id !=-1:
+                charge_list =  Charge_Code.objects.filter(client_id=client_id).values_list('charge', flat=True).distinct()
+            else:
+                charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
+                
+            contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
+            
+            item_list = Quote_Item.objects.filter(item_date__contains=year).all()
+            print('item_list =',item_list)
+            print('item_id =',item_id)
+            print('charge_id =',charge_id)
+            print('contractor=',contractor)
+            print('client=',client)    
+            print('item=', item)
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/quote_item.html",{"charge_list": charge_list, "id":id, "contractor_list":contractor_list, 'client_list':client_list, 'item_list':item_list,
+                        'charge':charge, 'client':client, "item":item, 'contractor':contractor, "operator":operator,'active':active,'item_id':item_id})
+
+    def post(self, request, *args, **kwargs):
+        contractor_list = []
+        expense_list =[]
+        desc_list = []
+        item_id = -1
+        exp =-1
+        vendor =-1
+        
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
+            contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            item_list = Quote_Item.objects.all()  
+                        
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            item_id = request.POST.get('_item_id', -1 )
+            print('item_id =',item_id)
+            contractor = request.POST.get('_contractor', -1 )#service_provider
+            print('contractor = ',contractor)
+            service_type = request.POST.get('_service_type', -1)
+            print('service_type = ',service_type)
+            resource_type = request.POST.get('_res_type', -1)
+            print('resource_type = ',resource_type)
+            client = request.POST.get('_cust', -1)
+            print('client =',client)
+            charge = request.POST.get('_charge', -1)
+            print('charge =',charge)
+            item_desc = request.POST.get('_item_desc', -1)
+            print('item_desc =',item_desc)
+            cost_type = request.POST.get('_item_cost_type', -1)
+            print('cost_type =',cost_type)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            rate = request.POST.get('_item_cost', -1)
+            print('rate =',rate)
+            total_cost = request.POST.get('_total_cost', -1)
+            print('total_cost =',total_cost)
+            item_date = request.POST.get('_item_date', -1)
+            print('item_date =',item_date)
+            quote = request.POST.get('_quote', -1)
+            print('quote =',quote)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            quote_id = request.POST.get('_quote_id', -1)
+            print('quote_id  =',quote_id )
+            
+            save_item = request.POST.get('_save', -1)
+            print('save_item =',save_item)
+            update_item = request.POST.get('_update', -1)
+            print('update_exp =',update_item)
+            del_item = request.POST.get('_delete', -1)
+            print('del_item =',del_item)
+            quantity = request.POST.get('_quantity', -1)
+            print('quantity =',quantity)
+            success = True
+                       
+            if active =='on':
+                active_save = True
+            else:
+                active_save = False
+                
+            client_id = Clients.objects.filter(name=client).first()
+            client_id = client_id.id
+            contractor_id = Contractors.objects.filter(name=contractor).first()
+            contractor_id = contractor_id.id
+            charge_id = Charge_Code.objects.filter(charge=charge).first()
+            charge_id = charge_id.id
+            item = Quote_Item.objects.all()
+            if item:
+                item = item[0]
+            
+                                
+            print('active_save=',active_save)
+            if not del_item==-1:
+                try:
+                   #update item	
+                    Quote_Item.objects.filter(id=item_id).delete()
+                    print('delete complete')
+                    item=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    return HttpResponseRedirect(reverse('accounts:expenses'))
+            elif not update_item==-1:
+                #update item	
+                print('client_id=',client_id)
+                print('contractor_id=',contractor_id)
+                print('charge_id=',charge_id)
+                Quote_Item.objects.filter(id=item_id).update(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id,resource_type=resource_type,service_type=service_type, 
+                                        cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
+                exp=-1
+            elif not save_item==-1:
+                if Quote_Item.objects.filter(id=item_id).exists():
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                else:
+                   #save item	
+                    print('client_id=',client_id)
+                    print('contractor_id=',contractor_id)
+                    print('charge_id=',charge_id)
+                    Quote_Item.objects.create(client_id=client_id,charge_id=charge_id, contractor_id=contractor_id, resource_type=resource_type,service_type=service_type,
+                                        cost_type=cost_type,item_date=item_date,item_desc=item_desc, rate=rate, quantity=quantity ,total=total_cost, active=active_save, last_update=timestamp)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return HttpResponseRedirect(reverse('accounts:quote_item'))
+
+
+class SearchQuoteView(View):
+    template_name = "quote.html"
+    success_url = reverse_lazy('accounts:quote')
+    def get(self, *args, **kwargs):
+        try:
+            
+            quote_list =[]
+            quote = -1
+            client_list = -1
+            client = -1
+            client_id = -1
+            desc_list = -1
+            id_list =-1
+            year =-1
+            paid =-1
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            year = dt.year
+            operator = str(self.request.user)
+            quote_list = Quote.objects.filter(quote_date__contains=year).all()
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            years = Quote.objects.order_by('quote_date').values_list('quote_date', flat=True).distinct()
+            print('years=',years)
+            year_list=[]
+            for year1 in years:
+                year1 = str(year1)
+                dt = year1.split('-')
+                year_list.append(dt[0])
+            year_list = list(OrderedDict.fromkeys(year_list))
+                      
+            print("in GET")
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/quote.html",{"quote_list": quote_list, "client_list":client_list, "desc_list":desc_list, "id_list":id_list, "year_list":year_list,
+                        "quote":quote, 'client':client, "year":year, "paid":paid})
+
+    def post(self, request, *args, **kwargs):
+        contractor_list = []
+        expense_list =[]
+        desc_list = []
+        item_id = -1
+        exp =-1
+        vendor =-1
+        
+        try: 
+            print("in POST")
+            timestamp = date.today()
+            quote_list =[]
+            quote = -1
+            client_list = -1
+            client = -1
+            client_id = -1
+            desc_list = -1
+            id_list =-1
+            year =-1
+            paid =-1
+            save_paid = "No"
+            timestamp = date.today()
+            operator = str(self.request.user)
+            quote_list = Quote.objects.all()
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            years = Quote.objects.order_by('quote_date').values_list('quote_date', flat=True).distinct()
+            print('years=',years)
+            year_list=[]
+            for year1 in years:
+                year1 = str(year1)
+                dt = year1.split('-')
+                year_list.append(dt[0])
+            year_list = list(OrderedDict.fromkeys(year_list))
+                        
+            search = request.POST.get('search', -1)
+            print('search =',search)
+            quote_id = request.POST.get('_quote_id', -1 )
+            print('quote_id =',quote_id)
+            quote_desc = request.POST.get('_quote_desc', -1 )
+            print('quote_desc =',quote_desc)
+            client = request.POST.get('_client', -1)
+            print('client =',client)
+            if client != 'Search by Client':
+                client_id = Clients.objects.filter(name=client).all()
+                print('client_id =',client_id)
+                client_id = client_id[0].id
+            print('client_id =',client_id)
+            paid = request.POST.get('_paid', -1 )#service_provider
+            print('paid  = ',paid )
+            if paid =='Paid':
+                save_paid=True
+            else:
+                save_paid=False
+            print('save_paid  = ',save_paid )    
+            year = request.POST.get('_year', -1)
+            print('year = ',year)
+             
+            clear = request.POST.get('_clear', -1)
+            print('clear =',clear)
+            success = True
+                 
+            if not clear==-1:
+                return HttpResponseRedirect(reverse('accounts:quote'))
+            
+            
+            if not search ==-1:
+                if  Quote.objects.filter(id__icontains=search).exists():
+                    quote_list = Quote.objects.filter(client_id__icontains=search).all()
+                    print('search 1=',quote_list)
+                elif  Quote.objects.filter(staff_id__icontains=search).exists():
+                    quote_list = Quote.objects.filter(expense_type__icontains=search).all()
+                    print('search 2=',quote_list)
+                elif Quote.objects.filter(quote_desc__icontains=search).exists():
+                    quote_list = Quote.objects.filter(expense_description__icontains=search).all() 
+                    print('search 3=',quote_list)
+                elif Quote.objects.filter(charge_code__icontains=search).exists():
+                    quote_list = Quote.objects.filter(item__icontains=search).all()
+                    print('search 4=',quote_list)
+                elif Quote.objects.filter(paid__icontains=search).exists():
+                    quote_list = Quote.objects.filter(item_desc__icontains=search).all()
+                    print('search 5=',quote_list)
+                elif Quote.objects.filter(quote_date__icontains=search).exists():
+                    quote_list = Quote.objects.filter(item_cost__contains=search).all()
+                    print('search 6=',quote_list)
+                elif Quote.objects.filter(payment_date__contains=search).exists():
+                    quote_list = Quote.objects.filter(sale_date__contains=search).all()
+                    print('search 7=',quote_list)
+                elif Quote.objects.filter(total__contains=search).exists():
+                    quote_list = Quote.objects.filter(sale_date__contains=search).all()
+                    print('search 8=',quote_list)
+                elif Quote.objects.filter(last_update__contains=search).exists():
+                    quote_list = Quote.objects.filter(sale_date__contains=search).all()
+                    print('search 9=',quote_list)
+            elif not quote_id =="select": 
+                quote_list = Quote.objects.filter(id=quote_id).all()
+            elif not quote_desc =="Search by Title": 
+                if not quote_desc == "Search by Title" and client == "Search by Client" and paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc).all()
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and paid == "Search by paid or unpaid" and year =='All years': 
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id).all()  
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and not paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid).all()  
+                if not quote_desc == "Search by Title" and  not client == "Search by Client" and  not paid == "Search by paid or unpaid" and not year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid, quote_date__contains=year).all() 
+            elif not client =="Search by Client": 
+                if not client == "Search by Client" and quote_desc == "Search by Title" and paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(client_id__contains=client_id).all()
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and paid == "Search by paid or unpaid" and year =='All years': 
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id).all()  
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and not paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid).all()  
+                if not quote_desc == "Search by Title" and  not client == "Search by Client" and  not paid == "Search by paid or unpaid" and not year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid, quote_date__contains=year).all()     
+            elif not year =="All years": 
+                if  client == "Search by Client" and quote_desc == "Search by Title" and paid == "Search by paid or unpaid" and not year =='All years':
+                    quote_list = Quote.objects.filter(quote_date__contains=year).all()
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and paid == "Search by paid or unpaid" and not year =='All years': 
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, quote_date__contains=year).all()  
+                if not quote_desc == "Search by Title" and not client == "Search by Client" and not paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid).all()  
+                if not quote_desc == "Search by Title" and  not client == "Search by Client" and  not paid == "Search by paid or unpaid" and not year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid, quote_date__contains=year).all()   
+            elif not paid == "Search by paid or unpaid": 
+                if quote_desc == "Search by Title" and client == "Search by Client" and not paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(paid=save_paid).all()
+                if quote_desc == "Search by Title" and not client == "Search by Client" and  not paid == "Search by paid or unpaid" and year =='All years': 
+                    quote_list = Quote.objects.filter(paid__contains=save_paid, client_id__contains=client_id).all()  
+                if quote_desc == "Search by Title" and not client == "Search by Client" and not paid == "Search by paid or unpaid" and year =='All years':
+                    quote_list = Quote.objects.filter(paid__contains=save_paid, client_id__contains=client_id, quote_desc=quote_desc).all()  
+                if not quote_desc == "Search by Title" and  not client == "Search by Client" and  not paid == "Search by paid or unpaid" and not year =='All years':
+                    quote_list = Quote.objects.filter(quote_desc=quote_desc, client_id__contains=client_id, paid__contains=save_paid, quote_date__contains=year).all()
+                    
+            print('quote_list =',quote_list)
+            print('paid =',paid)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/quote.html",{"quote_list": quote_list, "client_list":client_list, "desc_list":desc_list, "id_list":id_list, "year_list":year_list,
+                        "quote":quote, 'client':client, "year":year, "paid":paid})                       
+
+
+class CreateQuoteView(View):
+    template_name = "create_quote.html"
+    success_url = reverse_lazy('accounts:new_quote')
+    def get(self, *args, **kwargs):
+        try:
+            contractor = -1
+            client = -1
+            quote = -1
+            client_id = -1
+            quote_id_list =  [] 
+            quote_list = []
+            quote_item_list = []
+            quote = -1
+            quote_item = -1
+            total = -1
+            charge_code = -1
+            operator = str(self.request.user)
+            quote_id = self.request.GET.get('quote_id', -1)
+            item_id = self.request.GET.get('item_id', -1)
+            active = self.request.GET.get('active', -1)
+            item_quote = self.request.GET.get('item_quote', -1)
+            client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            total=0
+            print('quote_id =',quote_id)
+            if quote_id == 'x': #item_id but no quote_id
+                item = Quote_Item.objects.filter(id=item_id).first()
+                print('item=',item)
+                client_id=item.client_id
+                print('client_id=',client_id)
+                client = Clients.objects.filter(id=client_id).first()
+                print('client=',client)
+                client = client.name
+                print('client=',client)
+                print('client_id=',client_id)
+                print('quote_id =',quote_id)
+                print('client=',client)
+                quote = -1
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, active = True).all()  
+                quote_list = -1
+                print('quote_list =',quote_list)
+            elif quote_id ==-1 or quote_id == None:
+                client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
+            else:
+                print("IN Quote Active")
+                quote = Quote.objects.filter(id=quote_id)
+                quote = quote[0] 
+                item = Quote_Item.objects.filter(id=item_id)
+                item = item[0] 
+                item_desc = item.item_desc
+                item_date = item.item_date
+                print('item_date=',item_date)
+                resource_type = item.resource_type
+                contractor_id = item.contractor_id
+                client_id = item.client_id
+                print('client_id=',client_id)
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                print('client=',client)
+                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update Quote_Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                Quote_Item.objects.filter(id=item_id).update(active=active,quote_id=item_quote)
+                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update Quote_Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, active = True).all() 
+                print('quote_list =',quote_list)
+                print('item_id=',item_id)
+                # Add travel costs to Expenses if required
+                print('resource_type.upper()=',resource_type.upper())
+                print(search(resource_type.upper(),'SITE'))
+                if search('SITE', resource_type.upper()) or search('SITE', item_desc.upper()):
+                    travel_rate = 0.545
+                    get_distance = Equations(client_id,contractor_id)
+                    distance = get_distance.travel_distance()
+                    print('distance =',distance)
+                    expense_type = 'Travel Expenses'
+                    expense_description = 'Travel to ' + client
+                    item_desc = 'Travel Distance = ', round(distance, 2)
+                    exp_item = 'Travel'
+                    quantity = 1
+                    item_cost =  round(distance * travel_rate, 3)
+                    total_cost = item_cost
+                    if Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).exists():
+                        print('expense exists. update existing')
+                        if active==False:
+                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).delete()
+                        else:
+                            Expenses.objects.filter(expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id).update(expense_description=expense_description,item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                    else:
+                        print('expense does not exist. create new')
+                        Expenses.objects.create(expense_description=expense_description,expense_type=expense_type, item=exp_item, sale_date=item_date, vendor_id=contractor_id, item_desc=item_desc,quantity=quantity,item_cost=item_cost,total_cost=total_cost)
+                        
+                    
+                print('quote_item_list =',quote_item_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                if quote:
+                    quote=quote[0]
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                
+                                    
+            print('active =',active)
+            print('client_list =',client_list)
+            print('quote_list =',quote_list)
+            print('quote_list =',quote_list)
+            print('quote_id_list =',quote_id_list)
+            print('client=',client)    
+            print('quote=', quote)
+            
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/create_quote.html",{"quote_id_list": quote_id_list, 'client_list':client_list, 'quote_list':quote_list, 'quote_item_list':quote_item_list,
+                        'charge_code':charge_code, 'quote':quote, 'client':client, "quote_item":quote_item, "operator":operator,'quote_id':quote_id, 'total':total, 'client':client})
+
+    def post(self, request, *args, **kwargs):
+        try: 
+            contractor = -1
+            client = -1
+            quote = -1
+            quote_id = -1
+            client_id = -1
+            quote_id_list =  [] 
+            quote_list = []
+            quote_item_list = []
+            client_list = []
+            quote = -1
+            quote_item = -1
+            total = -1
+            
+            charge_code = -1
+            paid = False            
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            
+            quote_id = request.POST.get('_quote_id',-1)
+            print('quote_id=',quote_id)
+            client = request.POST.get('_client', -1)
+            print('client =',client)
+            save_quote = request.POST.get('_save',-1)
+            print('save_quote =',save_quote)
+            update_quote = request.POST.get('_update',-1)
+            print('update_quote =',update_quote)
+            del_quote = request.POST.get('_delete',-1)
+            print('del_quote =',del_quote)
+            clear_quote = request.POST.get('_clear',-1)
+            print('clear_quote =',clear_quote)
+            quote_desc = request.POST.get('_quote_desc',-1)
+            print('quote_desc =',quote_desc)
+            quote_charge = request.POST.get('_quote_charge',-1)
+            print('quote_charge =',quote_charge)
+            charge_code = quote_charge
+            quote_date = request.POST.get('_quote_date',-1)
+            print('quote_date =',quote_date)
+            # update quote items list with customer selection
+            if save_quote ==-1 and update_quote ==-1 and del_quote ==-1 and clear_quote==-1 and client !=-1:
+                print('we are here')
+                quote_id = 'x'
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, active = True).all()         
+                return render (self.request,"accounts/create_quote.html",{"quote_id_list": quote_id_list, 'client_list':client_list, 'quote_list':quote_list, 'quote_item_list':quote_item_list,
+                            'charge_code':charge_code, 'quote':quote, 'client':client, "quote_item":quote_item, "operator":operator,'quote_id':quote_id, 'total':total, 'client':client})
+            
+            if charge_code =="":
+                split_charge = quote_date.split("-")
+                print('split_charge =',split_charge)
+                charge_code = split_charge[1] + split_charge[2] + split_charge[0]
+                print('charge_code =',charge_code)
+            
+            quote = request.POST.get('_quote',-1)
+            print('quote =',quote)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            quantity = request.POST.get('_quantity',-1)
+            print('quantity =',quantity)
+            success = True
+            
+            print('quote_id=',quote_id)          
+            if quote_id == 'x':
+                print('quote_id =',quote_id)
+                quote = -1
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, active = True).all()  
+                quote_list = Quote_Item.objects.filter(client_id=client_id).all()
+                print('quote_list =',quote_list) 
+            elif quote_id :
+                quote = Quote.objects.filter(id=quote_id)
+                quote = quote[0] 
+                quote_date = quote.quote_date
+                print('quote-',quote)
+                client_id = quote.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, quote_id=0).all()
+                print('quote_item_list =',quote_item_list)
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                print('quote_list =',quote_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                staff_id=self.request.user.id
+                if quote:
+                    quote=quote[0]
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                    
+            else:
+                print('client=',client)
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                print('client_id=',client_id)
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_item = Quote_Item.objects.filter(client_id=client_id, active=True).all()
+                staff_id=self.request.user.id
+            
+            print('client_id =',client_id)
+            print('staff_id =',staff_id)
+            print('active =',active)
+            print('client_list =',client_list)
+            print('quote_list =',quote_list)
+            print('quote_id_list =',quote_id_list)
+            print('quote_id =',quote_id)
+            print('client=',client)    
+            print('quote=', quote)
+            
+                                
+            if not del_quote==-1:
+                try:
+                   #reset items	
+                    quote_items = Quote_item.objects.filter(quote_id=quote_id).all()
+                    for item in quote_items:
+                        Quote_Item.objects.filter(id=item.id).update(active=True,quote_id=0)# Reset Quote_Item
+                    #delete quote    
+                    Quote.objects.filter(id=quote_id).delete()
+                    print('delete complete')
+                    quote=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+              
+            elif not clear_quote==-1:
+                try:
+                   #reset items	
+                    quote_items = Quote_Item.objects.filter(quote_id=quote_id).all()
+                    for item in quote_items:
+                        Quote_Item.objects.filter(id=item.id).update(active=True,quote_id=0)# Reset Quote_Item
+                        print('item ',item.id, ' cleared')
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    
+
+            elif not update_quote==-1:
+                #update quote	
+                print('client_id=',client_id)
+                Quote.objects.filter(id=quote_id).update(client_id=client_id,staff_id=staff_id, quote_desc=quote_desc, charge_code=charge_code, paid=paid, quote_date=quote_date, last_update=timestamp)
+                return HttpResponseRedirect(reverse('accounts:quote'))
+            elif not save_quote==-1 :
+                if Quote.objects.filter(quote_desc=quote_desc, charge_code=charge_code, quote_date=quote_date).exists():
+                    quote_id = Quote.objects.filter(client_id=client_id,staff_id=staff_id, quote_desc=quote_desc, charge_code=charge_code, paid=paid, quote_date=quote_date, last_update=timestamp).first()  
+                    quote_id = quote_id.id
+                    
+                else:
+                    print('client_id=',client_id)
+                    Quote.objects.create(client_id=client_id,staff_id=staff_id, quote_desc=quote_desc, charge_code=charge_code, paid=paid, quote_date=quote_date, last_update=timestamp)
+                    quote_id = Quote.objects.filter(client_id=client_id,staff_id=staff_id, quote_desc=quote_desc, charge_code=charge_code, paid=paid, quote_date=quote_date, last_update=timestamp).first()  
+                    quote_id = quote_id.id
+                    
+                
+                
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, quote_id=0).all()
+                print('quote_item_list =',quote_item_list)
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                print('quote_list =',quote_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                if quote:
+                    quote=quote[0]
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                print('client_list=',client_list)
+                print('quote_id_list=',quote_id_list)
+                print('quote_list=',quote_list)
+                print('quote_item_list=',quote_item_list)
+                print('quote=',quote.id)
+                
+                                 
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/create_quote.html",{"quote_id_list": quote_id_list, 'client_list':client_list, 'quote_list':quote_list, 'quote_item_list':quote_item_list,
+                        'charge_code':charge_code, 'quote':quote, 'client':client, "quote_item":quote_item, "operator":operator,'quote_id':quote_id, 'total':total, 'client':client})
+ 
+
+class ReconsileQuoteView(View):
+    template_name = "reconsile_quote.html"
+    success_url = reverse_lazy('accounts:quote_update')
+    def get(self, *args, **kwargs):
+        try:
+            quote_item = -1
+            client = -1
+            quote = -1
+            charge = -1
+            client_list = -1
+            active = 'off'
+            quote_id_list = -1
+            quote_item_list = []
+            quote_list = []
+            total=0
+            paid = 'off'
+            
+            timestamp = date.today()
+            operator = str(self.request.user)
+            quote_id = self.request.GET.get('quote_id', -1)
+            
+            if quote_id !=-1:
+                quote = Quote.objects.filter(id=quote_id)
+                quote = quote[0] 
+                charge_code = quote.charge_code
+                client_id = quote.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, active=True).all()
+                print('quote_item_list =',quote_item_list)
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                print('quote_list =',quote_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                if quote:
+                    quote=quote[0]
+                    this_date = quote.quote_date
+                    paid=quote.paid
+                    if paid == True:
+                        save_paid = 'on'
+                    else:
+                        save_paid = 'off'
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                print('this_date=',this_date)
+                print('paid=', paid)
+                print('save_paid=', save_paid)
+                
+                                    
+            print('active =',active)
+            print('client_list =',client_list)
+            print('quote_list =',quote_list)
+            print('quote_item_list=',quote_item_list)
+            print('quote_id_list =',quote_id_list)
+            print('quote_id =',quote_id)
+            print('client=',client)    
+            print('quote=', quote)
+            print("in GET")
+            
+            
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/reconsile_quote.html",{"quote_id_list": quote_id_list, 'client_list':client_list, 'quote_list':quote_list, 'quote_item_list':quote_item_list,
+                        'quote':quote, 'client':client, "quote_item":quote_item, "operator":operator,'quote_id':quote_id, 'total':total, 'client':client, 'paid':save_paid, 'this_date':this_date})
+
+    def post(self, request, *args, **kwargs):
+        contractor_list = []
+        expense_list =[]
+        desc_list = []
+        quote_id = -1
+        exp =-1
+        vendor =-1
+        
+        try: 
+            client = -1
+            quote = -1
+            quote_id = -1
+            client_id = -1
+            quote_id_list =  [] 
+            quote_list = []
+            quote_item_list = []
+            client_list = []
+            quote = -1
+            quote_item = -1
+            total = -1
+            
+            charge_code = -1
+            print("in POST")
+            timestamp = date.today()
+            operator = str(self.request.user)
+            
+            quote_id = request.POST.get('_quote_id',-1)
+            print('quote_id=',quote_id)
+            client = request.POST.get('_client', -1)
+            print('client =',client)
+            client_id = Clients.objects.filter(name=client).all()
+            print('client_id =',client_id)
+            client_id = client[0]
+            print('client_id =',client_id)
+            
+            
+            quote_desc = request.POST.get('_quote_desc',-1)
+            print('quote_desc =',quote_desc)
+            quote_charge = request.POST.get('_quote_charge',-1)
+            print('quote_charge =',quote_charge)
+            charge_code = quote_charge
+            if charge_code =="":
+                split_charge = quote_date.split("-")
+                print('split_charge =',split_charge)
+                charge_code = split_charge[1] + split_charge[2] + split_charge[0]
+                print('charge_code =',charge_code)
+            quote = request.POST.get('_quote',-1)
+            print('quote =',quote)
+            active = request.POST.get('_active', False)
+            print('active =',active)
+            
+            paid = request.POST.get('_paid', -1)
+            print('paid =',paid)
+            if paid=='on':
+                save_paid = True
+            else:
+                save_paid = False
+            
+            save_quote = request.POST.get('_save',-1)
+            print('save_quote =',save_quote)
+            update_quote = request.POST.get('_update',-1)
+            print('update_exp =',update_quote)
+            del_quote = request.POST.get('_delete',-1)
+            print('del_quote =',del_quote)
+            clear_quote = request.POST.get('_clear',-1)
+            print('clear_quote =',clear_quote)
+           
+
+            quantity = request.POST.get('_quantity',-1)
+            print('quantity =',quantity)
+            success = True
+            
+            print('quote_id=',quote_id)          
+            if  quote_id :
+                quote = Quote.objects.filter(id=quote_id)
+                quote = quote[0] 
+                print('quote-',quote)
+                client_id = quote.client_id
+                client = Clients.objects.filter(id=client_id)
+                client = client[0].name
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, quote_id=0).all()
+                print('quote_item_list =',quote_item_list)
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                print('quote_list =',quote_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                staff_id=self.request.user.id
+                if quote:
+                    quote=quote[0]
+                    this_date = quote.quote_date
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                    
+            else:
+                print('client=',client)
+                client_id = Clients.objects.filter(name=client).first()
+                client_id = client_id.id
+                print('client_id=',client_id)
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_item = Quote_Item.objects.filter(client_id=client_id, active=True).all()
+                staff_id=self.request.user.id
+            
+            print('staff_id =',staff_id)
+            print('active =',active)
+            print('client_list =',client_list)
+            print('quote_list =',quote_list)
+            print('quote_id_list =',quote_id_list)
+            print('quote_id =',quote_id)
+            print('client=',client)    
+            print('quote=', quote)
+            
+                                
+            if not del_quote==-1:
+                try:
+                   #reset items	
+                    quote_items = Quote_Item.objects.filter(quote_id=quote_id).all()
+                    for item in quote_items:
+                        Quote_Item.objects.filter(id=item.id).update(active=True,quote_id=0)# Reset Quote_Item
+                        print('item ',item.id, ' cleared')
+                    #delete quote    
+                    Quote.objects.filter(id=quote_id).delete()
+                    print('delete complete')
+                    quote=-1
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+              
+            elif not clear_quote==-1:
+                try:
+                   #reset items	
+                    quote_items = Quote_Item.objects.filter(quote_id=quote_id).all()
+                    for item in quote_items:
+                        Quote_Item.objects.filter(id=item.id).update(active=True,quote_id=0)# Reset Quote_Item
+                        print('item ',item.id, ' cleared')
+                except IOError as e:
+                    print ("Events Save Failure ", e)
+                    
+
+            elif not update_quote==-1:
+                #update quote	
+                print('client_id=',client_id)
+                Quote.objects.filter(id=quote_id).update(total=total, client_id=client_id,staff_id=staff_id, quote_desc=quote_desc, charge_code=charge_code, paid=save_paid, quote_date=this_date, last_update=timestamp)
+                
+                client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
+                quote_id_list =  Quote.objects.filter(id=client_id).order_by('quote_desc').values_list('quote_desc', flat=True).distinct()
+                quote_item_list = Quote_Item.objects.filter(client_id=client_id, quote_id=0).all()
+                print('quote_item_list =',quote_item_list)
+                quote_list = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                print('quote_list =',quote_list)
+                quote_item = Quote_Item.objects.filter(client_id=client_id, quote_id=quote_id).all()
+                quote = Quote.objects.filter(client_id=client_id, id=quote_id).all()
+                if quote:
+                    quote=quote[0]
+                total=0
+                for subtotal in quote_item:
+                    total=round(total+float(subtotal.total),2)
+                    print(total)
+                print('client_list=',client_list)
+                print('quote_id_list=',quote_id_list)
+                print('quote_list=',quote_list)
+                print('quote_item_list=',quote_item_list)
+                print('quote=',quote.id)
+                return HttpResponseRedirect(reverse('accounts:quote'))
+                                 
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/reconsile_quote.html",{"quote_id_list": quote_id_list, 'client_list':client_list, 'quote_list':quote_list, 'quote_item_list':quote_item_list,
+                        'quote':quote, 'client':client, "quote_item":quote_item, "operator":operator,'quote_id':quote_id, 'total':total, 'client':client, 'paid':paid, 'this_date':this_date})
+                        
                      
 class Charge_codeView(View):
     template_name = "charge.html"
@@ -1381,7 +2288,7 @@ class Charge_codeView(View):
                 Charge_Code.objects.filter(id=item_id).update(charge_type=charge_type, client_id=client_id, charge=charge, charge_desc=charge_desc, start_date=start_date, end_date=end_date,last_update=timestamp)
             elif not save_item==-1:
                 if Charge_Code.objects.filter(charge=charge).exists():
-                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'contractor':contractor, "operator":operator})
+                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, 'desc_list':desc_list,"exp":exp, "operator":operator})
                 else:
                    #save item	
                     Charge_Code.objects.create(charge_type=charge_type, client_id=client_id, charge=charge, charge_desc=charge_desc, start_date=start_date, end_date=end_date,last_update=timestamp)
@@ -1441,11 +2348,11 @@ def save_expenses_csv(delete):
                              
                                    
 
-def save_invoices_csv(delete):               
+def save_quotes_csv(delete):               
     #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
     import csv
     timestamp  = date.today()
-    CSV_PATH = 'C:\\src\\ats\\accounts\\Invoices.csv'
+    CSV_PATH = 'C:\\src\\ats\\accounts\\Quotes.csv'
     print('csv = ',CSV_PATH)
    
    # Remove all data from Table
@@ -1646,6 +2553,8 @@ class ReportView(View):
             total=0
             paid = 'off'
             x=0
+            quote_id = -1
+            invoice_id = -1
             
             report_type = 'Invoice'
             timestamp = date.today()
@@ -1662,10 +2571,17 @@ class ReportView(View):
             print('month =',month)
                 
             operator = str(self.request.user)
-            invoice_id = self.request.GET.get('invoice_id', -1)
+           
             report_type = self.request.GET.get('report_type', -1)
-            print('invoice_id',invoice_id)
             print('report_type',report_type)
+            
+            if report_type=='Quote':
+                quote_id = self.request.GET.get('quote_id', -1)
+                print('quote_id',quote_id)
+            else:
+                invoice_id = self.request.GET.get('invoice_id', -1)
+                print('invoice_id',invoice_id)
+            
             company = 'Automated Test Solutions'
             company_address = 'West Babylon, NY 11704'
             
@@ -1678,6 +2594,35 @@ class ReportView(View):
                 invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
                 print('invoice_item =',invoice_item)
                 invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
+                operator = str(self.request.user)
+                if invoice:
+                    invoice=invoice[0]
+                    this_date = invoice.invoice_date
+                    paid=invoice.paid
+                    if paid == True:
+                        save_paid = 'on'
+                    else:
+                        save_paid = 'off'
+                total=0
+                index1=0
+                for subtotal in invoice_item:
+                    total=round(total+float(subtotal.total),2)
+                    item = Charge_Code.objects.filter(id=subtotal.charge_id)
+                    item_charge_code.append(item[0].charge)
+                    print(total)
+                    print('item_charge_code=',item_charge_code)
+                print('this_date=',this_date)
+                print('paid=', paid)
+                print('save_paid=', save_paid)
+            elif quote_id !=-1:
+                invoice = Quote.objects.filter(id=quote_id)
+                invoice = invoice[0] 
+                charge_code = invoice.charge_code
+                client_id = invoice.client_id
+                client = Clients.objects.filter(id=client_id).first()
+                invoice_item = Quote_Item.objects.filter(client_id=client_id, quote_id=invoice_id).all()
+                print('invoice_item =',invoice_item)
+                invoice = Quote.objects.filter(client_id=client_id, id=quote_id).all()
                 operator = str(self.request.user)
                 if invoice:
                     invoice=invoice[0]

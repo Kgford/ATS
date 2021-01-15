@@ -14,6 +14,10 @@ from accounts.views import (
     CreateInvoiceView,
     SearchInvoiceView,
     ReconsileInvoiceView,
+    QuoteItemView,
+    CreateQuoteView,
+    SearchQuoteView,
+    ReconsileQuoteView,
     Charge_codeView,
     ReportView,
     UserLogin
@@ -31,6 +35,11 @@ urlpatterns =[
     path('new_invoice', login_required(CreateInvoiceView.as_view(template_name="create_invoice.html")), name='new_invoice'),
     path('invoice_update', login_required(ReconsileInvoiceView.as_view(template_name="reconsile_invoice.html")), name='invoice_update'),
     path('report/', login_required(ReportView.as_view(template_name="report.html")), name='report'),
+    
+    path('quote', login_required(SearchQuoteView.as_view(template_name="quote.html")), name='quote'),
+    path('quote_item', login_required(QuoteItemView.as_view(template_name="quote_item.html")), name='quote_item'),
+    path('new_quote', login_required(CreateQuoteView.as_view(template_name="create_quote.html")), name='new_quote'),
+    path('quote_update', login_required(ReconsileQuoteView.as_view(template_name="reconsile_quote.html")), name='quote_update'),
     
     path('charge_code', login_required(Charge_codeView.as_view(template_name="charge_code.html")), name='charge_code'),
     path('login', login_required(UserLogin.as_view(template_name="user_login.html")), name='login'),

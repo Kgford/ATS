@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-<body id="page-top">
+<body id="page-top" >
 	<div class="container-fluid">
 			<div style = 'text-align:center'>
 				<picture class="center" ><img src="{% static 'dashboard/images/atsrf_logo.jpg' %}"  ></picture>
@@ -118,6 +118,9 @@
 				</div>
             </div>
         </div>
+		<div>
+			<pdf:nextpage />
+		</div>
         <div class="col-lg-5 col-xl-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -247,7 +250,6 @@
     <script src="{% static 'dashboard/js/bs-init.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="{% static 'dashboard/js/theme.js' %}"></script>
-	
 </body>
 {% endblock %}
 </html>

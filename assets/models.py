@@ -14,7 +14,7 @@ class Personnel(models.Model):
 class Personnel_Insurance(models.Model):
     name = models.CharField("name",max_length=50,null=True,unique=False) 
     type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
+    date = models.DateField(default=datetime.now,null=False)
     cost = models.FloatField("cost", null=True,unique=False)
     insurance = models.ForeignKey('assets.Personnel', on_delete=models.CASCADE)
     def __unicode__(self):
@@ -72,12 +72,12 @@ class Prouct_Insurance(models.Model):
         return self.cost       
 
 class Vehical(models.Model):
-    name = models.CharField("name",max_length=50,null=False,unique=False) 
-    model = models.CharField("model",max_length=50,null=False,unique=False) 
-    type = models.CharField("type",max_length=50,null=False,unique=False) 
+    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
+    model = models.CharField("model",max_length=50,null=False,unique=False,default='N/A') 
+    type = models.CharField("type",max_length=50,null=False,unique=False,default='N/A') 
     date = models.DateField(default=datetime.now,null=True)
     
-    year = models.IntegerField(null=False,unique=False)
+    year = models.IntegerField(null=True,unique=False)
     active_miles = models.FloatField("active_miles", null=True,unique=False)
     monthy_miles = models.FloatField("monthy_miles", null=True,unique=False)
     image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
@@ -162,7 +162,7 @@ class Vehicle_load(models.Model): #what and how much the vehicle will carry
         
 
 class Business_Space(models.Model):#commercial building space  
-    name = models.CharField("name",max_length=50,null=False,unique=False) 
+    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
     type = models.CharField("type",max_length=50,null=True,unique=False) 
     image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
     space_percentage = models.FloatField("space_percentage", null=True,unique=False)
@@ -183,8 +183,8 @@ class Building(models.Model):
         return self.address 
     
 class Insurance(models.Model):
-    name = models.CharField("name",max_length=50,null=False,unique=False) 
-    type = models.CharField("type",max_length=50,null=False,unique=False) 
+    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
+    type = models.CharField("type",max_length=50,null=False,unique=False,default='N/A') 
     date = models.DateField(default=datetime.now,null=True)
     cost = models.FloatField("cost", null=True,unique=False)
     insurance = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
@@ -231,7 +231,7 @@ class Phone(models.Model):
         return self.cost  
         
 class Building_repair(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
+    name = models.CharField("name",max_length=50,null=True,unique=False,default='N/A') 
     model = models.CharField("model",max_length=50,null=True,unique=False) 
     type = models.CharField("type",max_length=50,null=True,unique=False)
     date = models.DateField(default=datetime.now,null=True)
