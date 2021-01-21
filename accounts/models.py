@@ -37,6 +37,15 @@ class Expenses(models.Model):
     operator = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A') 
     last_update = models.DateField(null=True) 
     backup_index = models.IntegerField(null=True,unique=False)
+    v_insurance = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_insurance')
+    v_inspection = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_inspection')
+    v_fees = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_fees')
+    v_fuel = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_fuel')
+    v_tires = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_tires')
+    v_oil = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_oil')
+    v_repair = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_repair')
+    v_maintaince = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_maintaince')
+    v_payment = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_payment')
 	
 class Income(models.Model):
 	id = models.AutoField(primary_key=True)

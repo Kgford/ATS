@@ -5,6 +5,26 @@ from googlevoice import Voice
 #from googlevoice.util import input
 from six.moves import input
 import sys
+from ATS.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
+
+
+#https://data-flair.training/blogs/django-send-email/
+class Email:
+    def __init__ (self, recepient_list,subject,message):
+        self.subject = subject
+        self.message = message
+        self.recepient = recepient_list
+        print('recepient=',self.recepient)
+        if not isinstance(self.recepient, list):
+            self.recepient = [self.recepient]
+            print('recepient=',self.recepient)
+    
+    def send_email(self):
+        print('EMAIL_HOST_USER=',EMAIL_HOST_USER)
+        res = send_mail(self.subject, self.message, EMAIL_HOST_USER, self.recepient, fail_silently = False)
+        print('response=',res)
+        return res
 
 
 

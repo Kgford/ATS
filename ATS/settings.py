@@ -19,6 +19,15 @@ LOGIN_URL = 'staff/user_login'
 LOGIN_REDIRECT_URL = 'staff/user_login'
 LOGOUT_REDIRECT_URL = 'staff/user_login' 
 AUTH_PROFILE_MODULE = 'users.UserProfileInfo'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'atetestalerts@gmail.com'
+#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_HOST_PASSWORD = 'rlwfeuvgdrnfnxdl'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'default from email'
+
 
 
 # Quick-start development settings - unsuitable for production

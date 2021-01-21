@@ -62,7 +62,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
-					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Assets</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
@@ -92,41 +92,30 @@
 		</div>
 		<form action = "{% url 'assets:vehicle' %}"  method="post" enctype="multipart/form-data">
 			{% csrf_token %}
-			<input type='hidden' id = 'm_id' name='m_id' value = {{veh.id}} data-select='inventory_id'/>
-			<input type='hidden' id = 'model' name='model' value = {{veh.model}} data-select='model'/>
-            <div class="row">
-				<div class="col-sm-1 col-lg-1 grid-col">
+			<input type='hidden' id = 'veh_id' name='veh_id' value = "{{veh.id}}"/>
+			<input type='hidden' id = 'vehicle' name='vehicle' value = "{{veh.name}}"/>
+			<div class="row">
+				<div class="col-sm-1 col-lg-2 grid-col">
 					<div class="form-group">
-						<label>Type <span class="k-required"></span></label>
-						<input type='hidden' name='models' data-select='_band'/>
-						<select id='_type' name = "_type" value = "{{veh.type}}" class="browser-default custom-select custom-select-lg mb-3" >
-							{% if veh == -1 %}
-								<option selected>select option</option>
-							{% else %}
-								<option selected>{{veh.type}}</option>
-							{% endif %}
-							<option data-desc = 'band', data-val = "CAR">CAR</option>
-							<option data-desc = 'band', data-val = "SUV">SUV</option>
-							<option data-desc = 'band', data-val = "VAN">VAN</option>
-							<option data-desc = 'band', data-val = "1/2 TON PICKUP">1/2 TON PICKUP</option>
-							<option data-desc = 'band', data-val = "1 TON PICKUP">1 TON PICKUP</option>
-							<option data-desc = 'band', data-val = "HEAVY TRUCK">HEAVY TRUCK</option>
-							<option data-desc = 'band', data-val = "TANKER TRUCK">TANKER TRUCK</option>
-							<option data-desc = 'band', data-val = "FLATBED TRUCK">FLATBED TRUCK</option>
-							<option data-desc = 'band', data-val = "DUMP TRUCK">DUMP TRUCK</option>
-							<option data-desc = 'band', data-val = "GARBAGE TRUCK">GARBAGE TRUCK</option>
-						</select>
+						<label for="_desc">Name</label>
+						{% if duplicate != -1 %}
+							<input id = "_desc" name = "_model" input class="form-control" placeholder="***Name must be unique!!***"  required >
+						{% elif veh == -1 %}
+							<input id = "_name" name = "_name" input class="form-control" placeholder="Describe your vehicle"  required >
+						{% else %}
+							<input id = "_name" name = "_name" input class="form-control" value = "{{veh.name}}"  required >
+						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					 <div class="form-group">
 						<label>Make<span class="k-required"></span></label>
-						<input type='hidden' name='category' data-select='category'/>
-						<select id='_category' name = "_category" value = "{{veh.category}}" class="browser-default custom-select custom-select-lg mb-3" >
+						<input type='hidden' name='type' data-select='type'/>
+						<select id='_make' name = "_make" value = "{{veh.make}}" class="browser-default custom-select custom-select-lg mb-3" >
 							{% if veh == -1 %}
-								<option selected>select option</option>
+								<option selected>select make</option>
 							{% else %}
-								<option selected>{{veh.category}}</option>
+								<option selected>{{veh.make}}</option>
 							{% endif %}
 							<option data-desc = 'equipment', data-val = "ACURA">ACURA</option>
 							<option data-desc = 'equipment', data-val = "AUDI">AUDI</option>
@@ -186,96 +175,138 @@
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
-				<div class="form-group">
-					<!-- Customer-->
-					<label>Year<span class="k-required"></span></label>
-					<input type='hidden' name='_client' data-select='cust'/>
-					<select id='_client' name ='_year' class="browser-default custom-select custom-select-lg mb-3" required>
-						{% if client == -1%}
-							<option data-desc = '_client', value = "select menu">select menu</option>
-						{% else %}
-							<option selected>{{year}}</option>
-						{% endif %}	
-						{% for yea in years%}
-							<option data-desc = '_client', value = "{{cust}}">{{yea}}</option>
-						{% endfor %}
-					</select>
+					<div class="form-group">
+						<label>Type <span class="k-required"></span></label>
+						<input type='hidden' name='models' data-select='_band'/>
+						<select id='_type' name = "_type" value = "{{veh.type}}" class="browser-default custom-select custom-select-lg mb-3" >
+							{% if veh == -1 %}
+								<option selected>select type</option>
+							{% else %}
+								<option selected>{{veh.type}}</option>
+							{% endif %}
+							<option data-desc = 'band', data-val = "CAR">CAR</option>
+							<option data-desc = 'band', data-val = "SUV">SUV</option>
+							<option data-desc = 'band', data-val = "VAN">VAN</option>
+							<option data-desc = 'band', data-val = "1/2 TON PICKUP">1/2 TON PICKUP</option>
+							<option data-desc = 'band', data-val = "1 TON PICKUP">1 TON PICKUP</option>
+							<option data-desc = 'band', data-val = "HEAVY TRUCK">HEAVY TRUCK</option>
+							<option data-desc = 'band', data-val = "TANKER TRUCK">TANKER TRUCK</option>
+							<option data-desc = 'band', data-val = "FLATBED TRUCK">FLATBED TRUCK</option>
+							<option data-desc = 'band', data-val = "DUMP TRUCK">DUMP TRUCK</option>
+							<option data-desc = 'band', data-val = "GARBAGE TRUCK">GARBAGE TRUCK</option>
+						</select>
+					</div>
 				</div>
-			</div>
-			</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_insurance"># Tires</label>
+						{% if veh == -1 %}
+							<input id = "_n_tires" name = "_n_tires" input class="form-control" placeholder="Enter Tires"  required >
+						{% else %}
+							<input id = "_n_tires" name = "_n_tires" input class="form-control" value = "{{veh.model}}"  required >
+						{% endif %}
+					</div>
+				</div>				
+			</div>	
 			<div class="row">
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Load Limit</label>
+						<!-- year-->
+						<label>Year<span class="k-required"></span></label>
+						<input type='hidden' name='_year' data-select='cust'/>
+						<select id='_year' name ='_year' class="browser-default custom-select custom-select-lg mb-3" required>
+							{% if client == -1%}
+								<option data-desc = 'year', value = "select menu">select menu</option>
+							{% else %}
+								<option selected>{{year}}</option>
+							{% endif %}	
+							{% for yea in years%}
+								<option data-desc = 'year', value = "{{cust}}">{{yea}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label>Ownership <span class="k-required"></span></label>
+						<input type='hidden' name='owner' data-select='_owner'/>
+						<select id='_owner' name = "_owner" value = "{{veh.type}}" class="browser-default custom-select custom-select-lg mb-3" >
+							{% if veh == -1 %}
+								<option selected>select option</option>
+							{% else %}
+								<option selected>{{veh.type}}</option>
+							{% endif %}
+							<option data-desc = 'owner', data-val = "OWNER">OWNER</option>
+							<option data-desc = 'mortgage', data-val = "MORTGAGE">MORTGAGE</option>
+							<option data-desc = 'lease', data-val = "LEASE">LEASE</option>
+							<option data-desc = 'rent', data-val = "RENT">RENT</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1.5 grid-col">
+					<div class="form-group">
+						<label for="_miles">Original Value</label>
 						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
+							<input id = "_orig_val" name = "_orig_val" input class="form-control" placeholder="Original Value"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
+							<input id = "_orig_val" name = "_orig_val" input class="form-control" value = "{{veh.cost}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Monthly Miles</label>
+						<label for="_load">Load Limit</label>
 						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
+							<input id = "_load" name = "_load" input class="form-control" placeholder="Load Limit"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
+							<input id = "_load" name = "_load" input class="form-control" value = "{{veh.load_limit}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1.5 grid-col">
+					<div class="form-group">
+						<label for="_miles">Original Miles</label>
+						{% if veh == -1 %}
+							<input id = "_orig_miles" name = "_orig_miles" input class="form-control" placeholder="Original Miles"  required >
+						{% else %}
+							<input id = "_orig_miles" name = "_orig_miles" input class="form-control" value = "{{veh.original_miles}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1.5 grid-col">
+					<div class="form-group">
+						<label for="_miles">Active Miles</label>
+						{% if veh == -1 %}
+							<input id = "_active_miles" name = "_active_miles" input class="form-control" placeholder="Active Miles"  required >
+						{% else %}
+							<input id = "_active_miles" name = "_active_miles" input class="form-control" value = "{{veh.active_miles}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Insurance</label>
+						<label for="_miles">Monthly Miles</label>
 						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
+							<input id = "_miles" name = "_miles" input class="form-control" placeholder="Monthly miles"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
-						{% endif %}
-					</div>
-				</div>
-				<div class="col-sm-1 col-lg-1 grid-col">
-					<div class="form-group">
-						<label for="_desc">Monthly Fuel</label>
-						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
-						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
-						{% endif %}
-					</div>
-				</div>
-				<div class="col-sm-1 col-lg-1 grid-col">
-					<div class="form-group">
-						<label for="_desc">Maintaince</label>
-						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
-						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
-						{% endif %}
-					</div>
-				</div>
-				<div class="col-sm-1 col-lg-1 grid-col">
-					<div class="form-group">
-						<label for="_desc">Monthly Repair</label>
-						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
-						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
-						{% endif %}
-					</div>
-				</div>
-				<div class="col-sm-1 col-lg-1 grid-col">
-					<div class="form-group">
-						<label for="_desc">Monthly Tires</label>
-						{% if veh == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="Enter vehicle Model"  required >
-						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{veh.model}}"  required >
+							<input id = "_miles" name = "_miles" input class="form-control" value = "{{veh.monthy_miles}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				
+			</div>	
+			<div class="row">
+				<div class="container-fluid">
+					<h4 class="h3">Budget Costs</h4>
+					<h5 ><strong>Payment:&nbsp;&nbsp;&nbsp; {{month}}:</strong> ${{payment_month}}<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{year}}:</strong> ${{payment_year}}</h5>
+					<h5 ><strong>Fuel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{month}}:</strong> ${{fuel_month}}<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{year}}:</strong> ${{fuel_year}}</h5>
+					<h5 ><strong>Insurance:</strong> ${{insurance}}</h5>
+					<h5 ><strong>Maintenance:</strong> ${{maintenance}}</h5>
+					<h5 ><strong>Repair:</strong> ${{repair}}</h5>
+					<h5 ><strong>tires:</strong> ${{inspection}}</h5>
+				</div>
 			</div>
+			<hr>
 			<div class="row">	
 				<div class="col-sm-3 col-lg-4 grid-col">
 					<div class="form-group">
@@ -330,24 +361,22 @@
 			    <thead>
 					<tr>
 					  <th>ID</th>
-					  <th>Description</th>
-					  <th>Category</th>
-					  <th>Band</th>
+					  <th>Name</th>
+					  <th>Make</th>
 					  <th>Model</th>
-					  <th>Vendor</th>
-					  <th>Status</th>
+					  <th>Type</th>
+					  <th>Year</th>
 					</tr>
 			    </thead>
 				<tbody>
-					{% for model in models %}
+					{% for vehicle in vehicles %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.id}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.description}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.category}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.band}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.model}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.vendor}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id">{{model.status}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.id}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.name}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.make}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.model}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.type}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' %}?veh_id={{vehicle.id}}">{{vehicle.year}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

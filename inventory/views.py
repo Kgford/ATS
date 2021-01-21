@@ -564,7 +564,7 @@ def items(request):
         desc_list = Model.objects.order_by('description').values_list('description', flat=True).distinct()
         models_list = Model.objects.order_by('model').values_list('model', flat=True).distinct()
         locations_list = Location.objects.order_by('name').values_list('name', flat=True).distinct()
-        shelves_list = Location.objects.order_by('shelf').values_list('shelf', flat=True).distinct()
+        shelves_list = Inventory.objects.order_by('shelf').values_list('shelf', flat=True).distinct()
     except IOError as e:
          print ("Lists load Failure ", e)	
     return render (request,"inventory/items.html",{"today":date.today(), "locations_list":locations_list, "models_list":models_list, "shelf_list":shelves_list,'active_operator':operator})

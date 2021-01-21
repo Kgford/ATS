@@ -10,15 +10,18 @@ from equipment.models import Model
 from locations.models import Location
 from client.models import Clients
 from inventory.models import Inventory, Events
+from assets.models import Vehical
 from accounts.models import Expenses, Invoice_Item, Charge_Code, Invoice, Quote, Quote_Item
 from dashboard.models import Income_report
 from vendor.models import Vendor
 from contractors.models import Contractors
+from assets.models import Vehical
 from django.views import View
 import datetime
 from collections import OrderedDict
 from re import search
-from ATS.overhead import Equations
+from ATS.overhead import Equations, Email
+import os
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -238,6 +241,10 @@ class SaveExpensesView(View):
         try:
             vendor = -1
             vehicle = -1
+            item_type =-1
+            expense_type = -1
+            expense_desc = -1
+            vehicle_list = []
             year = datetime.date.today().year
             interval = 'off'
             exp_id = self.request.GET.get('expense_id', -1)
@@ -248,10 +255,20 @@ class SaveExpensesView(View):
             expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             vendor_list =  Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
-            print('vendor_list =',vendor_list)
+            vehicle_list =  Vehical.objects.order_by('name').values_list('name', flat=True).distinct()
+            expense_desc=-1
+            expense_type =-1
             if exp_id !=-1:
                 exp = Expenses.objects.filter(id=exp_id)
                 exp = exp[0]
+                expense_desc = exp.expense_description
+                expense_type = exp.expense_type
+                vehicle = exp.item
+                print('desc=',exp.expense_description)
+                if expense_desc.find('Vehicle') !=-1 or expense_desc.find('Gas') !=-1:
+                    item_type = 'Vehicle'
+                elif expense_desc.find('Building') !=-1:
+                    item_type = 'Building'
                 if exp.reoccuuring_expenses == True:
                     interval = 'on'
                 else:
@@ -262,25 +279,35 @@ class SaveExpensesView(View):
                 
             if vendor_id !=-1:
                 vendor = Vendor.objects.filter(id=vendor_id)
-                vendor = vendor[0].name
-                print('vendor=',vendor)
+                if vendor:
+                    vendor = vendor[0].name
+                    print('vendor=',vendor)
+                else:
+                    vendor=-1
             
             print('exp=', exp)
             print("in GET")
+            print('item_type=',item_type)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/save_expenses.html",{'year':year, 'vehicle':vehicle,"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator,'interval':interval})
+        return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list,
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
 
     def post(self, request, *args, **kwargs):
         vendor_list = []
         expense_list =[]
         desc_list = []
+        vehicle_list = []
         exp =-1
         vendor =-1
         
         try: 
             print("in POST")
+            vendor = -1
+            vehicle = -1
+            item_type =-1
+            vehicle_list = []
             timestamp = date.today()
             operator = str(self.request.user)
             exp_id = request.POST.get('e_id', -1)
@@ -288,60 +315,86 @@ class SaveExpensesView(View):
             print('exp_id =',exp_id)
             expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
-            vendor_list =  Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
+            vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
+            vehicle_list = Vehical.objects.order_by('name').values_list('name', flat=True).distinct()
             if exp_id !=-1 and exp_id != '':
                 exp = Expenses.objects.filter(id=exp_id).all()
             
             
             search = request.POST.get('search', -1)
-            print('search =',search)
+            #print('search =',search)
             vendor = request.POST.get('_vendor', -1)
-            print('vendor = ',vendor)
+            #print('vendor = ',vendor)
             expense_type = request.POST.get('_exp_type', -1)
             print('expense_type = ',expense_type)
             expense_desc = request.POST.get('_exp_desc', -1)
             print('expense_desc =',expense_desc)
-            
-            quantity = request.POST.get('_quantity', -1)
-            print('quantity =',quantity)
-            item_cost = request.POST.get('_item_cost', -1)
-            print('item_cost =',item_cost)
-            total_cost = request.POST.get('_total_cost', -1)
-            print('total_cost =',total_cost)
-            sale_date = request.POST.get('_sale_date', -1)
-            print('sale_date =',sale_date)
-            invoice = request.POST.get('_invoice', -1)
-            print('invoice =',invoice)
-            interval = request.POST.get('_interval', False)
-            print('interval =',interval)
-            interval_time = request.POST.get('_interval_time', -1)
-            print('interval_time =',interval_time)
             save_exp = request.POST.get('_save', -1)
             print('save_exp =',save_exp)
             update_exp = request.POST.get('_update', -1)
             print('update_exp =',update_exp)
             del_exp = request.POST.get('_delete', -1)
             print('del_exp =',del_exp)
+            
+            if not expense_desc==-1 and save_exp==-1 and update_exp==-1 and del_exp==-1:
+                if expense_desc.find('Vehicle') !=-1 or expense_desc.find('Gas') !=-1:
+                    item_type = 'Vehicle'
+                    exp=-1
+                    print('in vehicle')
+                    return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list,
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
+                elif expense_desc.find('Building') !=-1:
+                    item_type = 'Building'
+                    exp=-1
+                    return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list,
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
+            
             quantity = request.POST.get('_quantity', -1)
-            print('quantity =',quantity)
+            #print('quantity =',quantity)
+            item_cost = request.POST.get('_item_cost', -1)
+            #print('item_cost =',item_cost)
+            total_cost = request.POST.get('_total_cost', -1)
+            #print('total_cost =',total_cost)
+            sale_date = request.POST.get('_sale_date', -1)
+            #print('sale_date =',sale_date)
+            invoice = request.POST.get('_invoice', -1)
+            #print('invoice =',invoice)
+            interval = request.POST.get('_interval', False)
+            #print('interval =',interval)
+            interval_time = request.POST.get('_interval_time', -1)
+            #print('interval_time =',interval_time)
+            quantity = request.POST.get('_quantity', -1)
+            #print('quantity =',quantity)
             vehicle = request.POST.get('_vehicle', -1)
             print('vehicle =',vehicle)
             building = request.POST.get('_building', -1)
-            print('building =',building)
+            #print('building =',building)
             building_space = request.POST.get('_building_space', -1)
-            print('vehicle =',vehicle)
+            #print('vehicle =',vehicle)
             item_name = request.POST.get('_item_name', -1)
-            print('item_name =',item_name)
+            #print('item_name =',item_name)
             item_desc = request.POST.get('_item_desc', -1)
-            print('item_desc =',item_desc)
+            print('image_file=',image_file)  
+            if image_file==-1 or image_file=='inv1.jpg' or image_file== None or image_file== "":
+                image_file = mod.image_file
+                print(image_file)
+                uploaded_file_url = mod.photo
+                print('uploaded_file_url =',uploaded_file_url )
+            else:    
+                myfile = request.FILES['_upload']
+                print('MYFILE =', myfile)
+                fs = FileSystemStorage()
+                print('fs=',fs)
+                filename = fs.save(myfile.name, myfile)
+                uploaded_file_url = fs.url(filename)
+                print('uploaded_file_url =',uploaded_file_url )
+                print(image_file)
+                
+            if uploaded_file_url == None or uploaded_file_url =="":
+                uploaded_file_url='/ATS/media/inv1.jpg' 
+                image_file='inv1.jpg'
             
-            if item_name ==-1 and building ==-1:
-                item_name = vehicle
-                item_desc = vehicle_desc
-            elif item_name ==-1 and vehicle ==-1:
-                item_name = building
-                item_desc = building_space
-            
+                   
             success = True
             if interval_time=='select option':
                 interval_time = "N/A"
@@ -352,7 +405,6 @@ class SaveExpensesView(View):
             else:
                 interval_save = False
             
-            print('interval=',interval)
             if not del_exp==-1 and (exp_id !=-1 and exp_id != ''):
                 try:
                    #update item	
@@ -364,27 +416,126 @@ class SaveExpensesView(View):
                     return HttpResponseRedirect(reverse('accounts:expenses'))
             elif not update_exp==-1 and (exp_id !=-1 and exp_id != ''):
                 #update item	
+                print('in update')
                 ven = Vendor.objects.filter(name=vendor)
-                vendor_id = ven[0].id
-                print('vendor_id=',vendor_id)
-                Expenses.objects.filter(id=exp_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                if ven:
+                    vendor_id = ven[0].id
+                    print('vendor_id=',vendor_id)
+                print('vehicle=',vehicle)
+                if vehicle !=-1:
+                    vehicle = request.POST.get('_vehicle', -1)
+                    print('in vehicle')
+                    print('vehicle=',vehicle)
+                    item_type = 'Vehicle'
+                    item_name=vehicle
+                    print('item_name=',item_name)
+                    if item_desc ==-1:
+                        item_desc = vehicle
+                    v=Vehical.objects.get(name=vehicle)
+                    print('vehicle =',v)
+                    if expense_desc=='Gas':
+                        print('in gas')
+                        print('expense_id=',exp_id)
+                        Expenses.objects.filter(id=exp_id).update(v_fuel=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Payment':
+                        Expenses.objects.filter(id=exp_id).update(v_payment=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Insurance':
+                        Expenses.objects.filter(id=exp_id).update(v_insurance=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Inpection':
+                        Expenses.objects.filter(id=exp_id).update(v_inspection=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Fees':
+                        Expenses.objects.filter(id=exp_id).update(v_fees=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Tires':
+                        Expenses.objects.filter(id=exp_id).update(v_tires=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Oil':
+                        Expenses.objects.filter(id=exp_id).update(v_oil=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Repair':
+                        Expenses.objects.filter(id=exp_id).update(v_repair=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Maintainance':
+                         Expenses.objects.filter(id=exp_id).update(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    
+                else:
+                    Expenses.objects.filter(id=exp_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                 exp=-1
             elif not save_exp==-1 or (exp_id !=-1 and exp_id != ''):
+                print('save_exp=',save_exp)
+                print('exp_id=',exp_id)
                 if Expenses.objects.filter(item=item_name).exists():
                     exp = Expenses.objects.filter(item=item_name).all()
                     return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
                 else:
                    #save item	
+                    print('save item')
+                    print('vendor=',vendor)
                     ven = Vendor.objects.filter(name=vendor)
-                    vendor_id = ven[0].id
-                    print('vendor_id=',vendor_id)
-                    Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                    if ven:
+                        vendor_id = ven[0].id
+                        print('vendor_id=',vendor_id)
+                    print('vehicle=',vehicle)
+                    if vehicle !=-1:
+                        item_name = vehicle
+                        if item_desc ==-1:
+                            item_desc = vehicle
+                        v=Vehical.objects.get(name=vehicle)
+                        print('vehicle =',v)
+                        if expense_desc=='Gas':
+                            print('in gas')
+                            Expenses.objects.create(v_fuel=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Payment':
+                            print('in payment')
+                            Expenses.objects.create(v_payment=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Insurance':
+                            print('in insurance')
+                            Expenses.objects.create(v_insuranc=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Inpection':
+                            print('in inspection')
+                            Expenses.objects.create(v_inspection=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Fees':
+                            print('in fees')
+                            Expenses.objects.create(v_fees=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Tires':
+                            print('in tires')
+                            Expenses.objects.create(v_tires=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Oil':
+                            print('in oil')
+                            Expenses.objects.create(v_oil=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Repair':
+                            print('in repair')
+                            Expenses.objects.create(v_repair=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                        elif expense_desc=='Vehicle Maintenance':
+                            print('in Maintenance')
+                            Expenses.objects.create(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    else:
+                        Expenses.objects.create(vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
                                           quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/save_expenses.html",{'year':year, 'vehicle':vehicle,"expense_list": expense_list, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})     
+        expense_type=-1
+        expense_desc=-1
+        exp=-1
+        
+        return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list,'uploaded_file_url':uploaded_file_url,
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
         
 class InvoiceItemView(View):
     template_name = "invoice_item.html"

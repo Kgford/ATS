@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 
 class Personnel(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField("name",max_length=50,null=True,unique=False) 
     type = models.CharField("type",max_length=50,null=True,unique=False) 
     user_id = models.IntegerField(null=False,unique=False)
@@ -30,6 +31,7 @@ class Personnel_Overhead(models.Model):
         return self.cost    
 
 class Product(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField("name",max_length=50,null=True,unique=False) 
     model = models.CharField("model",max_length=50,null=True,unique=False) 
     inventory_id = models.IntegerField(null=True,unique=False)
@@ -72,96 +74,27 @@ class Prouct_Insurance(models.Model):
         return self.cost       
 
 class Vehical(models.Model):
-    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
+    id = models.AutoField(primary_key=True)
+    name = models.CharField("name",max_length=50,null=True,unique=True) 
+    make = models.CharField("make",max_length=50,null=False,unique=False,default='N/A') 
     model = models.CharField("model",max_length=50,null=False,unique=False,default='N/A') 
     type = models.CharField("type",max_length=50,null=False,unique=False,default='N/A') 
-    date = models.DateField(default=datetime.now,null=True)
-    
     year = models.IntegerField(null=True,unique=False)
+    original_miles = models.FloatField("original_miles", null=True,unique=False)
     active_miles = models.FloatField("active_miles", null=True,unique=False)
     monthy_miles = models.FloatField("monthy_miles", null=True,unique=False)
     image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
     cost = models.FloatField("cost", null=True,unique=False)
+    ownership = models.CharField("ownership",max_length=50,null=False,unique=False,default='N/A') 
+    last_update = models.DateField(null=True) 
+    original_value = models.FloatField("original_value", null=True,unique=False)
+    load_limit = models.FloatField("load_limit", null=True,unique=False)
     def __str__(self):
         return "%i %s %s" % (self.year, self.model, self.type)
-        
-class Vehicle_Insurance(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    insurance = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost       
 
-class Vehicle_Fuel(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    fuel = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost
-    
-class Vehicle_Tire(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    tires = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost  
-
-class Vehicle_oil(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    oil = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
-        
-
-class Vehicle_repair(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    vendor_id = models.IntegerField(null=False,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    repair = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
-        
-class Vehicle_mantainance(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    vendor_id = models.IntegerField(null=False,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    repair = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
-
-class Vehicle_load(models.Model): #what and how much the vehicle will carry
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    max = models.FloatField("max", null=True,unique=False)
-    on_board = models.FloatField("on_board", null=True,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    oil = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
-        
 
 class Business_Space(models.Model):#commercial building space  
+    id = models.AutoField(primary_key=True)
     name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
     type = models.CharField("type",max_length=50,null=True,unique=False) 
     image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 

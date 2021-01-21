@@ -23,6 +23,7 @@ from ATS.overhead import Equations
 from re import search
 from ATS.overhead import Comunication
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -65,7 +66,9 @@ class AssetsView(View):
         try:
             veh= []
             assets= []
-            vehicle=-1
+            vehicle=[]
+            space=[]
+            personnel=[]
             operator = str(self.request.user)
             phone = self.request.user.userprofileinfo.phone
             message = 'message'
@@ -84,15 +87,35 @@ class AssetsView(View):
                 veh = Model.objects.filter(id=veh_id).all()
                 veh=veh[0]
                 print(veh)
-                
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            thisyear = dt.year
+            thismonth = dt.month
+            thisday = dt.day
+            print('thismonth=',thismonth)
+            print('thisyear=',thisyear)
+            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            month = months[str(thismonth)]
+            print('month =',month)    
             print(vehicle)
         except IOError as e:
-            print ("Lists load Failure ", e)
+            print ("Lists load Failure ", e) 
+            
             print('error = ',e) 
-        return render (self.request,"assets/index.html",{ "vehicle": vehicle, "veh":veh,  "index_type":"assests"})
+        return render (self.request,"assets/index.html",{"personnel": personnel, "space": space, "vehicle": vehicle, "veh":veh, "index_type":"assests"})
         
     def post(self, *args, **kwargs):
         timestamp = date.today()
+        dt = datetime.datetime.today()
+        thisyear = dt.year
+        thismonth = dt.month
+        thisday = dt.day
+        print('thismonth=',thismonth)
+        print('thisyear=',thisyear)
+        months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+        month = months[str(thismonth)]
+        print('month =',month) 
+        operator = str(self.request.user)
         band = request.POST.POST('_band',-1)
         category = request.POST.get('_category',-1)
         description = request.POST.get('_desc',-1)
@@ -139,17 +162,43 @@ class VehicleView(View):
             # cast the request inventory_id from string to integer type.
             success = True 
             try:	
+                timestamp = date.today()
+                operator = str(self.request.user)
+                dt = datetime.datetime.today()
+                thisyear = dt.year
+                thismonth = dt.month
+                thisday = dt.day
+                print('thismonth=',thismonth)
+                print('thisyear=',thisyear)
+                months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+                month = months[str(thismonth)]
+                print('month =',month) 
+                insurance=0
+                payment_month=0
+                payment_year=0
+                fuel_month=0
+                fuel_year=0
+                maintenance=0
+                repair=0;
+                tires=0
+                inspection=0
+                veh=-1
+                duplicate=-1
                 years = []
                 year = datetime.date.today().year
                 for i in range(-40,0):
                     years.append(year+i)
-                veh_id = self.request.GET.get('vehicle', -1)
                 vehicles=Vehical.objects.all()
+                veh_id = self.request.GET.get('veh_id', -1)
+                print('vehicles=',vehicles)
+                print('veh_id=',veh_id)
                 if veh_id!=-1:
-                    veh = Model.objects.filter(id=veh_id).all()
+                    veh = Vehical.objects.filter(id=veh_id).all()
+                    print('veh=',veh)
                     veh=veh[0]
+                    print('veh=',veh)
                     print('veh.image_file',veh.image_file)
-                    uploaded_file_url=veh.photo
+                    uploaded_file_url=veh.image_file
                 
                 if uploaded_file_url==None or uploaded_file_url =="":
                     uploaded_file_url = '/ATS/media/inv1.png'
@@ -157,43 +206,131 @@ class VehicleView(View):
             except IOError as e:
                 print ("load vehicle Failure ", e)
                 print('error = ',e) 
-            return render(self.request,"assets/vehicle.html",{'year':year, 'years':years, "vehicles": vehicles, "veh": veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle"})
+            return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
+                                                            'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
+                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
+    
     def post(self, *args, **kwargs):
         timestamp = date.today()
-        band = request.POST.POST('_band',-1)
-        category = request.POST.get('_category',-1)
-        description = request.POST.get('_desc',-1)
-        model = request.POSTget('_model',-1)
-        vendor= request.POST.get('_vendor',-1)
-        active = True
-        image_file = request.POST.get('fileupload',-1)
-        comments = request.POST.get('_comments',-1)
-        model_id = request.POST.get('m_id',-1)
-        save = request.POST.get('_save',-1)
-        update = request.POST.get('_update',-1)
-        delete = request.POST.get('_delete',-1)
+        operator = str(self.request.user)
+        dt = datetime.datetime.today()
+        thisyear = dt.year
+        thismonth = dt.month
+        thisday = dt.day
+        print('thismonth=',thismonth)
+        print('thisyear=',thisyear)
+        months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+        month = months[str(thismonth)]
+        print('month =',month) 
+        insurance=0
+        payment_month=0
+        payment_year=0
+        fuel_month=0
+        fuel_year=0
+        maintenance=0
+        repair=0;
+        tires=0
+        inspection=0
+        veh=-1
+        duplicate=-1
+        name = self.request.POST.get('_name',-1)
+        print('name=',name)
+        make = self.request.POST.get('_make',-1)
+        print('make=',make)
+        load = self.request.POST.get('_load',-1)
+        print('load=',load)
+        type = self.request.POST.get('_type',-1) #Make
+        print('type=',type)
+        model = self.request.POST.get('_model',-1)
+        print('model=',model)
+        year= self.request.POST.get('_year',-1)
+        print('year=',year)
+        owner= self.request.POST.get('_owner',-1)
+        print('owner=',owner)
+             
+       
         
-        if not save==None:	
+        load= self.request.POST.get('_load',-1)
+        if load==-1:
+            load = 0
+        print('load=',load)
+        orig_miles= self.request.POST.get('_orig_miles',-1)
+        if orig_miles==-1:
+            orig_miles = 0
+        print('orig_miles=',orig_miles)
+        orig_val= self.request.POST.get('_orig_val',-1)
+        if orig_val==-1:
+            orig_val = 0
+        print('orig_val=',orig_val)
+        active_miles= self.request.POST.get('_active_miles',-1)
+        if active_miles==-1:
+            active_miles = 0
+        print('active_miles=',active_miles)
+        miles= self.request.POST.get('_miles',-1)
+        if miles==-1:
+            miles = 0
+        print('miles=',miles)
+        
+        years = []
+        year = datetime.date.today().year
+        for i in range(-40,0):
+            years.append(year+i)
+        veh_id = self.request.POST.get('veh_id', -1)
+        vehicles=Vehical.objects.all()
+        print('vehicles=',vehicles)
+        print('veh_id=',veh_id)
+        if veh_id:
+            veh = Vehical.objects.filter(id=veh_id).all()
+            print('veh=',veh)
+            veh=veh[0]
+            print('veh=',veh)
+            print('veh.image_file',veh.image_file)
+            uploaded_file_url=veh.image_file
+        
+        image_file = self.request.POST.get('_upload',-1)
+        print('image_file',image_file)
+        save = self.request.POST.get('_save',-1)
+        print('save',save)
+        update = self.request.POST.get('_update',-1)
+        print('update',update)
+        delete = self.request.POST.get('_delete',-1)
+        print('delete',delete)
+        
+        if not save==None and save !=-1:	
+            print('in save')
             try:		
-                Model.objects.create(description=description, category=category, band=band, vendor=vendor, model=model, 
-                        comments=comments, image_file=image_file, status=active, last_update=timestamp)
+                if Vehical.objects.filter(name=name).exists() or name =='***Name must be unique!!***':
+                    duplicate=1
+                    return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
+                                                            'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
+                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
+                else:
+                    Vehical.objects.create(name=name, make=make, model=model,type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val,
+                                        load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp)
+                
+                #if pic_form.is_valid():
+                    #pic_form.save()
             except IOError as e:
                 success = False
                 print ("Models Save Failure ", e)
-        elif not update==None: 
+        elif not update==None and update !=-1: 
             try:
+                print('in update')
                 #update existing event
-                Model.objects.filter(id=model_id).update({'description': description,'category':category,'band=':band,
-                    'model':model,'comment':comment,'locationname':locationname,'image_file':image_file,'vendor':vendor,'active':active,'last_update':last_update})
+                Vehical.objects.filter(id=veh_id).update(make=make, model=model, type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val, 
+                                 load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp)
             except IOError as e:
                 print ("Models Update Failure ", e)	
-        elif not delete==None: 
+        elif not delete==None and delete !=-1: 
+            print('in update')
             try:
-                Model.objects.filter(id=model_id).delete()
+                Vehical.objects.filter(id=veh_id).delete()
             except IOError as e:
                 print ("load vehicle Failure ", e)
                 print('error = ',e) 
-            return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "mod": mod, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle"})
+        return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
+                                                        'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
+                                                        'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
 
 class BuildingView(View):
     template_name = "building.html"
@@ -223,7 +360,9 @@ class BuildingView(View):
             except IOError as e:
                 print ("load building Failure ", e)
                 print('error = ',e) 
-            return render(self.request,"assets/building.html",{'build_space':build_space,  "buildings_list": buildings_list,  "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle"})
+            return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
+                                                            'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
+                                                            'inspection':inspection})
     
     def post(self, *args, **kwargs):
         timestamp = date.today()

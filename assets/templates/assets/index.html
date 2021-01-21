@@ -1,4 +1,4 @@
-{% extends "equipment/layout.html" %}
+{% extends "assets/layout.html" %}
 {% load static %}
 
 {% block title %}
@@ -62,7 +62,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
-					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Assets</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
@@ -80,35 +80,64 @@
 	</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
 	    <input type='hidden' id = 'm_id' value = "" name='m_id' data-select='inventory_id'/>
-        <h2 class="text-center">Equipment List</h2>
+        <h2 class="text-center">Building Space List</h2>
 		<div class="table-responsive" Method = "POST">
 			 <table id = "table_id" class="table table-striped table-sm">
 			    <thead>
 					<tr>
 					  <th>ID</th>
-					  <th>Description</th>
-					  <th>Category</th>
-					  <th>Band</th>
-					  <th>Model</th>
-					  <th>Vendor</th>
-					  <th>Status</th>
+					  <th>Name</th>
+					  <th>Type</th>
+					  <th>Percent Space </th>
+					  <th>Percent Fuel </th>
+					  <th>Percent Power</th>
+					  <th>Percent Internet</th>
 					</tr>
 			    </thead>
 				<tbody>
-					{% for model in models %}
+					{% for spaces in space %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.id}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.description}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.category}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.band}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.model}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.vendor}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id">{{model.status}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.id}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.name}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.type}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.space_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.fuel_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.power_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' building_id=spaces.id %}">{{spaces.internet_percentage}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<input type='hidden' id = 'm_id' value = "" name='m_id' data-select='inventory_id'/>
+        <h2 class="text-center">Vehicle List</h2>
+		<div class="table-responsive" Method = "POST">
+			 <table id = "table_id" class="table table-striped table-sm">
+			    <thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Name</th>
+					  <th>Model</th>
+					  <th>Type</th>
+					  <th>Year</th>
+					  <th>Cost</th>
+					</tr>
+			    </thead>
+				<tbody>
+					{% for veh in vehicle %}
+						<tr>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.id}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.name}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.model}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.type}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.date}}</td>
+							<td><a class="nav-link" href="{% url 'assets:vehicle' vehicle_id=veh.id %}">{{veh.cost}}</td>
 						</tr>
 				{% endfor %}
 				</tbody>
 			</table>
 		</div>
+		
     </main>
   </div>
 </div>
