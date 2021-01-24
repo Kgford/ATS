@@ -100,7 +100,7 @@ class Business_Space(models.Model):#commercial building space
     image_file = models.ImageField(upload_to='images/', null=True)
     space_percentage = models.FloatField("space_percentage", null=True,unique=False,default=0)
     power_percentage = models.FloatField("power_percent", null=True,unique=False,default=0)
-    internet_percentage = models.FloatField("power_percentage", null=True,unique=False,default=0)
+    internet_percentage = models.FloatField("internet_percentage", null=True,unique=False,default=0)
     insurance_percentage = models.FloatField("insurance_percentage", null=True,unique=False,default=0)
     fuel_percentage = models.FloatField("fuel_percentage", null=True,unique=False,default=0)
     sqr_feet = models.FloatField("sqr_feet", null=True,unique=False,default=100)

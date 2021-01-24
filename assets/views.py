@@ -105,11 +105,296 @@ class AssetsView(View):
             spaces = Business_Space.objects.all()
             print('spaces=',spaces)
             product = Product.objects.all()
-            building_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
-            building_year = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
-            space_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
-            space_year = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
+            expense_year_building = Expenses.objects.filter(sale_date__year=thisyear,expense_type ='Assets',expense_description__icontains='Building')
+            expense_month_building = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Building')
+            expense_year_vehicle = Expenses.objects.filter(sale_date__year=thisyear,expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_month_vehicle = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+            
+            office = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='OFFICE').last()
+            shop = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='SHOP').last()
+            lab = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='LAB').last()
+            
+            building_month=0
+            space_month=0
+            utilities_month=0
+            fuel_month=0
+            internet_month=0
+            tax_month=0
+            insurance_month=0
+            interest_month=0
+            payments_month=0
+            
+            building_space_month=0
+            utilities_space_month=0
+            fuel_space_month=0
+            internet_space_month=0
+            tax_space_month=0
+            insurance_space_month=0
+            interest_space_month=0
+            payments_space_month=0
+            for item in expense_month_building:
+                print('item-',item)
+                if search('MAIN', item.item_desc.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    payments_month = payments_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('building_month=',building_month)
+                elif search('MAIN', item.item_desc.upper()) and search('UTILITIES', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    utilities_month = utilities_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('FUEL', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_month = fuel_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INTERNET', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    internet_month = internet_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('TAX', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    tax_month = tax_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('tax_month=',tax_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_month = insurance_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('insurance_month=',insurance_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INTEREST', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    interest_space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    interest_space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_month = utilities_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+            
+            building_year=0
+            space_year=0
+            utilities_year=0
+            fuel_year=0
+            internet_year=0
+            tax_year=0
+            insurance_year=0
+            interest_year=0
+            payments_year=0
+            
+            building_space_year=0
+            utilities_space_year=0
+            fuel_space_year=0
+            internet_space_year=0
+            tax_space_year=0
+            insurance_space_year=0
+            interest_space_year=0
+            payments_space_year=0
+            print('payments_space_year=',payments_space_year)
+            for item in expense_year_building:
+                #print('item-',item)
+                if search('MAIN', item.item_desc.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    payments_year = payments_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    print('payments_space_year=',payments_space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('UTILITIES', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    utilities_year = utilities_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('FUEL', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_year = fuel_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INTERNET', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_year = internet_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('TAX', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_year = tax_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('tax_year=',tax_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_year = insurance_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('insurance_year=',insurance_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INTEREST', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_year = utilities_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    print('space_year=',space_year)
+                    print('interest_space_year=',interest_space_year)
            
+            total_taxed  =  [building_year,space_year]
+            cost_list_year  =  [payments_year, interest_year, insurance_year, tax_year, utilities_year, fuel_year, internet_year]
+            cost_list_month  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            total_taxed_v  =  [building_year,space_year]
+            cost_list_year_v  =  [payments_year, interest_year, insurance_year, tax_year, utilities_year, fuel_year, internet_year]
+            cost_list_month_v  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
+            print('cost_list_year=',cost_list_year)
+            print('cost_list_month=',cost_list_month)
             if veh_id!=-1:
                 veh = Model.objects.filter(id=veh_id).all()
                 veh=veh[0]
@@ -129,8 +414,10 @@ class AssetsView(View):
             print ("Lists load Failure ", e) 
             
             print('error = ',e) 
-        return render (self.request,"assets/index.html",{"personnel": personnel, "spaces": spaces, "vehicles": vehicles, "veh":veh, "index_type":"assests",'avatar':avatar, 'year_list':year_list, 'month_list':month_list,
-                                         'building_month':building_month,'building_year':building_year,'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,})
+        return render (self.request,"assets/index.html",{"personnel": personnel, "spaces": spaces, "vehicles": vehicles, "veh":veh, "index_type":"assests", 'avatar':avatar, 'year_list':year_list, 'month_list':month_list,'utilities_month':utilities_month,
+                                         'total_taxed':total_taxed, 'cost_list_year':cost_list_year, 'fuel_month':fuel_month,'internet_month':internet_month, 'tax_month':tax_month, 'insurance_month':insurance_month,'interest_month':interest_month,'cost_list_month':cost_list_month,
+                                         'total_taxed_v':total_taxed_v, 'cost_list_year_v':cost_list_year_v, 'cost_list_month_v':cost_list_month_v, 'utilities_year':utilities_year,'fuel_year':fuel_year,'internet_year':internet_year, 'tax_year':tax_year, 'insurance_year':insurance_year, 'interest_year':interest_year,
+                                         'building_month':building_month, 'building_year':building_year, 'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,})
         
     def post(self, *args, **kwargs):
         timestamp = date.today()
