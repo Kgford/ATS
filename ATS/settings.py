@@ -1,4 +1,4 @@
-
+ 
 import os
 import django_heroku
 
@@ -11,7 +11,7 @@ STATIC_DIR = os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = [STATIC_DIR]
 MEDIA_DIR = os.path.join(BASE_DIR,'media')
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/ATS/media/'
+MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
 STATIC_URL = '/static/'

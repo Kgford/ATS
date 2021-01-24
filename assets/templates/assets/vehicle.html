@@ -92,6 +92,7 @@
 		</div>
 		<form action = "{% url 'assets:vehicle' %}"  method="post" enctype="multipart/form-data">
 			{% csrf_token %}
+			{{ form.as_p }} 
 			<input type='hidden' id = 'veh_id' name='veh_id' value = "{{veh.id}}"/>
 			<input type='hidden' id = 'vehicle' name='vehicle' value = "{{veh.name}}"/>
 			<div class="row">
@@ -234,7 +235,7 @@
 							{% if veh == -1 %}
 								<option selected>select option</option>
 							{% else %}
-								<option selected>{{veh.type}}</option>
+								<option selected>{{veh.ownership}}</option>
 							{% endif %}
 							<option data-desc = 'owner', data-val = "OWNER">OWNER</option>
 							<option data-desc = 'mortgage', data-val = "MORTGAGE">MORTGAGE</option>
@@ -311,8 +312,7 @@
 				<div class="col-sm-3 col-lg-4 grid-col">
 					<div class="form-group">
 					    <label for="_upload"> Select an Equipment Image</label> 
-						<input type="file" name="_upload" id="_upload"> 
-						
+						<input type="file" name="uploaded_file" id="uploaded_file"> 
 					</div>
 				</div>
 			</div>
@@ -320,40 +320,32 @@
 				<div class="col-sm-2 col-lg-3 grid-col">
 					<div class="thumbnail">
 					    <img src="{{ uploaded_file_url }}" class="img-responsive" alt="Cinque Terre">
-						<div class="caption" >
-							{% if veh == -1 %}
-								<p id = "_md" name = '_md' >Vehicle:</p>
-							{% else %}
-								<p id = "_md" name = '_md' >Vehicle: {{veh.model}}</p>
-							{% endif %}
-							
-						</div>
-					</div>	
+						</div>	
 				</div>
 			</div>
 		<div class="row">
 			    {% if veh == -1 %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_save" name = "_save" data-search="save"  value="Save Model">
+							<input type="submit" id = "_save" name = "_save" data-search="save"  value="Save Vehicle">
 						</div>
 					</div>
 				{% else %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_update" name = "_update" data-update="save"  value="Update Model">
+							<input type="submit" id = "_update" name = "_update" data-update="save"  value="Update Vehicle">
 						</div>
 					</div>
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_delete" name = "_delete" data-update="save"  value="Delete Model">
+							<input type="submit" id = "_delete" name = "_delete" data-update="save"  value="Delete Vehicle">
 						</div>
 					</div>
 				{% endif %}
 			</div>
 		</form>
 		{% if uploaded_file_url %}
-			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{uploaded_file_url}}</a></p>
 		{% endif %}
 		<h2 class="text-center">Vehicle List</h2>
 		<div class="table-responsive" Method = "POST">

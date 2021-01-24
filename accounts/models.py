@@ -46,6 +46,16 @@ class Expenses(models.Model):
     v_repair = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_repair')
     v_maintaince = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_maintaince')
     v_payment = models.ForeignKey('assets.Vehical', on_delete=models.CASCADE, null=True, related_name='v_payment')
+    b_insurance = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_insurance')
+    b_utilities = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_power')
+    b_internet = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_internet')
+    b_fuel = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_fuel')
+    b_phone = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_phone')
+    b_repair = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_repair')
+    b_mantenance = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_mantenance')
+    b_payment = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_payment')
+    b_tax = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_tax')
+    
 	
 class Income(models.Model):
 	id = models.AutoField(primary_key=True)

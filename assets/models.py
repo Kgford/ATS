@@ -7,7 +7,7 @@ class Personnel(models.Model):
     type = models.CharField("type",max_length=50,null=True,unique=False) 
     user_id = models.IntegerField(null=False,unique=False)
     year = models.IntegerField(null=False,unique=False)
-    image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
+    image_file = models.ImageField(upload_to='images/', null=True)
     cost = models.FloatField("cost", null=True,unique=False)
     def __str__(self):
         return "%i %s %s" % (self.year, self.model, self.type)
@@ -38,7 +38,7 @@ class Product(models.Model):
     equipment_id = models.IntegerField(null=True,unique=False)
     type = models.CharField("type",max_length=50,null=True,unique=False) 
     year = models.IntegerField(null=False,unique=False)
-    image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
+    image_file = models.ImageField(upload_to='images/', null=True)
     cost = models.FloatField("cost", null=True,unique=False)
     def __str__(self):
         return "%i %s %s" % (self.year, self.model, self.type)
@@ -83,7 +83,7 @@ class Vehical(models.Model):
     original_miles = models.FloatField("original_miles", null=True,unique=False)
     active_miles = models.FloatField("active_miles", null=True,unique=False)
     monthy_miles = models.FloatField("monthy_miles", null=True,unique=False)
-    image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
+    image_file = models.ImageField(upload_to='images/', null=True)
     cost = models.FloatField("cost", null=True,unique=False)
     ownership = models.CharField("ownership",max_length=50,null=False,unique=False,default='N/A') 
     last_update = models.DateField(null=True) 
@@ -95,96 +95,24 @@ class Vehical(models.Model):
 
 class Business_Space(models.Model):#commercial building space  
     id = models.AutoField(primary_key=True)
-    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
+    building = models.CharField("building",max_length=50,null=False,unique=False,default='N/A') 
     type = models.CharField("type",max_length=50,null=True,unique=False) 
-    image_file = models.CharField("Image_file",max_length=20,null=True,unique=False) 
-    space_percentage = models.FloatField("space_percentage", null=True,unique=False)
-    power_percentage = models.FloatField("power_percent", null=True,unique=False)
-    internet_percentage = models.FloatField("power_percentage", null=True,unique=False)
-    insurance_percentage = models.FloatField("insurance_percentage", null=True,unique=False)
-    fuel_percentage = models.FloatField("fuel_percentage", null=True,unique=False)
-    
-class Building(models.Model):
-    address = models.CharField("name",max_length=100,null=True,unique=False)
-    city = models.CharField("name",max_length=50,null=True,unique=False)
-    state = models.CharField("name",max_length=10,null=True,unique=False)
-    zip_code = models.CharField("name",max_length=50,null=True,unique=False)
-    address = models.CharField("name",max_length=50,null=True,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    building = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)  
-    def __unicode__(self):
-        return self.address 
-    
-class Insurance(models.Model):
-    name = models.CharField("name",max_length=50,null=False,unique=False,default='N/A') 
-    type = models.CharField("type",max_length=50,null=False,unique=False,default='N/A') 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    insurance = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost      
-    
-class Power(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    power = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost  
+    image_file = models.ImageField(upload_to='images/', null=True)
+    space_percentage = models.FloatField("space_percentage", null=True,unique=False,default=0)
+    power_percentage = models.FloatField("power_percent", null=True,unique=False,default=0)
+    internet_percentage = models.FloatField("power_percentage", null=True,unique=False,default=0)
+    insurance_percentage = models.FloatField("insurance_percentage", null=True,unique=False,default=0)
+    fuel_percentage = models.FloatField("fuel_percentage", null=True,unique=False,default=0)
+    sqr_feet = models.FloatField("sqr_feet", null=True,unique=False,default=100)
+    payment_cost = models.FloatField("payment_cost", null=True,unique=False,default=100)
+    power_cost = models.FloatField("power_cost", null=True,unique=False,default=100)
+    internet_cost = models.FloatField("internet_cost", null=True,unique=False,default=100)
+    fuel_cost = models.FloatField("fuel_cost", null=True,unique=False,default=100)
+    maintenance_cost = models.FloatField("maintenance_cost", null=True,unique=False,default=100)
+    last_update = models.DateField(null=True) 
+    def __str__(self):
+        return "%s %s" % (self.building, self.type)
         
-class Internet(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    internet = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost  
-        
-class Building_Fuel(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    cost = models.FloatField("cost", null=True,unique=False)
-    building_fuel = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost  
-        
-class Phone(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False) 
-    date = models.DateField(default=datetime.now,null=True)
-    cost = models.FloatField("cost", null=True,unique=False)
-    phone = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost  
-        
-class Building_repair(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False,default='N/A') 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    vendor_id = models.IntegerField(null=False,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    repair = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
-        
-class Building_mantainance(models.Model):
-    name = models.CharField("name",max_length=50,null=True,unique=False) 
-    model = models.CharField("model",max_length=50,null=True,unique=False) 
-    type = models.CharField("type",max_length=50,null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    vendor_id = models.IntegerField(null=False,unique=False)
-    cost = models.FloatField("cost", null=True,unique=False)
-    date = models.DateField(default=datetime.now,null=True)
-    repair = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE)
-    def __unicode__(self):
-        return self.cost 
+
     
    

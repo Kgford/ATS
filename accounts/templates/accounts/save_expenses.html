@@ -130,9 +130,13 @@
 						<option data-desc = 'expense', value = "Liability Insurance">Liability Insurance</option>
 						<option data-desc = 'expense', value = "Building Payment">Building Payment</option>
 						<option data-desc = 'expense', value = "Building Utilities">Building Utilities</option>
+						<option data-desc = 'expense', value = "Building Internet">Building Internet</option>
+						<option data-desc = 'expense', value = "Building Fuel">Building Fuel</option>
+						<option data-desc = 'expense', value = "Building Phone">Building Phone</option>
 						<option data-desc = 'expense', value = "Building Insurance">Building Insurance</option>
 						<option data-desc = 'expense', value = "Building  Tax">Building  Tax</option>
 						<option data-desc = 'expense', value = "Building Maintainance">Building Maintenance</option>
+						<option data-desc = 'expense', value = "Building Repair">Building Repair</option>
 						<option data-desc = 'expense', value = "Vehicle Payment">Vehicle Payment</option>
 						<option data-desc = 'expense', value = "Vehicle Insurance">Vehicle Insurance</option>
 						<option data-desc = 'expense', value = "Vehicle Maintainance">Vehicle Maintenance</option>
@@ -168,7 +172,7 @@
 			</div>
 			<div class="col-sm-1 col-lg-2 grid-col">
 				<div class="form-group">
-					<label>Vendor/Contractor/Store<span class="k-required"></span></label>
+					<label>Vendor/Contractor/Store/Bank<span class="k-required"></span></label>
 					<input type='hidden' name='_vendor' data-select='vendor'/>
 					<select id='_vendor' name ='_vendor' class="browser-default custom-select custom-select-lg mb-3" required>
 						{% if exp == -1%}
@@ -226,7 +230,7 @@
 								<option selected>select menu</option>
 							{% endif %}	
 							
-							{% for veh in building_list %}
+							{% for veh in buildings_list %}
 								<option data-desc = 'description', value = "{{veh}}">{{veh}}</option>
 							{% endfor %}
 						</select>
@@ -237,11 +241,12 @@
 						<label>Building Space<span class="k-required"></span></label>
 						<input type='hidden' name='category' data-select='category'/>
 						<select id='_building_space' name = "_building_space" value = "{{exp.item_desc}}" class="browser-default custom-select custom-select-lg mb-3" >
-							{% if space != -1 %}
+							{% if exp == -1 %}
 								<option selected>select type</option>
 							{% else %}
 								<option selected>{{exp.item_desc}}</option>
 							{% endif %}
+							<option data-desc = 'building', data-val = "MAIN">MAIN</option>
 							<option data-desc = 'building', data-val = "OFFICE">OFFICE</option>
 							<option data-desc = 'building', data-val = "CONFERENCE ROOM">CONFERENCE ROOM</option>
 							<option data-desc = 'building', data-val = "FACTORY">FACTORY</option>

@@ -10,7 +10,7 @@ class Vendor(models.Model):
     zip_code = models.CharField("zip_code",max_length=25,null=False,unique=False,default='N/A')   
     phone = models.CharField("Phone",max_length=20,null=False,unique=False,default='N/A')      
     email = models.CharField("email",max_length=50,null=False,unique=False,default='N/A')   
-    website = models.CharField("website",max_length=60,null=False,unique=False,default='N/A') 
+    website = models.CharField("website",max_length=500,null=False,unique=False,default='N/A') 
     active = models.BooleanField("active",unique=False,null =True,default=True)
     image_file = models.CharField("image",max_length=50,null=True,unique=False)   
     created_on = models.DateField()

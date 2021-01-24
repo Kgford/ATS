@@ -90,37 +90,22 @@
 				</div>
 			</div>
 		</div>
-		<form action = "{% url 'assets:vehicle' %}"  method="post" enctype="multipart/form-data">
+		<form action = "{% url 'assets:building' %}"  method="post" enctype="multipart/form-data">
 			{% csrf_token %}
-			<input type='hidden' id = 'm_id' name='m_id' value = {{mod.id}} data-select='inventory_id'/>
-			<input type='hidden' id = 'model' name='model' value = {{mod.model}} data-select='model'/>
-            <div class="row">
-				<div class="col-sm-1 col-lg-2 grid-col">
-					<div class="form-group">
-						<label>Building <span class="k-required"></span></label>
-						<input type='hidden' name='models' data-select='_band'/>
-						<select id='_band' name = "_building" value = "{{build_space.name}}" class="browser-default custom-select custom-select-lg mb-3" >
-							{% if build_space == -1 %}
-								<option selected>select building</option>
-							{% else %}
-								<option selected>{{build_space.name}}</option>
-							{% endif %}
-							{% for building in buildings_list %}
-								<option data-desc = 'building', value = "{{building}}">{{building}}</option>
-							{% endfor %}on>
-						</select>
-					</div>
-				</div>
+			<div class="row">
+				<input type='hidden' id = '_space_id' name='_space_id' value = "{{space_id}}" data-select='space_id'/>
+				<input type='hidden' id = 'building' name='building' value = "{{build_space.building}}" data-select='building'/>
 				<div class="col-sm-1 col-lg-2 grid-col">
 					 <div class="form-group">
 						<label>Type<span class="k-required"></span></label>
-						<input type='hidden' name='category' data-select='category'/>
-						<select id='_category' name = "_category" value = "{{mod.category}}" class="browser-default custom-select custom-select-lg mb-3" >
-							{% if build_space == -1 %}
-								<option selected>select type</option>
+						<input type='hidden' name='type' data-select='type'/>
+						<select id='_type' name = "_type" value = "{{build_space.type}}" class="browser-default custom-select custom-select-lg mb-3" onchange = "this.form.submit()">
+							{% if space_type == -1 %}
+								<option selected>MAIN</option>
 							{% else %}
-								<option selected>{{build_space.type}}</option>
+								<option selected>{{space_type}}</option>
 							{% endif %}
+							<option data-desc = 'building', data-val = "MAIN BUILDING">MAIN</option>
 							<option data-desc = 'building', data-val = "OFFICE">OFFICE</option>
 							<option data-desc = 'building', data-val = "CONFERENCE ROOM">CONFERENCE ROOM</option>
 							<option data-desc = 'building', data-val = "FACTORY">FACTORY</option>
@@ -131,65 +116,145 @@
 						</select>
 					</div>	
 				</div>	
+				<div class="col-sm-1 col-lg-2 grid-col">
+					<div class="form-group">
+						<label>Building <span class="k-required"></span></label>
+						<input type='hidden' name='models' data-select='_band'/>
+						<select id='_building' name = "_building" value = "{{building}}" class="browser-default custom-select custom-select-lg mb-3" >
+							{% if building == -1 %}
+								<option selected>select building</option>
+							{% else %}
+								<option selected>{{building}}</option>
+							{% endif %}
+							{% for build in buildings_list %}
+								<option data-desc = 'building', value = "{{building}}">{{build}}</option>
+							{% endfor %}on>
+						</select>
+					</div>
+				</div>
 			</div>
 			<div class="row">
+				{% if main_building != 'MAIN' %}
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label for="_space">Space %</label>
+							{% if build_space == -1 %}
+								<input id = "_space" name = "_space" input class="form-control" placeholder="% space use"  required >
+							{% else %}
+								<input id = "_space" name = "_space" input class="form-control" value = "{{build_space.space_percentage}}"  required >
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label for="_power">Power %</label>
+							{% if build_space == -1 %}
+								<input id = "_power" name = "_power" input class="form-control" placeholder="% of Power"  required >
+							{% else %}
+								<input id = "_power" name = "_power" input class="form-control" value = "{{build_space.power_percentage}}"  required >
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label for="_internet">Internet %</label>
+							{% if build_space == -1 %}
+								<input id = "_internet" name = "_internet" input class="form-control" placeholder="% of Internet"  required >
+							{% else %}
+								<input id = "_internet" name = "_internet" input class="form-control" value = "{{build_space.internet_percentage}}"  required >
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label for="_fuel">Insurance %</label>
+							{% if build_space == -1 %}
+								<input id = "_insurance" name = "_insurance" input class="form-control" placeholder="% Insurance"  required >
+							{% else %}
+								<input id = "_insurance" name = "_insurance" input class="form-control" value = "{{build_space.insurance_percentage}}"  required >
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-sm-1 col-lg-1 grid-col">
+						<div class="form-group">
+							<label for="_fuel">Fuel %</label>
+							{% if build_space == -1 %}
+								<input id = "_fuel" name = "_fuel" input class="form-control" placeholder="% Fuel"  required >
+							{% else %}
+								<input id = "_fuel" name = "_fuel" input class="form-control" value = "{{build_space.fuel_percentage}}"  required >
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% else %}
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Space %</label>
+						<label for="_space">Square Footage</label>
 						{% if build_space == -1 %}
-							<input id = "_space" name = "_space" input class="form-control" placeholder="% space use"  required >
+							<input id = "_sqr_feet" name = "_sqr_feet" input class="form-control" placeholder="Sqr Feet"  required >
 						{% else %}
-							<input id = "_space" name = "_space" input class="form-control" value = "{{build_space.space_percentage}}"  required >
+							<input id = "_sqr_feet" name = "_sqr_feet" input class="form-control" value = "{{build_space.sqr_feet}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Power %</label>
+						<label for="_space">Payments</label>
 						{% if build_space == -1 %}
-							<input id = "_power" name = "_power" input class="form-control" placeholder="% of Power"  required >
+							<input id = "_payment_cost" name = "_payment_cost" input class="form-control" placeholder="Payments"  required >
 						{% else %}
-							<input id = "_power" name = "_power" input class="form-control" value = "{{build_space.power_percentage}}"  required >
+							<input id = "_payment_cost" name = "_payment_cost" input class="form-control" value = "{{build_space.payment_cost}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Internet %</label>
+						<label for="_space">Utilities</label>
 						{% if build_space == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="% of Internet"  required >
+							<input id = "_power_cost" name = "_power_cost" input class="form-control" placeholder="Utilities"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.internet_percentage}}"  required >
+							<input id = "_power_cost" name = "_power_cost" input class="form-control" value = "{{build_space.power_cost}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Insurance %</label>
+						<label for="_space">Internet</label>
 						{% if build_space == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="% Insurance"  required >
+							<input id = "_internet_cost" name = "_internet_cost" input class="form-control" placeholder="Internet costs"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.insurance_percentage}}"  required >
+							<input id = "_internet_cost" name = "_internet_cost" input class="form-control" value = "{{build_space.internet_cost}}"  required >
 						{% endif %}
 					</div>
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_desc">Fuel %</label>
+						<label for="_space">Fuel</label>
 						{% if build_space == -1 %}
-							<input id = "_desc" name = "_model" input class="form-control" placeholder="% Fuel"  required >
+							<input id = "_fuel_cost" name = "_fuel_cost" input class="form-control" placeholder="Fuel costs"  required >
 						{% else %}
-							<input id = "_desc" name = "_model" input class="form-control" value = "{{build_space.fuel_percentage}}"  required >
+							<input id = "_fuel_cost" name = "_fuel_cost" input class="form-control" value = "{{build_space.fuel_cost}}"  required >
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-sm-1 col-lg-1 grid-col">
+					<div class="form-group">
+						<label for="_space">Maintenance</label>
+						{% if build_space == -1 %}
+							<input id = "_maintenance_cost" name = "_maintenance_cost" input class="form-control" placeholder="Maintenance"  required >
+						{% else %}
+							<input id = "_maintenance_cost" name = "_maintenance_cost" input class="form-control" value = "{{build_space.maintenance_cost}}"  required >
 						{% endif %}
 					</div>
 				</div>
 			</div>
+			{% endif %}
+			
 			<div class="row">	
 				<div class="col-sm-3 col-lg-4 grid-col">
 					<div class="form-group">
 					    <label for="_upload"> Select an Equipment Image</label> 
-						<input type="file" name="_upload" id="_upload"> 
-						
+						<input type="file" name="uploaded_file" id="uploaded_file"> 
 					</div>
 				</div>
 			</div>
@@ -197,33 +262,25 @@
 				<div class="col-sm-2 col-lg-3 grid-col">
 					<div class="thumbnail">
 					    <img src="{{ uploaded_file_url }}" class="img-responsive" alt="Cinque Terre">
-						<div class="caption" >
-							{% if mod == -1 %}
-								<p id = "_md" name = '_md' >Model:</p>
-							{% else %}
-								<p id = "_md" name = '_md' >Model: {{mod.model}}</p>
-							{% endif %}
-							
-						</div>
 					</div>	
 				</div>
 			</div>
 			<div class="row">
-			    {% if mod == -1 %}
+			    {% if build_space == -1 %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_save" name = "_save" data-search="save"  value="Save Model">
+							<input type="submit" id = "_save" name = "_save" data-search="save"  value="Save Space">
 						</div>
 					</div>
 				{% else %}
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_update" name = "_update" data-update="save"  value="Update Model">
+							<input type="submit" id = "_update" name = "_update" data-update="save"  value="Update Space">
 						</div>
 					</div>
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
-							<input type="submit" id = "_delete" name = "_delete" data-update="save"  value="Delete Model">
+							<input type="submit" id = "_delete" name = "_delete" data-update="save"  value="Delete Space">
 						</div>
 					</div>
 				{% endif %}
@@ -238,24 +295,26 @@
 			    <thead>
 					<tr>
 					  <th>ID</th>
-					  <th>Description</th>
-					  <th>Category</th>
-					  <th>Band</th>
-					  <th>Model</th>
-					  <th>Vendor</th>
-					  <th>Status</th>
-					</tr>
+					  <th>Office Space</th>
+					  <th>Location</th>
+					  <th>Space %</th>
+					  <th>Power %</th>
+					  <th>Internet %</th>
+					  <th>Insurance %</th>
+					  <th>Fuel %</th>
+				  </tr>
 			    </thead>
 				<tbody>
-					{% for model in models %}
+					{% for space in spaces %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.id}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.description}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.category}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.band}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.model}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id %}">{{model.vendor}}</td>
-							<td><a class="nav-link" href="{% url 'assets:building' model_id=model.id">{{model.status}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.id}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.type}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.building}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.space_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.power_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.internet_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.insurance_percentage}}</td>
+							<td><a class="nav-link" href="{% url 'assets:building' %}?space_id={{space.id}}&space_type={{space.type}}">{{space.fuel_percentage}}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

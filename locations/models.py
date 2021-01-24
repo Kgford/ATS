@@ -12,13 +12,15 @@ class Location(models.Model):
     email = models.CharField("email",max_length=50,null=False,unique=False,default='N/A')   
     website = models.CharField("website",max_length=60,null=False,unique=False,default='N/A') 
     active = models.BooleanField("active",unique=False,null =True,default=True)
-    image_file = models.CharField("image",max_length=50,null=True,unique=False)   
+    image_file = models.ImageField(upload_to='images/', null=True) 
     created_on = models.DateField()
     last_entry = models.DateField()
     inventory_id  = models.IntegerField(null=True,unique=False)
     lat = models.FloatField("lat",null=True,unique=False)
     lng = models.FloatField("lng",null=True,unique=False)
-    type = models.CharField("type",max_length=25,null=True,unique=False,default='N/A')   
+    type = models.CharField("type",max_length=25,null=True,unique=False,default='N/A')  
+    cost = models.FloatField("cost", null=True,unique=False)
+    Business_Space = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE, null=True,  related_name='Business_Space')   
     
     def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
         self.name = name
