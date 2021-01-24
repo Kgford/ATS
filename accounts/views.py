@@ -391,7 +391,7 @@ class SaveExpensesView(View):
             if not del_exp==-1 and (exp_id !=-1 and exp_id != ''):
                 try:
                    #update item	
-                    Expenses.objects.filter(id=expense_id).delete()
+                    Expenses.objects.filter(id=exp_id).delete()
                     print('delete complete')
                     exp=-1
                 except IOError as e:
