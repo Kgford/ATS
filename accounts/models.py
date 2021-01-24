@@ -55,6 +55,8 @@ class Expenses(models.Model):
     b_mantenance = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_mantenance')
     b_payment = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_payment')
     b_tax = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_tax')
+    b_interest = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_interest')
+    v_interest = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='v_interest')
     
 	
 class Income(models.Model):

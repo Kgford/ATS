@@ -445,6 +445,9 @@ class SaveExpensesView(View):
                     elif expense_desc=='Vehicle Maintainance':
                          Expenses.objects.filter(id=exp_id).update(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    elif expense_desc=='Vehicle Interest':
+                         Expenses.objects.filter(id=exp_id).update(v_interest=v, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                 elif building !=-1:
                     print('in building update')
                     print('building=',building)
@@ -481,13 +484,14 @@ class SaveExpensesView(View):
                     if expense_desc=='Building Repair':
                          Expenses.objects.filter(id=exp_id).update(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Interest':
+                         Expenses.objects.filter(id=exp_id).update(b_interest=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                 else:
                     Expenses.objects.filter(id=exp_id).update(vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                 exp=-1
            
-
-
             elif not save_exp==-1 or (exp_id !=-1 and exp_id != ''):
                 print('save_exp=',save_exp)
                 print('exp_id=',exp_id)
@@ -545,7 +549,10 @@ class SaveExpensesView(View):
                             print('in Maintenance')
                             Expenses.objects.create(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
                                                        quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                    
+                        elif expense_desc=='Vehicle Interest':
+                            print('in Maintenance')
+                            Expenses.objects.create(v_interest=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
                     elif building !=-1:
                         print('in building save')
                         print('building=',building)
@@ -582,8 +589,9 @@ class SaveExpensesView(View):
                         if expense_desc=='Building Repair':
                              Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                    
-                    
+                        if expense_desc=='Building Interest':
+                             Expenses.objects.create(b_interest=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                     else:
                         Expenses.objects.create(vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
                                           quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)

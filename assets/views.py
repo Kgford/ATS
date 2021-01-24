@@ -68,23 +68,48 @@ class AssetsView(View):
         try:
             veh= []
             assets= []
-            vehicle=[]
-            space=[]
+            vehicles=[]
+            spaces=[]
             personnel=[]
             operator = str(self.request.user)
             phone = self.request.user.userprofileinfo.phone
             message = 'message'
-            com=Comunication(phone,message)
-            print('com=',com)
-            com.send_sms()
+            #com=Comunication(phone,message)
+            #print('com=',com)
+            #com.send_sms()
+            month_list = -1
+            year_list = -1
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            thisyear = dt.year
+            thismonth = dt.month
+            thisday = dt.day
+            print('thismonth=',thismonth)
+            print('thisyear=',thisyear)
+            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
+            month = months[str(thismonth)]
+            month_full = full_months[str(thismonth)]
+            print('month =',month)
+            operator = str(self.request.user)
+            avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
+            year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
+            month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
             veh_id = self.request.GET.get('vehicle', -1)
             build_id = self.request.GET.get('building', -1)
             person_id = self.request.GET.get('personnel', -1)
             product_id = self.request.GET.get('product', -1)
-            vehicle = Vehical.objects.all()
+            vehicles = Vehical.objects.all()
+            print('vehicles=',vehicles)
             personnel = Personnel.objects.all()
-            space = Business_Space.objects.all()
+            spaces = Business_Space.objects.all()
+            print('spaces=',spaces)
             product = Product.objects.all()
+            building_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
+            building_year = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
+            space_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
+            space_year = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
+           
             if veh_id!=-1:
                 veh = Model.objects.filter(id=veh_id).all()
                 veh=veh[0]
@@ -99,12 +124,13 @@ class AssetsView(View):
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             month = months[str(thismonth)]
             print('month =',month)    
-            print(vehicle)
+            print(vehicles)
         except IOError as e:
             print ("Lists load Failure ", e) 
             
             print('error = ',e) 
-        return render (self.request,"assets/index.html",{"personnel": personnel, "space": space, "vehicle": vehicle, "veh":veh, "index_type":"assests"})
+        return render (self.request,"assets/index.html",{"personnel": personnel, "spaces": spaces, "vehicles": vehicles, "veh":veh, "index_type":"assests",'avatar':avatar, 'year_list':year_list, 'month_list':month_list,
+                                         'building_month':building_month,'building_year':building_year,'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,})
         
     def post(self, *args, **kwargs):
         timestamp = date.today()
