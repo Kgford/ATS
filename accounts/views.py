@@ -993,6 +993,7 @@ class CreateInvoiceView(View):
                 print('invoice_id =',invoice_id)
                 print('client=',client)
                 invoice = -1
+                               
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
                 invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()  
