@@ -10,11 +10,7 @@ TEMPLATE_DIR = os.path.join(SETTINGS_PATH,'templates')
 MEDIA_DIR = os.path.join(BASE_DIR,'media')
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-#STATIC_DIR = os.path.join(BASE_DIR,'static')
-#STATICFILES_DIRS = [STATIC_DIR]
-#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
-#STATIC_URL = '/static/'
+
 LOGIN_URL = 'staff/user_login'
 LOGIN_REDIRECT_URL = 'staff/user_login'
 LOGOUT_REDIRECT_URL = 'staff/user_login' 
@@ -28,12 +24,20 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
 
+#~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~Django~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#STATIC_DIR = os.path.join(BASE_DIR,'static')
+#STATICFILES_DIRS = [STATIC_DIR]
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
+#STATIC_URL = '/static/'
+#~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~Django~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -41,6 +45,9 @@ STATICFILES_DIRS = (
 
 # Whitenoise Storage Class  - Apply compression but don’t want the caching behaviour
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+#~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -48,8 +55,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
 
 #ALLOWED_HOSTS = ['automatedtestsolution.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
 ALLOWED_HOSTS = ["*"]
