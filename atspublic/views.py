@@ -255,11 +255,13 @@ class RobotView(View):
     def get(self, *args, **kwargs):
         inv=-1
         try:
+            video = self.request.GET.get('video', -1)
+            print('video=',video)
             print('in Get')
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"robotLab.html",{"inventory": inv})
+        return render (self.request,"robotLab.html",{"inventory": inv, 'video':video})
 		
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -281,6 +283,7 @@ class FieldView(View):
         inv=-1
         try:
             print('in Get')
+            video=-1
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -296,7 +299,7 @@ class FieldView(View):
             print ("Lists load Failure ", e)
 
         print('inv_list',inv)
-        return render (self.request,"field.html",{"inventory": inv})
+        return render (self.request,"field.html",{"inventory": inv, 'video':video})
         
 class SoftwareView(View):
     template_name = "software.html"

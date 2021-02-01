@@ -89,6 +89,7 @@ class Vehical(models.Model):
     last_update = models.DateField(null=True) 
     original_value = models.FloatField("original_value", null=True,unique=False)
     load_limit = models.FloatField("load_limit", null=True,unique=False)
+    business_use = models.BooleanField("business_use",unique=False,default=False)
     def __str__(self):
         return "%i %s %s" % (self.year, self.model, self.type)
 

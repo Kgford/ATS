@@ -294,6 +294,24 @@
 						{% endif %}
 					</div>
 				</div>
+				<div class="col-sm-1 col-lg-2 grid-col">
+					<div class="form-group">
+						<div class="form-check">
+							{% if veh == -1 %}
+								<input type="checkbox" class="form-check-input" id="_use" name="_use" onclick="check();"/>
+								<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Business Use?</label>
+							{% else %}
+								{% if business_use == 'on' %}
+									<input type="checkbox" class="form-check-input" id="_interval" name="_interval" checked = "checked" onclick="check();"/>
+									<label class="form-check-label" for="_use">&nbsp;&nbsp;&nbsp;&nbsp;Business Use?</label>
+								{% else %}	
+									<input type="checkbox" class="form-check-input" id="_use" name="_use" onclick="check();"/>
+									<label class="form-check-label" for="_interval">&nbsp;&nbsp;&nbsp;&nbsp;Business Use?</label>
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>	
+				</div>
 				
 			</div>	
 			<div class="row">

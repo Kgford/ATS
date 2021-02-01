@@ -144,5 +144,8 @@ class Equations:
     def rad2deg (self,rad):
         ans = rad / math.pi * 180.0
         return ans
+        
+    def get_num(self,x):
+        return float(''.join(ele for ele in x if ele.isdigit() or ele == '.'))
     
     

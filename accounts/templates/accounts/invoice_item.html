@@ -315,9 +315,12 @@
 						{% if active == 'on' %}
 							<input type="checkbox" class="form-check-input" id="_active" name="_active" checked = "checked" onclick="check();"/>
 							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
-						{% else %}
+						{% elif active == 'off' %}
 							<input type="checkbox" class="form-check-input" id="_active" name="_active" onclick="check();"/>
 							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active?</label>
+						{% else %}
+							<input type="checkbox" class="form-check-input" id="_active" name="_active" checked = "checked" onclick="check();"/>
+							<label class="form-check-label" for="_active">&nbsp;&nbsp;&nbsp;&nbsp;Active</label>
 						{% endif %}
 					</div>
 			

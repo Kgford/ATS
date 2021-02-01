@@ -33,7 +33,6 @@ DEFAULT_FROM_EMAIL = 'default from email'
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~Django~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -57,8 +56,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 
-#ALLOWED_HOSTS = ['automatedtestsolution.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['automatedtestsolution.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']
+
 
 
 # Application definition

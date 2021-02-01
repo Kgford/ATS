@@ -109,6 +109,8 @@ class AssetsView(View):
             expense_month_building = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Building')
             expense_year_vehicle = Expenses.objects.filter(sale_date__year=thisyear,expense_type ='Assets',expense_description__icontains='Vehicle')
             expense_month_vehicle = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_year_travel = Expenses.objects.filter(sale_date__year=thisyear,expense_type__icontains='Travel',expense_description__icontains='Travel')
+            expense_month_travel = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type__icontains='Travel',expense_description__icontains='Travel')
             
             office = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='OFFICE').last()
             shop = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='SHOP').last()
@@ -258,6 +260,7 @@ class AssetsView(View):
             insurance_space_year=0
             interest_space_year=0
             payments_space_year=0
+            monthly_mile=0
             print('payments_space_year=',payments_space_year)
             for item in expense_year_building:
                 #print('item-',item)
@@ -379,15 +382,33 @@ class AssetsView(View):
             cost_list_year  =  [payments_year, interest_year, insurance_year, tax_year, utilities_year, fuel_year, internet_year]
             cost_list_month  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
             
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vehicle Expenses~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            if veh_id!=-1:
+                veh = Model.objects.filter(id=veh_id).all()
+                veh=veh[0]
+                print('veh.business_use',veh.business_use)
             
+            travel_cost_month = 0
+            travel_miles_month = 0
+            travel_cost_year = 0
+            travel_miles_year = 0
+            monthly_miles=0
+            taxable_percent=0
+            for item in expense_month_travel:
+                travel_cost_month = travel_cost_month + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_month = travel_miles_month + travel_miles
+            print('travel_cost_month=',travel_cost_month)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('miles=',miles.monthy_miles)
+                monthly_mile = monthly_mile + (float(miles.monthy_miles))
+                print('monthly_mile=',monthly_mile)
             
-            
-            
-            
-            
-            
-            
-            
+            taxable_percent = travel_miles_month/monthly_mile 
+            print('taxable_percent=',taxable_percent)
             
             
             total_taxed_v  =  [building_year,space_year]
@@ -395,10 +416,6 @@ class AssetsView(View):
             cost_list_month_v  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
             print('cost_list_year=',cost_list_year)
             print('cost_list_month=',cost_list_month)
-            if veh_id!=-1:
-                veh = Model.objects.filter(id=veh_id).all()
-                veh=veh[0]
-                print(veh)
             timestamp = date.today()
             dt = datetime.datetime.today()
             thisyear = dt.year
@@ -499,6 +516,7 @@ class VehicleView(View):
                 inspection=0
                 veh=-1
                 duplicate=-1
+                business_use=-1
                 years = []
                 year = datetime.date.today().year
                 for i in range(-40,0):
@@ -515,6 +533,11 @@ class VehicleView(View):
                     veh=veh[0]
                     print('veh=',veh)
                     print('veh.image_file=',veh.image_file)
+                    print('veh.business_use',veh.business_use)
+                    if veh.business_use:
+                        business_use = 'on'
+                    else:
+                        business_use = 'off'
                     if veh.image_file != -1:
                         print('media_folder=',media_folder)
                         print('veh.image_file=',veh.image_file)
@@ -528,7 +551,7 @@ class VehicleView(View):
                 print('error = ',e) 
             return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
                                                             'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
-                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
+                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use})
     
     def post(self, *args, **kwargs):
         timestamp = date.today()
@@ -554,6 +577,12 @@ class VehicleView(View):
         veh=-1
         duplicate=-1
                     
+        business_use = self.request.POST.get('_use',-1)
+        if business_use =='on':
+            business_use_s = True
+        else:
+            business_use_s = False
+        print('business_use=',business_use)
         name = self.request.POST.get('_name',-1)
         print('name=',name)
         make = self.request.POST.get('_make',-1)
@@ -607,12 +636,14 @@ class VehicleView(View):
             veh=veh[0]
             print('veh=',veh)
             print('veh.image_file',veh.image_file)
+            print('veh.business_use',veh.business_use)
             uploaded_file_url=veh.image_file
-        
-        image_file_content = self.request.FILES['uploaded_file'].read()
-        print('image_file_content',image_file_content)
         image_file_name = self.request.FILES.get('uploaded_file')
-        print('image_file_content',image_file_content)
+        print('image_file_name',image_file_name)
+        if image_file_name !=None:
+            image_file_content = self.request.FILES['uploaded_file'].read()
+            print('image_file_content',image_file_content)
+            
         
         image_file=image_file_name
         print('image_file',image_file)
@@ -637,7 +668,7 @@ class VehicleView(View):
                                                             'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
                 else:
                     Vehical.objects.create(name=name, make=make, model=model,type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val,
-                                        load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp)
+                                        load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp,business_use=business_use_s)
                 
                 #if pic_form.is_valid():
                     #pic_form.save()
@@ -648,8 +679,12 @@ class VehicleView(View):
             try:
                 print('in update')
                 #update existing event
-                Vehical.objects.filter(id=veh_id).update(make=make, model=model, type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val, 
-                                 load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp)
+                if image_file_name !=None:
+                    Vehical.objects.filter(id=veh_id).update(make=make, model=model, type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val, 
+                                     load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp,business_use=business_use_s)
+                else:
+                    Vehical.objects.filter(id=veh_id).update(make=make, model=model, type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val, 
+                                 load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, last_update=timestamp,business_use=business_use_s)
             except IOError as e:
                 print ("Models Update Failure ", e)	
         elif not delete==None and delete !=-1: 
@@ -661,7 +696,7 @@ class VehicleView(View):
                 print('error = ',e) 
         return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
                                                         'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
-                                                        'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
+                                                        'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use_s})
 
 class BuildingView(View):
     template_name = "building.html"

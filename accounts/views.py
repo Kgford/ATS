@@ -244,6 +244,7 @@ class SaveExpensesView(View):
             item_type =-1
             expense_type = -1
             expense_desc = -1
+            business_use = -1
             vehicle_list = []
             year = datetime.date.today().year
             interval = 'off'
@@ -293,7 +294,7 @@ class SaveExpensesView(View):
             print ("Lists load Failure ", e)
             print('error = ',e) 
         return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list, 'buildings_list':buildings_list,
-                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, 'business_use':business_use, "operator":operator})
 
     def post(self, request, *args, **kwargs):
         vendor_list = []
@@ -309,6 +310,7 @@ class SaveExpensesView(View):
             vehicle = -1
             item_type =-1
             image_file =-1
+            vendor_id =-1
             vehicle_list = []
             timestamp = date.today()
             operator = str(self.request.user)
@@ -323,7 +325,7 @@ class SaveExpensesView(View):
             if exp_id !=-1 and exp_id != '':
                 exp = Expenses.objects.filter(id=exp_id).all()
             
-            
+            business_use = request.POST.get('_use', -1)
             search = request.POST.get('search', -1)
             #print('search =',search)
             vendor = request.POST.get('_vendor', -1)
@@ -345,12 +347,12 @@ class SaveExpensesView(View):
                     exp=-1
                     print('in vehicle')
                     return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list, 'buildings_list':buildings_list,
-                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, 'business_use':business_use, "operator":operator})
                 elif expense_desc.find('Building') !=-1:
                     item_type = 'Building'
                     exp=-1
                     return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list, 'buildings_list':buildings_list,
-                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})
+                                    'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, 'business_use':business_use, "operator":operator})
             
             quantity = request.POST.get('_quantity', -1)
             #print('quantity =',quantity)
