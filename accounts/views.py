@@ -1,6 +1,6 @@
 from django import forms
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.core import serializers
@@ -477,6 +477,12 @@ class SaveExpensesView(View):
                     if expense_desc=='Building Maintenance':
                          Expenses.objects.filter(id=exp_id).update(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Maintenance Heating':
+                         Expenses.objects.filter(id=exp_id).update(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Maintenance Cooling':
+                         Expenses.objects.filter(id=exp_id).update(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                     if expense_desc=='Building Fuel':
                          Expenses.objects.filter(id=exp_id).update(b_fuel=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
@@ -484,6 +490,12 @@ class SaveExpensesView(View):
                          Expenses.objects.filter(id=exp_id).update(b_phone=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                     if expense_desc=='Building Repair':
+                         Expenses.objects.filter(id=exp_id).update(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Repair Heating':
+                         Expenses.objects.filter(id=exp_id).update(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Repair Cooling':
                          Expenses.objects.filter(id=exp_id).update(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                     if expense_desc=='Building Interest':
@@ -582,6 +594,12 @@ class SaveExpensesView(View):
                         if expense_desc=='Building Maintenance':
                              Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                        if expense_desc=='Building Maintenance Heating':
+                             Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                        if expense_desc=='Building Maintenance Cooling':
+                             Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                         if expense_desc=='Building Fuel':
                              Expenses.objects.create(b_fuel=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
@@ -589,6 +607,12 @@ class SaveExpensesView(View):
                              Expenses.objects.create(b_phone=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                         if expense_desc=='Building Repair':
+                             Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                        if expense_desc=='Building Repair Heating':
+                             Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                        if expense_desc=='Building Repair Cooling':
                              Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                         quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
                         if expense_desc=='Building Interest':
@@ -616,7 +640,7 @@ class InvoiceItemView(View):
             client = -1
             item = -1
             charge = -1
-            active = 'off'
+            active = 'on'
             item_id = self.request.GET.get('item_id', -1)
             charge_id = self.request.GET.get('charge_id', -1)
             client_id = self.request.GET.get('client_id', -1)
@@ -627,8 +651,12 @@ class InvoiceItemView(View):
                 item = Invoice_Item.objects.filter(id=item_id)
                 item = item[0] 
                 active = item.active
-                if active=='on':
-                    active = True
+                print('active-',active)
+                if active==True:
+                    active = 'on'
+                else:
+                    active = 'off'
+                print('active-',active)
                 date= item.item_date
                 print('date=',date)
                 contractor_id = item.contractor_id
@@ -666,7 +694,7 @@ class InvoiceItemView(View):
             print ("Lists load Failure ", e)
             print('error = ',e) 
         return render (self.request,"accounts/invoice_item.html",{"charge_list": charge_list, "id":id, "contractor_list":contractor_list, 'client_list':client_list, 'item_list':item_list,
-                        'charge':charge, 'client':client, "item":item, 'contractor':contractor, "operator":operator,'active':active,'item_id':item_id})
+                        'charge':charge, 'client':client, "item":item, 'contractor':contractor, "operator":operator,'active':active,'item_id':item_id, 'active':active})
 
     def post(self, request, *args, **kwargs):
         contractor_list = []
@@ -974,6 +1002,7 @@ class CreateInvoiceView(View):
             invoice_item = -1
             total = -1
             charge_code = -1
+            print('invoice_list1 =',invoice_list)
             operator = str(self.request.user)
             invoice_id = self.request.GET.get('invoice_id', -1)
             item_id = self.request.GET.get('item_id', -1)
@@ -999,7 +1028,7 @@ class CreateInvoiceView(View):
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
                 invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()  
-                invoice_list = -1
+                invoice_list = []
                 print('invoice_list =',invoice_list)
             elif invoice_id ==-1 or invoice_id == None:
                 client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -1098,7 +1127,7 @@ class CreateInvoiceView(View):
             print("in POST")
             timestamp = date.today()
             operator = str(self.request.user)
-            
+            print('invoice_list1 =',invoice_list)
             invoice_id = request.POST.get('_invoice_id',-1)
             print('invoice_id=',invoice_id)
             client = request.POST.get('_client', -1)
@@ -1117,18 +1146,22 @@ class CreateInvoiceView(View):
             print('invoice_charge =',invoice_charge)
             charge_code = invoice_charge
             invoice_date = request.POST.get('_invoice_date',-1)
+            print('invoice_list2 =',invoice_list)
             print('invoice_date =',invoice_date)
             # update invoice items list with customer selection
             if save_invoice ==-1 and update_invoice ==-1 and del_invoice ==-1 and clear_invoice==-1 and client !=-1:
-                print('we are here')
+                print('we are here1')
                 invoice_id = 'x'
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 client_id = Clients.objects.filter(name=client).first()
                 client_id = client_id.id
+                print('client_id=',client_id)
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
-                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()         
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id__isnull=True, active = True).all()  
+                print('invoice_item_list =',invoice_item_list)
+            
                 return render (self.request,"accounts/create_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
-                            'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
+                                'charge_code':charge_code, 'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client})
             
             if charge_code =="":
                 split_charge = invoice_date.split("-")
@@ -1146,14 +1179,16 @@ class CreateInvoiceView(View):
             
             print('invoice_id=',invoice_id)          
             if invoice_id == 'x':
-                print('invoice_id =',invoice_id)
+                print('in invoice_id = x',invoice_id)
+                print('client =',client)
                 invoice = -1
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 client_id = Clients.objects.filter(name=client).first()
+                print('client_id1 =',client_id)
                 client_id = client_id.id
+                print('client_id2 =',client_id)
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
-                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, active = True).all()  
-                invoice_list = Invoice_Item.objects.filter(client_id=client_id).all()
+                invoice_item_list = Invoice_Item.objects.filter(client_id=client_id, invoice_id__isnull=True, active = True).all()  
                 print('invoice_list =',invoice_list) 
             elif invoice_id :
                 invoice = Invoice.objects.filter(id=invoice_id)
@@ -1192,7 +1227,7 @@ class CreateInvoiceView(View):
             print('staff_id =',staff_id)
             print('active =',active)
             print('client_list =',client_list)
-            print('invoice_list =',invoice_list)
+            print('invoice_list last =',invoice_list)
             print('invoice_id_list =',invoice_id_list)
             print('invoice_id =',invoice_id)
             print('client=',client)    
@@ -1229,17 +1264,21 @@ class CreateInvoiceView(View):
                 Invoice.objects.filter(id=invoice_id).update(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
                 return HttpResponseRedirect(reverse('accounts:invoice'))
             elif not save_invoice==-1 :
+                print('In save')
                 if Invoice.objects.filter(invoice_desc=invoice_desc, charge_code=charge_code, invoice_date=invoice_date).exists():
                     invoice_id = Invoice.objects.filter(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp).first()  
                     invoice_id = invoice_id.id
-                    
+                    sendstring = '/accounts/invoice_update?invoice_id=' + str(invoice_id) +'&type=new'
+                    print('sendstring=',sendstring)
                 else:
                     print('client_id=',client_id)
                     Invoice.objects.create(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp)
                     invoice_id = Invoice.objects.filter(client_id=client_id,staff_id=staff_id, invoice_desc=invoice_desc, charge_code=charge_code, paid=paid, invoice_date=invoice_date, last_update=timestamp).first()  
                     invoice_id = invoice_id.id
+                    sendstring = '/accounts/invoice_update?invoice_id=' + str(invoice_id) +'&type=new'
+                    print('sendstring=',sendstring)
                     
-                
+                return redirect(sendstring)  
                 
                 client_list =  Clients.objects.filter(id=client_id).order_by('name').values_list('name', flat=True).distinct()
                 invoice_id_list =  Invoice.objects.filter(id=client_id).order_by('invoice_desc').values_list('invoice_desc', flat=True).distinct()
@@ -1285,10 +1324,10 @@ class ReconsileInvoiceView(View):
             invoice_list = []
             total=0
             paid = 'off'
-            
             timestamp = date.today()
             operator = str(self.request.user)
             invoice_id = self.request.GET.get('invoice_id', -1)
+            type = self.request.GET.get('type', -1)
             
             if invoice_id !=-1:
                 invoice = Invoice.objects.filter(id=invoice_id)
@@ -1331,12 +1370,13 @@ class ReconsileInvoiceView(View):
             print('client=',client)    
             print('invoice=', invoice)
             print("in GET")
+            print('type=',type)
             
             
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,'type':type,
                         'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':save_paid, 'this_date':this_date})
 
     def post(self, request, *args, **kwargs):
@@ -1346,6 +1386,7 @@ class ReconsileInvoiceView(View):
         invoice_id = -1
         exp =-1
         vendor =-1
+        type=-1
         
         try: 
             client = -1
@@ -1509,7 +1550,7 @@ class ReconsileInvoiceView(View):
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,
+        return render (self.request,"accounts/reconsile_invoice.html",{"invoice_id_list": invoice_id_list, 'client_list':client_list, 'invoice_list':invoice_list, 'invoice_item_list':invoice_item_list,'type':type,
                         'invoice':invoice, 'client':client, "invoice_item":invoice_item, "operator":operator,'invoice_id':invoice_id, 'total':total, 'client':client, 'paid':paid, 'this_date':this_date})
                         
                         

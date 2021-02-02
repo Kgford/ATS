@@ -167,6 +167,7 @@
 			    <thead>
 					<tr>
 					  <th>ID</th>
+					  <th>Invoice ID</th>
 					  <th>Resource Type</th>
 					  <th>Service Type</th>
 					  <th>Item Date</th>
@@ -179,6 +180,7 @@
 					{% for item in invoice_item_list %}
 						<tr>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.invoice_id}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.resource_type}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.service_type}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=False&item_invoice={{invoice_id}}">{{item.item_date}}</td>
@@ -235,6 +237,7 @@
 			    <thead>
 					<tr>
 						<th>ID</th>
+						<th>Invoice ID</th>
 						<th>Resource Type</th>
 						<th>Service Type</th>
 						<th>Item Date</th>
@@ -247,6 +250,7 @@
 					{% for item in invoice_list %}
 						<tr>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.id}}</td>
+							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.invoice_id}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.resource_type}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.service_type}}</td>
 							<td><a class="nav-link" href="{% url 'accounts:new_invoice' %}?invoice_id={{invoice_id}}&item_id={{item.id}}&active=True&item_invoice=0">{{item.item_date}}</td>

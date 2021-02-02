@@ -14,13 +14,13 @@
 				<div class="sidebar-brand-icon rotate-n-15"></div><div class="sidebar-brand-text mx-3"></div></a>
 				<hr class="sidebar-divider my-0">
 				<ul class="nav navbar-nav text-light nav flex-column" id="accordionSidebar">
-					<li class="nav-item active"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:dashboard' %}"><i class="fas fa-chart-line"></i><span>&nbsp;&nbsp;&nbsp;Dashboard</span></a></li>
 					<li class="nav-item"></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:expenses' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-user"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
@@ -44,9 +44,9 @@
 							<div class="dropdown-menu  animated--grow-in" >
 								<a class="dropdown-item" href="{% url 'accounts:invoice_item' %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Invoicing</a>
 								<a class="dropdown-item" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book fa-sm fa-fw mr-2 text-gray-400"></i>Quotes</a>
-								<a class="dropdown-item" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump fa-sm fa-fw mr-2 text-gray-400"></i>Expenses</a>
+								<a class="dropdown-item" href="{% url 'accounts:expenses' %}"><i class="fas fa-gas-pump fa-sm fa-fw mr-2 text-gray-400"></i>Expenses</a>
 								<a class="dropdown-item" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card fa-sm fa-fw mr-2 text-gray-400"></i>Income</a>
-								<a class="dropdown-item" href="{% url 'assets:assets' %}"><i class="fa fas fa-truck fa-sm fa-fw mr-2 text-gray-400"></i>Capital Budget</a>
+								<a class="dropdown-item active" href="{% url 'assets:assets' %}"><i class="fa fas fa-truck fa-sm fa-fw mr-2 text-gray-400"></i>Capital Budget</a>
 								<a class="dropdown-item" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode fa-sm fa-fw mr-2 text-gray-400"></i>Inventory</a>
 								<a class="dropdown-item" href="{% url 'equipment:equipment' %}"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Equipment</a>
 								<a class="dropdown-item" href="{% url 'client:client' %}"><i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Clients</a>
@@ -168,7 +168,7 @@
 		</ul>
 	</nav>
     <div class="container-fluid">
-		<form action = "{% url 'dashboard:dashboard' %}" method="post">
+		<form action = "{% url 'assets:assets' %}" method="post">
 			{% csrf_token %}
 			<div class="d-sm-flex justify-content-between align-items-center mb-4">
 			<select id='_year' name = "_year"  onchange="this.form.submit()">
@@ -262,7 +262,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Year to Date Capital Costs  ({{year}}))</h6>
+					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Capital Costs  ({{year}}))</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -279,7 +279,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Monthly  Capital Costs  ({{month}})</h6>
+					<h6 class="text-primary font-weight-bold m-0">Monthly  Taxable Capital Costs  ({{month}})</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -357,7 +357,7 @@
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Vehicle Business Use Costs  ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_month}}</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_month_taxable}}</span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -370,7 +370,7 @@
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Vehicle Business Use Costs  ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_year}}</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_year_taxable}}</span></div>
                             </div>
                             <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
                         </div>
@@ -399,7 +399,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Year to Date Capital Costs  ({{year}}))</h6>
+					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Capital Costs  ({{year}}))</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -415,7 +415,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Monthly  Capital Costs  ({{month}})</h6>
+					<h6 class="text-primary font-weight-bold m-0">Monthly Taxable Capital Costs  ({{month}})</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>

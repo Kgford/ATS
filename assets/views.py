@@ -105,17 +105,568 @@ class AssetsView(View):
             spaces = Business_Space.objects.all()
             print('spaces=',spaces)
             product = Product.objects.all()
-            expense_year_building = Expenses.objects.filter(sale_date__year=thisyear,expense_type ='Assets',expense_description__icontains='Building')
-            expense_month_building = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Building')
-            expense_year_vehicle = Expenses.objects.filter(sale_date__year=thisyear,expense_type ='Assets',expense_description__icontains='Vehicle')
-            expense_month_vehicle = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
-            expense_year_travel = Expenses.objects.filter(sale_date__year=thisyear,expense_type__icontains='Travel',expense_description__icontains='Travel')
-            expense_month_travel = Expenses.objects.filter(sale_date__year=thisyear,sale_date__month=thismonth, expense_type__icontains='Travel',expense_description__icontains='Travel')
+            # Building expences 
+            expense_year_building = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Building').all()
+            expense_month_building = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets', expense_description__icontains='Building').all()
+            # Travel expenses
+            expense_year_travel = Expenses.objects.filter(sale_date__year=thisyear, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            expense_month_travel = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            print('expense_year_travel=',expense_year_travel)
+            office = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='OFFICE').last()
+            shop = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='SHOP').last()
+            lab = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='LAB').last()
             
-            office = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='OFFICE').last()
-            shop = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='SHOP').last()
-            lab = Business_Space.objects.filter(last_update__year=thisyear,type__icontains='LAB').last()
+            print('expense_year_building',expense_year_building)
+            print('expense_month_building',expense_month_building)
+            print('expense_year_travel',expense_year_travel)
+            print('expense_month_travel',expense_month_travel)
+            building_month=0
+            space_month=0
+            utilities_month=0
+            fuel_month=0
+            internet_month=0
+            tax_month=0
+            insurance_month=0
+            interest_month=0
+            payments_month=0
             
+            building_space_month=0
+            utilities_space_month=0
+            fuel_space_month=0
+            internet_space_month=0
+            tax_space_month=0
+            insurance_space_month=0
+            interest_space_month=0
+            payments_space_month=0
+            for item in expense_month_building:
+                print('item-',item)
+                if search('MAIN', item.item_desc.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    payments_space_month = payments_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    payments_month = payments_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('building_month=',building_month)
+                elif search('MAIN', item.item_desc.upper()) and search('UTILITIES', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    utilities_space_month = utilities_space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    utilities_month = utilities_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('FUEL', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    print('fuel_space_month=',fuel_space_month)
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    print('fuel_space_month=',fuel_space_month)
+                    fuel_space_month = fuel_space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    print('fuel_space_month=',fuel_space_month)
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_month = fuel_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INTERNET', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    internet_space_month = internet_space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    internet_month = internet_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+                elif search('MAIN', item.item_desc.upper()) and search('TAX', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    tax_space_month = tax_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    tax_month = tax_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('tax_month=',tax_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    insurance_space_month = insurance_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = building_space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_month = insurance_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('insurance_month=',insurance_month)
+                elif search('MAIN', item.item_desc.upper()) and search('INTEREST', item.expense_description.upper()):
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    interest_space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    interest_space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    space_month = space_month + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_month = space_month + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_month = space_month + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_month = utilities_month + float(item.total_cost)
+                    building_month = building_month + float(item.total_cost)
+                    print('space_month=',space_month)
+            
+            building_year=0
+            space_year=0
+            utilities_year=0
+            fuel_year=0
+            internet_year=0
+            tax_year=0
+            insurance_year=0
+            interest_year=0
+            payments_year=0
+            
+            building_space_year=0
+            utilities_space_year=0
+            fuel_space_year=0
+            internet_space_year=0
+            tax_space_year=0
+            insurance_space_year=0
+            interest_space_year=0
+            payments_space_year=0
+            monthly_mile=0
+            print('payments_space_year=',payments_space_year)
+            for item in expense_year_building:
+                #print('item-',item)
+                if search('MAIN', item.item_desc.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    payments_space_year = payments_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    payments_year = payments_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    print('payments_space_year=',payments_space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('UTILITIES', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    utilities_space_year = utilities_space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.power_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.power_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.power_percentage)/100))
+                    
+                    utilities_year = utilities_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('FUEL', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    print('fuel_space_year=',fuel_space_year)
+                    print('(float(item.total_cost)=',float(item.total_cost))
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    print('fuel_space_year=',fuel_space_year)
+                    fuel_space_year = fuel_space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    print('fuel_space_year=',fuel_space_year)
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.fuel_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.fuel_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.fuel_percentage)/100))
+                    
+                    fuel_year = fuel_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INTERNET', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    internet_space_year = internet_space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.internet_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.internet_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.internet_percentage)/100))
+                    
+                    internet_year = internet_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('space_year=',space_year)
+                elif search('MAIN', item.item_desc.upper()) and search('TAX', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    tax_space_year = tax_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    tax_year = tax_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('tax_year=',tax_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    insurance_space_year = insurance_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    insurance_year = insurance_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    #print('insurance_year=',insurance_year)
+                elif search('MAIN', item.item_desc.upper()) and search('INTEREST', item.expense_description.upper()):
+                    space_year = space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    space_year = space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    building_space_year = building_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(office.space_percentage)/100))
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(shop.space_percentage)/100))
+                    interest_space_year = interest_space_year + (float(item.total_cost) * (float(lab.space_percentage)/100))
+                    
+                    interest_year = utilities_year + float(item.total_cost)
+                    building_year = building_year + float(item.total_cost)
+                    print('space_year=',space_year)
+                    print('interest_space_year=',interest_space_year)
+           
+            total_taxed  =  [building_year,space_year]
+            cost_list_year  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_year, fuel_space_year, internet_space_year]
+            cost_list_month  =  [payments_space_month, interest_space_month, insurance_space_month, tax_space_month, utilities_space_month, fuel_space_month, internet_space_month]
+            
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vehicle Expenses~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            print('thisyear at list2',thisyear)
+            print('thismonth at list2',thismonth)
+            expense_year_travel = Expenses.objects.filter(sale_date__year=thisyear, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            expense_month_travel = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            print('expense_year_travel=',expense_year_travel)
+            
+            expense_year_vehicle = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_year_gas = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Gas')
+            expense_month_vehicle = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_month_gas = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Gas')
+            print('expense_year_vehicle',expense_year_vehicle)
+            print('expense_month_vehicle',expense_month_vehicle)
+            print('expense_month_gas',expense_month_gas)
+            print('expense_year_gas',expense_year_gas)
+                             
+            
+            vehicle_year=0
+            vehicle_month=0
+            vehicle_month_taxable=0
+            payments_vehicle_month=0
+            payments_vehicle_month=0
+            insurance_vehicle_month=0
+            interest_vehicle_month=0
+            tax_vehicle_month=0
+            repair_vehicle_month=0
+            fuel_vehicle_month=0
+            mantenance_vehicle_month=0
+            payments_vehicle_month_taxable=0
+            payments_vehicle_month_taxable=0
+            insurance_vehicle_month_taxable=0
+            interest_vehicle_month_taxable=0
+            tax_vehicle_month_taxable=0
+            repair_vehicle_month_taxable=0
+            fuel_vehicle_month_taxable=0
+            mantenance_vehicle_month_taxable=0
+            
+            travel_cost_month = 0
+            travel_miles_month = 0
+            for item in expense_month_travel:
+                print('in expense_month_travel item')
+                travel_cost_month = travel_cost_month + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_month = travel_miles_month + travel_miles
+            
+            print('travel_cost_month=',travel_cost_month)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('miles=',miles.monthy_miles)
+                monthly_mile = monthly_mile + (float(miles.monthy_miles))
+                print('monthly_mile=',monthly_mile)
+            
+            if monthly_mile == 0:
+                taxable_percent_month = 0
+            else:
+                taxable_percent_month = travel_miles_month/monthly_mile
+            print('taxable_percent_month=',taxable_percent_month)
+            
+            for item in expense_month_gas:
+                fuel_vehicle_month = fuel_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                fuel_vehicle_month_taxable = (fuel_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                vehicle_month = vehicle_month + float(item.total_cost)
+                vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_month)))
+                print('in month gas',fuel_vehicle_month )
+                    
+            for item in expense_month_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_month = (payments_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    payments_vehicle_month_taxable = (payments_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    print('payments_vehicle_month=',payments_vehicle_month)
+                    print('vehicle_month_taxable=',vehicle_month_taxable)
+                    print('vehicle_month=',vehicle_month)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                    interest_vehicle_month = interest_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    interest_vehicle_month_taxable = interest_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = vehicle_month + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_month)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_month = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    insurance_vehicle_month_taxable = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_month = (tax_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    tax_vehicle_month_taxable = (tax_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_month = repair_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    repair_vehicle_month_taxable = (repair_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                    mantenance_vehicle_month = mantenance_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    mantenance_vehicle_month_taxable = (mantenance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+            
+             
+            payments_vehicle_year_taxable=0
+            payments_vehicle_year_taxable=0
+            insurance_vehicle_year_taxable=0
+            interest_vehicle_year_taxable=0
+            tax_vehicle_year_taxable=0
+            repair_vehicle_year_taxable=0
+            fuel_vehicle_year_taxable=0
+            mantenance_vehicle_year_taxable=0
+            payments_vehicle_year=0
+            payments_vehicle_year=0
+            insurance_vehicle_year=0
+            interest_vehicle_year=0
+            tax_vehicle_year=0
+            repair_vehicle_year=0
+            fuel_vehicle_year=0
+            mantenance_vehicle_year=0
+           
+            travel_cost_year = 0
+            travel_miles_year = 0
+            year_miles = 0
+            for item in expense_year_travel:
+                print('in expense_month_travel item')
+                travel_cost_year = travel_cost_year + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_year = travel_miles_year + travel_miles
+            print('travel_cost_year=',travel_cost_year)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('year_miles=',miles.monthy_miles * int(thismonth))
+                year_miles = year_miles + (float(miles.monthy_miles *  int(thismonth)))
+                print('year_miles=',year_miles)
+            
+            if year_miles==0:
+                taxable_percent_year = 0
+            else:
+                taxable_percent_year = travel_miles_year/year_miles 
+            print('yeary taxable_percent=',taxable_percent_year)
+           
+            vehicle_year_taxable=0
+            for item in expense_year_gas:
+                fuel_vehicle_year = fuel_vehicle_year + (float(item.total_cost) * (float(taxable_percent_month)))
+                fuel_vehicle_year_taxable = (fuel_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                vehicle_year = vehicle_month + float(item.total_cost)
+                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_month)))
+                print('in year gas',fuel_vehicle_year )
+            
+            for item in expense_year_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_year = (payments_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    payments_vehicle_year_taxable = (payments_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                    print('payments_vehicle_year=',payments_vehicle_year)
+                    print('vehicle_year_taxable=',vehicle_year_taxable)
+                    print('vehicle_year=',vehicle_year)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                    interest_vehicle_year = interest_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                    interest_vehicle_year_taxable = interest_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = vehicle_year + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_year)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_year = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    insurance_vehicle_year_taxable = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_year = (tax_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    tax_vehicle_year_taxable = (tax_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_year = repair_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    repair_vehicle_year_taxable = (repair_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                    mantenance_vehicle_year = mantenance_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                    mantenance_vehicle_year_taxable = (mantenance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+            
+            
+            print('vehicle_month',vehicle_month)
+            print('vehicle_month_taxable',vehicle_month_taxable)
+            print('vehicle_year_taxable',vehicle_year_taxable)
+            print ('payments_vehicle_year_taxable',payments_vehicle_year_taxable)
+            total_taxed_v  =  [vehicle_year,vehicle_year_taxable]
+            
+            cost_list_month_v  =  [payments_vehicle_month_taxable, insurance_vehicle_month_taxable, interest_vehicle_month_taxable, tax_vehicle_month_taxable, travel_cost_month, repair_vehicle_month_taxable, fuel_vehicle_month_taxable]
+            cost_list_year_v  =  [payments_vehicle_year_taxable, insurance_vehicle_year_taxable, interest_vehicle_year_taxable, tax_vehicle_year_taxable, travel_cost_year, repair_vehicle_year_taxable, fuel_vehicle_year_taxable]
+            print('cost_list_month_v=',cost_list_month_v)
+            print(vehicles)
+        except IOError as e:
+            print ("Lists load Failure ", e) 
+            
+            print('error = ',e) 
+        return render (self.request,"assets/index.html",{"personnel": personnel, "spaces": spaces, "vehicles": vehicles, "veh":veh, "index_type":"assests", 'avatar':avatar, 'year_list':year_list, 'month_list':month_list,'utilities_month':utilities_month,
+                                     'total_taxed':total_taxed, 'cost_list_year':cost_list_year, 'fuel_month':fuel_month,'internet_month':internet_month, 'tax_month':tax_month, 'insurance_month':insurance_month,'interest_month':interest_month,'cost_list_month':cost_list_month,
+                                     'total_taxed_v':total_taxed_v, 'cost_list_year_v':cost_list_year_v, 'cost_list_month_v':cost_list_month_v, 'utilities_year':utilities_year,'fuel_year':fuel_year,'internet_year':internet_year, 'tax_year':tax_year, 'insurance_year':insurance_year, 'interest_year':interest_year,
+                                     'building_month':building_month, 'building_year':building_year, 'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,
+                                     'vehicle_month':vehicle_month, 'vehicle_year':vehicle_year, 'vehicle_month_taxable':vehicle_month_taxable, 'vehicle_year_taxable':vehicle_year_taxable})
+
+
+
+    def post(self, *args, **kwargs):
+        try:
+            tmonth_list = -1
+            year_list = -1
+            veh= []
+            assets= []
+            vehicles=[]
+            spaces=[]
+            personnel=[]
+            operator = str(self.request.user)
+            phone = self.request.user.userprofileinfo.phone
+            message = 'message'
+            month_list = -1
+            year_list = -1
+            timestamp = date.today()
+            dt = datetime.datetime.today()
+            dt = datetime.datetime.today()
+            thisyear = dt.year
+            
+            thisday = dt.day
+            thisyear = self.request.POST.get('_year', -1)
+            month = self.request.POST.get('_month', -1)
+            mon = self.request.POST.get('_month', -1)
+            print('month=',month)
+            printnow = self.request.POST.get('_print', -1)
+            year=thisyear
+            print('year',year)
+            timestamp = date.today()
+            print('timestamp',timestamp)
+            months_num = {'Jan': "1", 'Feb': "2",  'Mar': "3", 'Apr': '4', 'May': "5", 'Jun': "6", 'Jul': "7", 'Aug': "8", 'Sept': "9", '10': "Oct", 'Nov': "11", 'Dec': "12"}
+            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
+            full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
+            
+            thismonth = months_num[str(month)]
+            month_full = full_months[str(thismonth)]
+            print('thismonth =',thismonth)
+            operator = str(self.request.user)
+            avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
+            year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
+            month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
+            vehicles = Vehical.objects.all()
+            print('vehicles=',vehicles)
+            personnel = Personnel.objects.all()
+            spaces = Business_Space.objects.all()
+            print('spaces=',spaces)
+            product = Product.objects.all()
+            print('thisyear at list1',thisyear)
+            print('thismonth at list1',thismonth)
+            # Building expences 
+            expense_year_building = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Building').all()
+            expense_month_building = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets', expense_description__icontains='Building').all()
+            # Travel expenses
+            expense_year_travel = Expenses.objects.filter(sale_date__year=thisyear, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            expense_month_travel = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+            print('expense_year_travel=',expense_year_travel)
+            office = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='OFFICE').last()
+            shop = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='SHOP').last()
+            lab = Business_Space.objects.filter(last_update__year=thisyear, type__icontains='LAB').last()
+            
+            print('expense_year_building',expense_year_building)
+            print('expense_month_building',expense_month_building)
+            print('expense_year_travel',expense_year_travel)
+            print('expense_month_travel',expense_month_travel)
             building_month=0
             space_month=0
             utilities_month=0
@@ -379,26 +930,52 @@ class AssetsView(View):
                     print('interest_space_year=',interest_space_year)
            
             total_taxed  =  [building_year,space_year]
-            cost_list_year  =  [payments_year, interest_year, insurance_year, tax_year, utilities_year, fuel_year, internet_year]
-            cost_list_month  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
+            cost_list_year  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_year, fuel_space_year, internet_space_year]
+            cost_list_month  =  [payments_space_month, interest_space_month, insurance_space_month, tax_space_month, utilities_space_month, fuel_space_month, internet_space_month]
             
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vehicle Expenses~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            if veh_id!=-1:
-                veh = Model.objects.filter(id=veh_id).all()
-                veh=veh[0]
-                print('veh.business_use',veh.business_use)
+            print('thisyear at list2',thisyear)
+            print('thismonth at list2',thismonth)
+            
+            expense_year_vehicle = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_year_gas = Expenses.objects.filter(sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Gas')
+            expense_month_vehicle = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_month_gas = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Gas')
+            print('expense_year_vehicle',expense_year_vehicle)
+            print('expense_month_vehicle',expense_month_vehicle)
+            print('expense_month_gas',expense_month_gas)
+            print('expense_year_gas',expense_year_gas)
+                             
+            
+            vehicle_year=0
+            vehicle_month=0
+            vehicle_month_taxable=0
+            payments_vehicle_month=0
+            payments_vehicle_month=0
+            insurance_vehicle_month=0
+            interest_vehicle_month=0
+            tax_vehicle_month=0
+            repair_vehicle_month=0
+            fuel_vehicle_month=0
+            mantenance_vehicle_month=0
+            payments_vehicle_month_taxable=0
+            payments_vehicle_month_taxable=0
+            insurance_vehicle_month_taxable=0
+            interest_vehicle_month_taxable=0
+            tax_vehicle_month_taxable=0
+            repair_vehicle_month_taxable=0
+            fuel_vehicle_month_taxable=0
+            mantenance_vehicle_month_taxable=0
             
             travel_cost_month = 0
             travel_miles_month = 0
-            travel_cost_year = 0
-            travel_miles_year = 0
-            monthly_miles=0
-            taxable_percent=0
             for item in expense_month_travel:
+                print('in expense_month_travel item')
                 travel_cost_month = travel_cost_month + (float(item.total_cost))
                 get_travel_miles = Equations(0,0)
                 travel_miles = get_travel_miles.get_num(item.item_desc)
                 travel_miles_month = travel_miles_month + travel_miles
+            
             print('travel_cost_month=',travel_cost_month)
             mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
             print('mile=',mile)
@@ -407,80 +984,161 @@ class AssetsView(View):
                 monthly_mile = monthly_mile + (float(miles.monthy_miles))
                 print('monthly_mile=',monthly_mile)
             
-            taxable_percent = travel_miles_month/monthly_mile 
-            print('taxable_percent=',taxable_percent)
+            if monthly_mile == 0:
+                taxable_percent_month = 0
+            else:
+                taxable_percent_month = travel_miles_month/monthly_mile
+            print('taxable_percent_month=',taxable_percent_month)
+            
+            for item in expense_month_gas:
+                fuel_vehicle_month = fuel_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                fuel_vehicle_month_taxable = (fuel_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                vehicle_month = vehicle_month + float(item.total_cost)
+                vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_month)))
+                print('in month gas',fuel_vehicle_month )
+                    
+            for item in expense_month_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_month = (payments_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    payments_vehicle_month_taxable = (payments_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    print('payments_vehicle_month=',payments_vehicle_month)
+                    print('vehicle_month_taxable=',vehicle_month_taxable)
+                    print('vehicle_month=',vehicle_month)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                    interest_vehicle_month = interest_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    interest_vehicle_month_taxable = interest_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = vehicle_month + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_month)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_month = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    insurance_vehicle_month_taxable = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_month = (tax_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    tax_vehicle_month_taxable = (tax_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_month = repair_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    repair_vehicle_month_taxable = (repair_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                    mantenance_vehicle_month = mantenance_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    mantenance_vehicle_month_taxable = (mantenance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+            
+             
+            payments_vehicle_year_taxable=0
+            payments_vehicle_year_taxable=0
+            insurance_vehicle_year_taxable=0
+            interest_vehicle_year_taxable=0
+            tax_vehicle_year_taxable=0
+            repair_vehicle_year_taxable=0
+            fuel_vehicle_year_taxable=0
+            mantenance_vehicle_year_taxable=0
+            payments_vehicle_year=0
+            payments_vehicle_year=0
+            insurance_vehicle_year=0
+            interest_vehicle_year=0
+            tax_vehicle_year=0
+            repair_vehicle_year=0
+            fuel_vehicle_year=0
+            mantenance_vehicle_year=0
+           
+            travel_cost_year = 0
+            travel_miles_year = 0
+            year_miles = 0
+            for item in expense_year_travel:
+                print('in expense_month_travel item')
+                travel_cost_year = travel_cost_year + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_year = travel_miles_year + travel_miles
+            print('travel_cost_year=',travel_cost_year)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('year_miles=',miles.monthy_miles * int(thismonth))
+                year_miles = year_miles + (float(miles.monthy_miles *  int(thismonth)))
+                print('year_miles=',year_miles)
+            
+            if year_miles==0:
+                taxable_percent_year = 0
+            else:
+                taxable_percent_year = travel_miles_year/year_miles 
+            print('yeary taxable_percent=',taxable_percent_year)
+           
+            vehicle_year_taxable=0
+            for item in expense_year_gas:
+                fuel_vehicle_year = fuel_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                fuel_vehicle_year_taxable = (fuel_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                vehicle_year = vehicle_year + float(item.total_cost)
+                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_year)))
+                print('in year gas',fuel_vehicle_year )
+            
+            for item in expense_year_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_year = (payments_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    payments_vehicle_year_taxable = (payments_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                    print('payments_vehicle_year=',payments_vehicle_year)
+                    print('vehicle_year_taxable=',vehicle_year_taxable)
+                    print('vehicle_year=',vehicle_year)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                    interest_vehicle_year = interest_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                    interest_vehicle_year_taxable = interest_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = vehicle_year + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_year)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_year = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    insurance_vehicle_year_taxable = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_year = (tax_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    tax_vehicle_year_taxable = (tax_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_year = repair_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    repair_vehicle_year_taxable = (repair_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                    mantenance_vehicle_year = mantenance_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                    mantenance_vehicle_year_taxable = (mantenance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
             
             
-            total_taxed_v  =  [building_year,space_year]
-            cost_list_year_v  =  [payments_year, interest_year, insurance_year, tax_year, utilities_year, fuel_year, internet_year]
-            cost_list_month_v  =  [payments_space_year, interest_space_year, insurance_space_year, tax_space_year, utilities_space_month, fuel_space_year, internet_space_year]
-            print('cost_list_year=',cost_list_year)
-            print('cost_list_month=',cost_list_month)
-            timestamp = date.today()
-            dt = datetime.datetime.today()
-            thisyear = dt.year
-            thismonth = dt.month
-            thisday = dt.day
-            print('thismonth=',thismonth)
-            print('thisyear=',thisyear)
-            months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
-            month = months[str(thismonth)]
-            print('month =',month)    
+            print('vehicle_month',vehicle_month)
+            print('vehicle_month_taxable',vehicle_month_taxable)
+            print('vehicle_year_taxable',vehicle_year_taxable)
+            print ('payments_vehicle_year_taxable',payments_vehicle_year_taxable)
+            total_taxed_v  =  [vehicle_year,vehicle_year_taxable]
+            
+            cost_list_month_v  =  [payments_vehicle_month_taxable, insurance_vehicle_month_taxable, interest_vehicle_month_taxable, tax_vehicle_month_taxable, travel_cost_month, repair_vehicle_month_taxable, fuel_vehicle_month_taxable]
+            cost_list_year_v  =  [payments_vehicle_year_taxable, insurance_vehicle_year_taxable, interest_vehicle_year_taxable, tax_vehicle_year_taxable, travel_cost_year, repair_vehicle_year_taxable, fuel_vehicle_year_taxable]
+            print('cost_list_month_v=',cost_list_month_v)
             print(vehicles)
         except IOError as e:
             print ("Lists load Failure ", e) 
             
             print('error = ',e) 
         return render (self.request,"assets/index.html",{"personnel": personnel, "spaces": spaces, "vehicles": vehicles, "veh":veh, "index_type":"assests", 'avatar':avatar, 'year_list':year_list, 'month_list':month_list,'utilities_month':utilities_month,
-                                         'total_taxed':total_taxed, 'cost_list_year':cost_list_year, 'fuel_month':fuel_month,'internet_month':internet_month, 'tax_month':tax_month, 'insurance_month':insurance_month,'interest_month':interest_month,'cost_list_month':cost_list_month,
-                                         'total_taxed_v':total_taxed_v, 'cost_list_year_v':cost_list_year_v, 'cost_list_month_v':cost_list_month_v, 'utilities_year':utilities_year,'fuel_year':fuel_year,'internet_year':internet_year, 'tax_year':tax_year, 'insurance_year':insurance_year, 'interest_year':interest_year,
-                                         'building_month':building_month, 'building_year':building_year, 'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,})
-        
-    def post(self, *args, **kwargs):
-        timestamp = date.today()
-        dt = datetime.datetime.today()
-        thisyear = dt.year
-        thismonth = dt.month
-        thisday = dt.day
-        print('thismonth=',thismonth)
-        print('thisyear=',thisyear)
-        months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
-        month = months[str(thismonth)]
-        print('month =',month) 
-        operator = str(self.request.user)
-        band = request.POST.POST('_band',-1)
-        category = request.POST.get('_category',-1)
-        description = request.POST.get('_desc',-1)
-        model = request.POSTget('_model',-1)
-        vendor= request.POST.get('_vendor',-1)
-        active = True
-        image_file = request.POST.get('fileupload',-1)
-        comments = request.POST.get('_comments',-1)
-        model_id = request.POST.get('m_id',-1)
-        save = request.POST.get('_save',-1)
-        update = request.POST.get('_update',-1)
-        delete = request.POST.get('_delete',-1)
-        
-        if not save==None:	
-            try:		
-                Model.objects.create(description=description, category=category, band=band, vendor=vendor, model=model, 
-                        comments=comments, image_file=image_file, status=active, last_update=timestamp)
-            except IOError as e:
-                success = False
-                print ("Models Save Failure ", e)
-        elif not update==None: 
-            try:
-                #update existing event
-                Model.objects.filter(id=model_id).update({'description': description,'category':category,'band=':band,
-                    'model':model,'comment':comment,'locationname':locationname,'image_file':image_file,'vendor':vendor,'active':active,'last_update':last_update})
-            except IOError as e:
-                print ("Models Update Failure ", e)	
-        elif not delete==None: 
-            try:
-                Model.objects.filter(id=model_id).delete()
-            except IOError as e:
-                print ("Models Delete Failure ", e)		
-        return render (self.request,"assets/index.html",{"form": form, "models": models, "index_type":"assests"})
+                                     'total_taxed':total_taxed, 'cost_list_year':cost_list_year, 'fuel_month':fuel_month,'internet_month':internet_month, 'tax_month':tax_month, 'insurance_month':insurance_month,'interest_month':interest_month,'cost_list_month':cost_list_month,
+                                     'total_taxed_v':total_taxed_v, 'cost_list_year_v':cost_list_year_v, 'cost_list_month_v':cost_list_month_v, 'utilities_year':utilities_year,'fuel_year':fuel_year,'internet_year':internet_year, 'tax_year':tax_year, 'insurance_year':insurance_year, 'interest_year':interest_year,
+                                     'building_month':building_month, 'building_year':building_year, 'space_month':space_month, 'space_year':space_year, 'month_full':month_full,'month':month,'year':thisyear,
+                                     'vehicle_month':vehicle_month, 'vehicle_year':vehicle_year, 'vehicle_month_taxable':vehicle_month_taxable, 'vehicle_year_taxable':vehicle_year_taxable})
 
 
 class VehicleView(View):
@@ -517,6 +1175,46 @@ class VehicleView(View):
                 veh=-1
                 duplicate=-1
                 business_use=-1
+                vehicle_year=0
+                vehicle_month=0
+                vehicle_month_taxable=0
+                payments_vehicle_month=0
+                payments_vehicle_month=0
+                insurance_vehicle_month=0
+                interest_vehicle_month=0
+                tax_vehicle_month=0
+                repair_vehicle_month=0
+                fuel_vehicle_month=0
+                mantenance_vehicle_month=0
+                tire_vehicle_month=0
+                payments_vehicle_month_taxable=0
+                payments_vehicle_month_taxable=0
+                insurance_vehicle_month_taxable=0
+                interest_vehicle_month_taxable=0
+                tax_vehicle_month_taxable=0
+                repair_vehicle_month_taxable=0
+                fuel_vehicle_month_taxable=0
+                mantenance_vehicle_month_taxable=0
+                tire_vehicle_month_taxable=0
+                monthly_mile=0
+                payments_vehicle_year_taxable=0
+                payments_vehicle_year_taxable=0
+                insurance_vehicle_year_taxable=0
+                inspection_vehicle_year_taxable=0
+                tax_vehicle_year_taxable=0
+                repair_vehicle_year_taxable=0
+                fuel_vehicle_year_taxable=0
+                mantenance_vehicle_year_taxable=0
+                tire_vehicle_year_taxable=0
+                payments_vehicle_year=0
+                insurance_vehicle_year=0
+                inspection_vehicle_year=0
+                tax_vehicle_year=0
+                repair_vehicle_year=0
+                fuel_vehicle_year=0
+                mantenance_vehicle_year=0
+                tire_vehicle_year=0
+                       
                 years = []
                 year = datetime.date.today().year
                 for i in range(-40,0):
@@ -542,6 +1240,183 @@ class VehicleView(View):
                         print('media_folder=',media_folder)
                         print('veh.image_file=',veh.image_file)
                         uploaded_file_url= media_folder + str(veh.image_file)
+                        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vehicle Expenses~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        expense_year_travel = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+                        expense_month_travel = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, sale_date__month=thismonth, expense_type__icontains='Travel', expense_description__icontains='Travel').all()
+                        print('expense_year_travel=',expense_year_travel)
+                        print('thisyear at list2',thisyear)
+                        print('thismonth at list2',thismonth)
+                        
+                        expense_year_vehicle = Expenses.objects.filter(item=veh.name, sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Vehicle')
+                        expense_year_gas = Expenses.objects.filter(item=veh.name, sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Gas')
+                        expense_month_vehicle = Expenses.objects.filter(item=veh.name, sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+                        expense_month_gas = Expenses.objects.filter(item=veh.name, sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Gas')
+                        print('expense_year_vehicle',expense_year_vehicle)
+                        print('expense_month_vehicle',expense_month_vehicle)
+                        print('expense_month_gas',expense_month_gas)
+                        print('expense_year_gas',expense_year_gas)
+                                         
+                        
+                        
+                        
+                        travel_cost_month = 0
+                        travel_miles_month = 0
+                        for item in expense_month_travel:
+                            print('in expense_month_travel item')
+                            travel_cost_month = travel_cost_month + (float(item.total_cost))
+                            get_travel_miles = Equations(0,0)
+                            travel_miles = get_travel_miles.get_num(item.item_desc)
+                            travel_miles_month = travel_miles_month + travel_miles
+                        
+                        print('travel_cost_month=',travel_cost_month)
+                        mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+                        print('mile=',mile)
+                        for miles in mile:
+                            print('miles=',miles.monthy_miles)
+                            monthly_mile = monthly_mile + (float(miles.monthy_miles))
+                            print('monthly_mile=',monthly_mile)
+                        
+                        if monthly_mile == 0:
+                            taxable_percent_month = 0
+                        else:
+                            taxable_percent_month = travel_miles_month/monthly_mile
+                        print('taxable_percent_month=',taxable_percent_month)
+                        for item in expense_month_gas:
+                            fuel_vehicle_month = payments_vehicle_month + float(item.total_cost) 
+                            fuel_vehicle_month_taxable = (fuel_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                            vehicle_month = vehicle_month + float(item.total_cost)
+                            vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_month)))
+                            print('in month gas',fuel_vehicle_month )
+                                
+                        for item in expense_month_vehicle:
+                            print('item-',item)
+                            if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                                payments_vehicle_month = (payments_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                payments_vehicle_month_taxable = (payments_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                                print('payments_vehicle_month=',payments_vehicle_month)
+                                print('vehicle_month_taxable=',vehicle_month_taxable)
+                                print('vehicle_month=',vehicle_month)
+                            elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                                interest_vehicle_month = interest_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                                interest_vehicle_month_taxable = vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = vehicle_month + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_month)))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                                insurance_vehicle_month = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                insurance_vehicle_month_taxable = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost))  * (float(taxable_percent_month))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                                tax_vehicle_month = (tax_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                tax_vehicle_month_taxable = (tax_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) * (float(taxable_percent_month))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                                repair_vehicle_month = repair_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                                repair_vehicle_month_taxable = (repair_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('OIL', item.expense_description.upper()):
+                                mantenance_vehicle_month = mantenance_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                                mantenance_vehicle_month_taxable = (mantenance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                            elif search('VEHICLE', item.expense_description.upper()) and search('TIRES', item.expense_description.upper()):
+                                tire_vehicle_month = tire_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                                tire_vehicle_month_taxable = (tire_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                                vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                                vehicle_month = vehicle_month + float(item.total_cost)
+                            
+                         
+                        
+                        travel_cost_year = 0
+                        travel_miles_year = 0
+                        year_miles = 0
+                        for item in expense_year_travel:
+                            print('in expense_month_travel item')
+                            travel_cost_year = travel_cost_year + (float(item.total_cost))
+                            get_travel_miles = Equations(0,0)
+                            travel_miles = get_travel_miles.get_num(item.item_desc)
+                            travel_miles_year = travel_miles_year + travel_miles
+                        print('travel_cost_year=',travel_cost_year)
+                        mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+                        print('mile=',mile)
+                        for miles in mile:
+                            print('year_miles=',miles.monthy_miles * int(thismonth))
+                            year_miles = year_miles + (float(miles.monthy_miles *  int(thismonth)))
+                            print('year_miles=',year_miles)
+                        
+                        if year_miles==0:
+                            taxable_percent_year = 0
+                        else:
+                            taxable_percent_year = travel_miles_year/year_miles 
+                        print('yearly taxable_percent=',taxable_percent_year)
+                       
+                        vehicle_year_taxable=0
+                        for item in expense_year_gas:
+                            fuel_vehicle_year = fuel_vehicle_year + float(item.total_cost)
+                            fuel_vehicle_year_taxable = (fuel_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                            vehicle_year = vehicle_year + float(item.total_cost)
+                            vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_year)))
+                            print('in year gas',fuel_vehicle_year )
+                        
+                        payments_vehicle_year=0
+                        for item in expense_year_vehicle:
+                            print('item-',item)
+                            if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                                payments_vehicle_year = (payments_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                payments_vehicle_year_taxable = (payments_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                                print('payments_vehicle_year=',payments_vehicle_year)
+                                print('vehicle_year_taxable=',vehicle_year_taxable)
+                                print('vehicle_year=',vehicle_year)
+                            elif search('VEHICLE', item.expense_description.upper()) and search('INSPECTION', item.expense_description.upper()):
+                                inspection_vehicle_year = inspection_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                                inspection_vehicle_year_taxable = inspection_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = vehicle_year + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_year)))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                                insurance_vehicle_year = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                insurance_vehicle_year_taxable = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost))  * (float(taxable_percent_year))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                                tax_vehicle_year = (tax_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                tax_vehicle_year_taxable = (tax_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) * (float(taxable_percent_year))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                                repair_vehicle_year = repair_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                                repair_vehicle_year_taxable = (repair_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                            elif search('GAS', item.expense_description.upper()):
+                                fuel_vehicle_year = fuel_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                                fuel_vehicle_year_taxable = (fuel_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_year)))
+                            elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                                mantenance_vehicle_year = mantenance_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                                mantenance_vehicle_year_taxable = (mantenance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                            elif search('VEHICLE', item.expense_description.upper()) and search('TIRES', item.expense_description.upper()):
+                                tire_vehicle_year = tire_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                                tire_vehicle_year_taxable = (tire_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                                vehicle_year = vehicle_year + float(item.total_cost)
+                                vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                        
+                        
+                        print('vehicle_month',vehicle_month)
+                        print('vehicle_month_taxable',vehicle_month_taxable)
+                        print('vehicle_year_taxable',vehicle_year_taxable)
+                        print ('payments_vehicle_year_taxable',payments_vehicle_year_taxable)
+                        total_taxed_v  =  [vehicle_year,vehicle_year_taxable]
                 
                 if uploaded_file_url==None or uploaded_file_url =="":
                     uploaded_file_url = '/media/images/vehicle.png'
@@ -549,8 +1424,8 @@ class VehicleView(View):
             except IOError as e:
                 print ("load vehicle Failure ", e)
                 print('error = ',e) 
-            return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
-                                                            'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
+            return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':vehicle_month, 
+                                                            'payment_year':vehicle_year, 'insurance':insurance_vehicle_year, 'fuel_month':fuel_vehicle_month, 'fuel_year':fuel_vehicle_year, 'maintenance':mantenance_vehicle_year, 'repair':repair_vehicle_year, 'tires':tire_vehicle_year,
                                                             'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use})
     
     def post(self, *args, **kwargs):
@@ -576,6 +1451,28 @@ class VehicleView(View):
         inspection=0
         veh=-1
         duplicate=-1
+        vehicle_year=0
+        vehicle_month=0
+        vehicle_month_taxable=0
+        payments_vehicle_month=0
+        payments_vehicle_month=0
+        insurance_vehicle_month=0
+        interest_vehicle_month=0
+        tax_vehicle_month=0
+        repair_vehicle_month=0
+        fuel_vehicle_month=0
+        mantenance_vehicle_month=0
+        tire_vehicle_month=0
+        payments_vehicle_month_taxable=0
+        payments_vehicle_month_taxable=0
+        insurance_vehicle_month_taxable=0
+        interest_vehicle_month_taxable=0
+        tax_vehicle_month_taxable=0
+        repair_vehicle_month_taxable=0
+        fuel_vehicle_month_taxable=0
+        mantenance_vehicle_month_taxable=0
+        tire_vehicle_month_taxable=0
+
                     
         business_use = self.request.POST.get('_use',-1)
         if business_use =='on':
@@ -638,6 +1535,213 @@ class VehicleView(View):
             print('veh.image_file',veh.image_file)
             print('veh.business_use',veh.business_use)
             uploaded_file_url=veh.image_file
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Vehicle Expenses~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            print('thisyear at list2',thisyear)
+            print('thismonth at list2',thismonth)
+            
+            expense_year_vehicle = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_year_gas = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, expense_type ='Assets',expense_description__icontains='Gas')
+            expense_month_vehicle = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Vehicle')
+            expense_month_gas = Expenses.objects.filter(item=veh.name,sale_date__year=thisyear, sale_date__month=thismonth, expense_type ='Assets',expense_description__icontains='Gas')
+            print('expense_year_vehicle',expense_year_vehicle)
+            print('expense_month_vehicle',expense_month_vehicle)
+            print('expense_month_gas',expense_month_gas)
+            print('expense_year_gas',expense_year_gas)
+                             
+            
+            vehicle_year=0
+            vehicle_month=0
+            vehicle_month_taxable=0
+            payments_vehicle_month=0
+            payments_vehicle_month=0
+            insurance_vehicle_month=0
+            interest_vehicle_month=0
+            tax_vehicle_month=0
+            repair_vehicle_month=0
+            fuel_vehicle_month=0
+            mantenance_vehicle_month=0
+            tire_vehicle_month=0
+            payments_vehicle_month_taxable=0
+            payments_vehicle_month_taxable=0
+            insurance_vehicle_month_taxable=0
+            interest_vehicle_month_taxable=0
+            tax_vehicle_month_taxable=0
+            repair_vehicle_month_taxable=0
+            fuel_vehicle_month_taxable=0
+            mantenance_vehicle_month_taxable=0
+            tire_vehicle_month_taxable=0
+            
+            travel_cost_month = 0
+            travel_miles_month = 0
+            for item in expense_month_travel:
+                print('in expense_month_travel item')
+                travel_cost_month = travel_cost_month + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_month = travel_miles_month + travel_miles
+            
+            print('travel_cost_month=',travel_cost_month)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('miles=',miles.monthy_miles)
+                monthly_mile = monthly_mile + (float(miles.monthy_miles))
+                print('monthly_mile=',monthly_mile)
+            
+            if monthly_mile == 0:
+                taxable_percent_month = 0
+            else:
+                taxable_percent_month = travel_miles_month/monthly_mile
+            print('taxable_percent_month=',taxable_percent_month)
+            
+            for item in expense_month_gas:
+                fuel_vehicle_month = fuel_vehicle_month + float(item.total_cost) 
+                fuel_vehicle_month_taxable = (fuel_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                vehicle_month = vehicle_month + float(item.total_cost)
+                vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_month)))
+                print('in month gas',fuel_vehicle_month )
+                    
+            for item in expense_month_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_month = (payments_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    payments_vehicle_month_taxable = (payments_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    print('payments_vehicle_month=',payments_vehicle_month)
+                    print('vehicle_month_taxable=',vehicle_month_taxable)
+                    print('vehicle_month=',vehicle_month)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INTEREST', item.expense_description.upper()):
+                    interest_vehicle_month = interest_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    interest_vehicle_month_taxable = vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = vehicle_month + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_month)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_month = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    insurance_vehicle_month_taxable = (insurance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_month = (tax_vehicle_month + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    tax_vehicle_month_taxable = (tax_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month_taxable + float(item.total_cost)) * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_month = repair_vehicle_month_taxable + (float(item.total_cost) * (float(taxable_percent_month)))
+                    repair_vehicle_month_taxable = (repair_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                elif search('VEHICLE', item.expense_description.upper()) and search('OIL', item.expense_description.upper()):
+                    mantenance_vehicle_month = mantenance_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    mantenance_vehicle_month_taxable = (mantenance_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                elif search('VEHICLE', item.expense_description.upper()) and search('TIRES', item.expense_description.upper()):
+                    tire_vehicle_month = tire_vehicle_month + (float(item.total_cost) * (float(taxable_percent_month)))
+                    tire_vehicle_month_taxable = (tire_vehicle_month_taxable + (float(item.total_cost)) * (float(taxable_percent_month)))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+                    vehicle_month_taxable = (vehicle_month + float(item.total_cost))  * (float(taxable_percent_month))
+                    vehicle_month = vehicle_month + float(item.total_cost)
+            
+             
+            payments_vehicle_year_taxable=0
+            payments_vehicle_year_taxable=0
+            insurance_vehicle_year_taxable=0
+            inspection_vehicle_year_taxable=0
+            tax_vehicle_year_taxable=0
+            repair_vehicle_year_taxable=0
+            fuel_vehicle_year_taxable=0
+            mantenance_vehicle_year_taxable=0
+            tire_vehicle_year_taxable=0
+            payments_vehicle_year=0
+            payments_vehicle_year=0
+            insurance_vehicle_year=0
+            inspection_vehicle_year=0
+            tax_vehicle_year=0
+            repair_vehicle_year=0
+            fuel_vehicle_year=0
+            mantenance_vehicle_year=0
+            tire_vehicle_year=0
+           
+            travel_cost_year = 0
+            travel_miles_year = 0
+            year_miles = 0
+            for item in expense_year_travel:
+                print('in expense_month_travel item')
+                travel_cost_year = travel_cost_year + (float(item.total_cost))
+                get_travel_miles = Equations(0,0)
+                travel_miles = get_travel_miles.get_num(item.item_desc)
+                travel_miles_year = travel_miles_year + travel_miles
+            print('travel_cost_year=',travel_cost_year)
+            mile = Vehical.objects.filter(last_update__year=thisyear,business_use=True).all()
+            print('mile=',mile)
+            for miles in mile:
+                print('year_miles=',miles.monthy_miles * int(thismonth))
+                year_miles = year_miles + (float(miles.monthy_miles *  int(thismonth)))
+                print('year_miles=',year_miles)
+            
+            if year_miles==0:
+                taxable_percent_year = 0
+            else:
+                taxable_percent_year = travel_miles_year/year_miles 
+            print('yeary taxable_percent=',taxable_percent_year)
+           
+            vehicle_year_taxable=0
+            for item in expense_year_gas:
+                fuel_vehicle_year = fuel_vehicle_year + float(item.total_cost) 
+                fuel_vehicle_year_taxable = (fuel_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                vehicle_year = vehicle_year + float(item.total_cost)
+                vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) + (float(item.total_cost) * (float(taxable_percent_year)))
+                print('in year gas',fuel_vehicle_year )
+            
+            for item in expense_year_vehicle:
+                print('item-',item)
+                if search('VEHICLE', item.expense_description.upper()) and search('PAYMENT', item.expense_description.upper()):
+                    payments_vehicle_year = (payments_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    payments_vehicle_year_taxable = (payments_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                    print('payments_vehicle_year=',payments_vehicle_year)
+                    print('vehicle_year_taxable=',vehicle_year_taxable)
+                    print('vehicle_year=',vehicle_year)
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSPECTION', item.expense_description.upper()):
+                    inspection_vehicle_year = inspection_vehicle_year + (float(item.total_cost) * (float(taxable_percent_year)))
+                    inspection_vehicle_year_taxable = inspection_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = vehicle_year + float(item.total_cost) + (float(item.total_cost) * (float(taxable_percent_year)))
+                elif search('VEHICLE', item.expense_description.upper()) and search('INSURANCE', item.expense_description.upper()):
+                    insurance_vehicle_year = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    insurance_vehicle_year_taxable = (insurance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TAX', item.expense_description.upper()):
+                    tax_vehicle_year = (tax_vehicle_year + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    tax_vehicle_year_taxable = (tax_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year_taxable + float(item.total_cost)) * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('REPAIR', item.expense_description.upper()):
+                    repair_vehicle_year = repair_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    repair_vehicle_year_taxable = (repair_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and (search('OIL', item.expense_description.upper()) or search('TIRES', item.expense_description.upper())):
+                    mantenance_vehicle_year = mantenance_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    mantenance_vehicle_year_taxable = (mantenance_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+                elif search('VEHICLE', item.expense_description.upper()) and search('TIRES', item.expense_description.upper()):
+                    tire_vehicle_year = tire_vehicle_year_taxable + (float(item.total_cost) * (float(taxable_percent_year)))
+                    tire_vehicle_year_taxable = (tire_vehicle_year_taxable + (float(item.total_cost)) * (float(taxable_percent_year)))
+                    vehicle_year = vehicle_year + float(item.total_cost)
+                    vehicle_year_taxable = (vehicle_year + float(item.total_cost))  * (float(taxable_percent_year))
+            
+            
+            print('vehicle_month',vehicle_month)
+            print('vehicle_month_taxable',vehicle_month_taxable)
+            print('vehicle_year_taxable',vehicle_year_taxable)
+            print ('payments_vehicle_year_taxable',payments_vehicle_year_taxable)
+            total_taxed_v  =  [vehicle_year,vehicle_year_taxable]
         image_file_name = self.request.FILES.get('uploaded_file')
         print('image_file_name',image_file_name)
         if image_file_name !=None:
@@ -663,9 +1767,9 @@ class VehicleView(View):
             try:		
                 if Vehical.objects.filter(name=name).exists() or name =='***Name must be unique!!***':
                     duplicate=1
-                    return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
-                                                            'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
-                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate})
+                    return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_vehicle_month, 
+                                                            'payment_year':payment_vehicle_year, 'insurance':insurance_vehicle_year, 'fuel_month':fuel_vehicle_month, 'fuel_year':fuel_vehicle_year, 'maintenance':mantenance_vehicle_year, 'repair':repair_vehicle_year, 'tires':tires_vehicle_year,
+                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use})
                 else:
                     Vehical.objects.create(name=name, make=make, model=model,type=type,year=year,original_miles=orig_miles, active_miles=active_miles, original_value=orig_val,
                                         load_limit=load, ownership=owner, cost=orig_val, monthy_miles=miles, image_file=image_file, last_update=timestamp,business_use=business_use_s)
@@ -694,9 +1798,9 @@ class VehicleView(View):
             except IOError as e:
                 print ("load vehicle Failure ", e)
                 print('error = ',e) 
-        return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_month, 
-                                                        'payment_year':payment_year, 'insurance':insurance, 'fuel_month':fuel_month, 'fuel_year':fuel_year, 'maintenance':maintenance, 'repair':repair, 'tires':tires,
-                                                        'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use_s})
+        return render(self.request,"assets/vehicle.html",{"vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':payment_vehicle_month, 
+                                                            'payment_year':payment_vehicle_year, 'insurance':insurance_vehicle_year, 'fuel_month':fuel_vehicle_month, 'fuel_year':fuel_vehicle_year, 'maintenance':mantenance_vehicle_year, 'repair':repair_vehicle_year, 'tires':tires_vehicle_year,
+                                                            'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use})
 
 class BuildingView(View):
     template_name = "building.html"

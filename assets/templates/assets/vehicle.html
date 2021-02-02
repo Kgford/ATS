@@ -63,7 +63,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
 					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:expenses' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-user"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
@@ -114,7 +114,7 @@
 						<input type='hidden' name='type' data-select='type'/>
 						<select id='_make' name = "_make" value = "{{veh.make}}" class="browser-default custom-select custom-select-lg mb-3" >
 							{% if veh == -1 %}
-								<option selected>select make</option>
+								<option selected>Make</option>
 							{% else %}
 								<option selected>{{veh.make}}</option>
 							{% endif %}
@@ -217,7 +217,7 @@
 						<input type='hidden' name='_year' data-select='cust'/>
 						<select id='_year' name ='_year' class="browser-default custom-select custom-select-lg mb-3" required>
 							{% if client == -1%}
-								<option data-desc = 'year', value = "select menu">select menu</option>
+								<option data-desc = 'year', value = "select menu">select</option>
 							{% else %}
 								<option selected>{{year}}</option>
 							{% endif %}	
@@ -233,7 +233,7 @@
 						<input type='hidden' name='owner' data-select='_owner'/>
 						<select id='_owner' name = "_owner" value = "{{veh.type}}" class="browser-default custom-select custom-select-lg mb-3" >
 							{% if veh == -1 %}
-								<option selected>select option</option>
+								<option selected>select</option>
 							{% else %}
 								<option selected>{{veh.ownership}}</option>
 							{% endif %}
@@ -246,9 +246,9 @@
 				</div>
 				<div class="col-sm-1 col-lg-1.5 grid-col">
 					<div class="form-group">
-						<label for="_miles">Original Value</label>
+						<label for="_miles">Orig Value</label>
 						{% if veh == -1 %}
-							<input id = "_orig_val" name = "_orig_val" input class="form-control" placeholder="Original Value"  required >
+							<input id = "_orig_val" name = "_orig_val" input class="form-control" placeholder="Value"  required >
 						{% else %}
 							<input id = "_orig_val" name = "_orig_val" input class="form-control" value = "{{veh.cost}}"  required >
 						{% endif %}
@@ -258,7 +258,7 @@
 					<div class="form-group">
 						<label for="_load">Load Limit</label>
 						{% if veh == -1 %}
-							<input id = "_load" name = "_load" input class="form-control" placeholder="Load Limit"  required >
+							<input id = "_load" name = "_load" input class="form-control" placeholder="Load"  required >
 						{% else %}
 							<input id = "_load" name = "_load" input class="form-control" value = "{{veh.load_limit}}"  required >
 						{% endif %}
@@ -266,9 +266,9 @@
 				</div>
 				<div class="col-sm-1 col-lg-1.5 grid-col">
 					<div class="form-group">
-						<label for="_miles">Original Miles</label>
+						<label for="_miles">Orig Miles</label>
 						{% if veh == -1 %}
-							<input id = "_orig_miles" name = "_orig_miles" input class="form-control" placeholder="Original Miles"  required >
+							<input id = "_orig_miles" name = "_orig_miles" input class="form-control" placeholder="Orig Miles"  required >
 						{% else %}
 							<input id = "_orig_miles" name = "_orig_miles" input class="form-control" value = "{{veh.original_miles}}"  required >
 						{% endif %}
@@ -278,7 +278,7 @@
 					<div class="form-group">
 						<label for="_miles">Active Miles</label>
 						{% if veh == -1 %}
-							<input id = "_active_miles" name = "_active_miles" input class="form-control" placeholder="Active Miles"  required >
+							<input id = "_active_miles" name = "_active_miles" input class="form-control" placeholder="Miles"  required >
 						{% else %}
 							<input id = "_active_miles" name = "_active_miles" input class="form-control" value = "{{veh.active_miles}}"  required >
 						{% endif %}
@@ -286,9 +286,9 @@
 				</div>
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_miles">Monthly Miles</label>
+						<label for="_miles">Month Miles</label>
 						{% if veh == -1 %}
-							<input id = "_miles" name = "_miles" input class="form-control" placeholder="Monthly miles"  required >
+							<input id = "_miles" name = "_miles" input class="form-control" placeholder="Miles"  required >
 						{% else %}
 							<input id = "_miles" name = "_miles" input class="form-control" value = "{{veh.monthy_miles}}"  required >
 						{% endif %}

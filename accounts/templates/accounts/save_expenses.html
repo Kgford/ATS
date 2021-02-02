@@ -55,7 +55,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
-					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:new_expense' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'accounts:expenses' %}"><i class="fas fa-gas-pump"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'client:client' %}"><i class="fa fa-user"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Clients</span></a></li>
@@ -117,7 +117,6 @@
 						{% endif %}	
 						
 						<option data-desc = 'expense', value = "Salarys">Data Entry</option>
-						
 						<option data-desc = 'expense', value = "Fees">Fees</option>
 						<option data-desc = 'expense', value = "Wages">Wages</option>
 						<option data-desc = 'expense', value = "Taxes">Taxes</option>
@@ -137,8 +136,13 @@
 						<option data-desc = 'expense', value = "Building Insurance">Building Insurance</option>
 						<option data-desc = 'expense', value = "Building  Tax">Building  Tax</option>
 						<option data-desc = 'expense', value = "Building Maintainance">Building Maintenance</option>
+						<option data-desc = 'expense', value = "Building Maintainance Heating">Building Maintenance Heating</option>
+						<option data-desc = 'expense', value = "Building Maintainancev">Building Maintenance Cooling</option>
 						<option data-desc = 'expense', value = "Building Repair">Building Repair</option>
+						<option data-desc = 'expense', value = "Building Repair Heating">Building Repair Heating</option>
+						<option data-desc = 'expense', value = "Building Repair Cooling">Building Repair Cooling</option>
 						<option data-desc = 'expense', value = "Vehicle Payment">Vehicle Payment</option>
+						<option data-desc = 'expense', value = "Vehicle Gas">Vehicle Gas</option>
 						<option data-desc = 'expense', value = "Vehicle Interest">Vehicle Interest</option>
 						<option data-desc = 'expense', value = "Vehicle Insurance">Vehicle Insurance</option>
 						<option data-desc = 'expense', value = "Vehicle Maintainance">Vehicle Maintenance</option>
