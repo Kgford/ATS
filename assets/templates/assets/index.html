@@ -6,9 +6,52 @@
 {% endblock %}
 
 {% block body %}
-<body id="page-top">
-    <div id="wrapper">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar navbar-dark bg-dark sidebar collapse" >
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">ATS Capital Budget Manager</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'dashboard:dashboard' %}" aria-disabled="true">Dashboard</a>
+				</li>
+				<li class="nav-item active">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'assets:assets' %}" aria-disabled="true">Assets&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'assets:vehicle' %}">Vehicles&nbsp;&nbsp;</a>>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="clipboard"></span>
+					<a class="nav-link" href="{% url 'assets:building' %}">Commercial Space</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'locations:location' %}" aria-disabled="true">Building Locations&nbsp;&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'assets:personnel' %}">Personnel&nbsp;&nbsp;</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
+				</li>
+				<li class="nav-item ">
+					<span data-feather="log-out"></span>
+					<a class="nav-link" href="{% url 'users:base' %}" aria-disabled="true">home</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid">
+	  <div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar navbar-dark bg-dark sidebar collapse" >
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand text-left sidebar-brand m-0" href="#">
 				<span class="text-left d-lg-flex flex-wrap justify-content-lg-start" style="font-size: 12;">ATS Navigation</span>
 				<div class="sidebar-brand-icon rotate-n-15"></div><div class="sidebar-brand-text mx-3"></div></a>
@@ -31,143 +74,22 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="far fa-sun"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Settings</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'atspublic:public' %}"><i class="fa fa-male"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Website</span></a></li>
 				</ul>
-			<div class="text-center d-none d-md-inline"></div>
+				<div class="text-center d-none d-md-inline"></div>
 			</div>
 		</nav>
-	 <div class="d-flex flex-column" id="content-wrapper">
-        <div id="content">
-            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-                <div class="container-fluid">
-					<button class="btn btn-link collapsed d-md-none rounded-circle mr-3" type="button"  data-toggle="dropdown" data-target="#collapseExample" ><i class="fas fa-bars"></i></button>
-						<div class="collapse" id="collapseExample" >
-						<li class="dropdown">
-							<div class="dropdown-menu  animated--grow-in" >
-								<a class="dropdown-item" href="{% url 'accounts:invoice_item' %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Invoicing</a>
-								<a class="dropdown-item" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book fa-sm fa-fw mr-2 text-gray-400"></i>Quotes</a>
-								<a class="dropdown-item" href="{% url 'accounts:expenses' %}"><i class="fas fa-gas-pump fa-sm fa-fw mr-2 text-gray-400"></i>Expenses</a>
-								<a class="dropdown-item" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card fa-sm fa-fw mr-2 text-gray-400"></i>Income</a>
-								<a class="dropdown-item active" href="{% url 'assets:assets' %}"><i class="fa fas fa-truck fa-sm fa-fw mr-2 text-gray-400"></i>Capital Budget</a>
-								<a class="dropdown-item" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode fa-sm fa-fw mr-2 text-gray-400"></i>Inventory</a>
-								<a class="dropdown-item" href="{% url 'equipment:equipment' %}"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Equipment</a>
-								<a class="dropdown-item" href="{% url 'client:client' %}"><i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Clients</a>
-								<a class="dropdown-item" href="{% url 'contractors:contractor' %}"><i class="fa fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>Contractors</a>
-								<a class="dropdown-item" href="{% url 'vendor:vendor' %}"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Vendors</a>
-								<a class="dropdown-item" href="{% url 'locations:location' %}"><i class="far fa-building fa-sm fa-fw mr-2 text-gray-400"></i>Locations</a>
-								<a class="dropdown-item" href="{% url 'atspublic:public' %}"><i class="fa fa-male fa-sm fa-fw mr-2 text-gray-400"></i>Website</a>
-							</div>
-						</li>
-					</div>
-					<picture><img class="img-fluid d-xl-flex flex-grow-1 flex-shrink-1 flex-fill justify-content-center align-content-center align-self-center flex-nowrap justify-content-xl-center" src="{% static 'dashboard/images/atsrf_logo.jpg' %}" width="150" ></picture>
-                    <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-append"></div>
-                        </div>
-                    </form>
-                    <ul class="nav navbar-nav d-xl-flex flex-nowrap ml-auto justify-content-xl-center">
-                        <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-search"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto navbar-search w-100">
-                                    <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                        <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle d-xl-flex justify-content-xl-center nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="badge badge-danger badge-counter">3+</span><i class="fas fa-bell fa-fw"></i></a>
-                                <div
-                                    class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in">
-                                    <h6 class="dropdown-header">alerts center</h6>
-                                    <a class="d-flex align-items-center dropdown-item" href="#">
-                                        <div class="mr-3">
-                                            <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
-                                        </div>
-                                        <div><span class="small text-gray-500">December 12, 2019</span>
-                                            <p>A new monthly report is ready to download!</p>
-                                        </div>
-                                    </a>
-                                    <a class="d-flex align-items-center dropdown-item" href="#">
-                                        <div class="mr-3">
-                                            <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
-                                        </div>
-                                        <div><span class="small text-gray-500">December 7, 2019</span>
-                                            <p>$290.29 has been deposited into your account!</p>
-                                        </div>
-                                    </a>
-                                    <a class="d-flex align-items-center dropdown-item" href="#">
-                                        <div class="mr-3">
-                                            <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
-                                        </div>
-                                        <div><span class="small text-gray-500">December 2, 2019</span>
-                                            <p>Spending Alert: We've noticed unusually high spending for your account.</p>
-                                        </div>
-                                    </a><a class="text-center dropdown-item small text-gray-500" href="#">Show All Alerts</a></div>
-                </div>
-                </li>
-                <li class="nav-item dropdown no-arrow mx-1">
-                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle d-xl-flex justify-content-xl-center nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-envelope fa-fw"></i><span class="badge badge-danger badge-counter">7</span></a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-list dropdown-menu-right animated--grow-in">
-                            <h6 class="dropdown-header">alerts center</h6>
-                            <a class="d-flex align-items-center dropdown-item" href="#">
-                                <div class="dropdown-list-image mr-3"><img class="rounded-circle">
-                                    <div class="bg-success status-indicator"></div>
-                                </div>
-                                <div class="font-weight-bold">
-                                    <div class="text-truncate"><span>Hi there! I am wondering if you can help me with a problem I've been having.</span></div>
-                                    <p class="small text-gray-500 mb-0">Emily Fowler - 58m</p>
-                                </div>
-                            </a>
-                            <a class="d-flex align-items-center dropdown-item" href="#">
-                                <div class="dropdown-list-image mr-3"><img class="rounded-circle" src="{% static 'dashboard/images/avatars/Gford.jpeg' %}">
-                                    <div class="status-indicator"></div>
-                                </div>
-                                <div class="font-weight-bold">
-                                    <div class="text-truncate"><span>I have the photos that you ordered last month!</span></div>
-                                    <p class="small text-gray-500 mb-0">Jae Chun - 1d</p>
-                                </div>
-                            </a>
-                            <a class="d-flex align-items-center dropdown-item" href="#">
-                                <div class="dropdown-list-image mr-3"><img class="rounded-circle" src="{% static 'dashboard/images/avatars/Cugo.jpeg' %}">
-                                    <div class="bg-warning status-indicator"></div>
-                                </div>
-                                <div class="font-weight-bold">
-                                    <div class="text-truncate"><span>Last month's report looks great, I am very happy with the progress so far, keep up the good work!</span></div>
-                                    <p class="small text-gray-500 mb-0">Morgan Alvarez - 2d</p>
-                                </div>
-                            </a>
-                            <a class="d-flex align-items-center dropdown-item" href="#">
-                                <div class="dropdown-list-image mr-3"><img class="rounded-circle" src="{% static 'dashboard/images/avatars/Kayla.jpeg' %}">
-                                    <div class="bg-success status-indicator"></div>
-                                </div>
-                                <div class="font-weight-bold">
-                                    <div class="text-truncate"><span>Am I a good girl? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...</span></div>
-                                    <p class="small text-gray-500 mb-0">Chicken the Dog · 2w</p>
-                                </div>
-                            </a><a class="text-center dropdown-item small text-gray-500" href="#">Show All Alerts</a></div>
-					</div>
-                    <div class="shadow dropdown-list dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown"></div>
-                </li>
-                <!-- Avitar Pulldown menu-->
-                <div class="d-none d-sm-block topbar-divider"></div>
-                <li class="nav-item dropdown no-arrow">
-                    <div class="nav-item dropdown no-arrow">
-						<a class="dropdown-toggle d-xl-flex justify-content-xl-center nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
-							<span class="text-uppercase d-none d-lg-inline mr-2 text-gray-600 small">{{operator}}</span>
-							<img class="border rounded-circle img-profile" src="{% static avatar %}" loading="eager">
-						</a>
-						<div
-							class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
-							<a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a>
-							<a class="dropdown-item" href="{% url 'users:base' %}"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
-							<a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Administrator</a>
-							<div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'users:logout' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
-						</div>
-					</div>	
-				</li>
-				<!-- Avitar Pulldown menu-->
-		</ul>
-	</nav>
-    <div class="container-fluid">
+		
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-6 col-xl-3 mb-4" >
+				<a>&nbsp;</a>
+				<a>&nbsp;</a>
+				<a>&nbsp;</a>
+				<a>&nbsp;</a>
+				<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
+				
+			</div>
+		
 		<form action = "{% url 'assets:assets' %}" method="post">
 			{% csrf_token %}
 			<div class="d-sm-flex justify-content-between align-items-center mb-4">
@@ -184,9 +106,23 @@
 				{% endfor %}
 		  </select>
 	   </form>
+		   <div class="row">
+				<div class="col-md-6 col-xl-3 mb-4" >
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+					<a>&nbsp;</a>
+				</div>
+			</div>
 			<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
-			<div
-            class="row">
+			<div class="row">
+				<h1 style = "text-align:center">Capital Budget Report</h1>
+			</div>
+			<div class="row">
             <div class="col-md-6 col-xl-3 mb-4" >
                 <div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
                     <div class="card-body">
