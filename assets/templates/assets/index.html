@@ -77,17 +77,11 @@
 				<div class="text-center d-none d-md-inline"></div>
 			</div>
 		</nav>
-		
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-6 col-xl-3 mb-4" >
-				<a>&nbsp;</a>
-				<a>&nbsp;</a>
-				<a>&nbsp;</a>
-				<a>&nbsp;</a>
-				<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
-				
+				<a ></a></div>
 			</div>
 		
 		<form action = "{% url 'assets:assets' %}" method="post">
@@ -106,32 +100,21 @@
 				{% endfor %}
 		  </select>
 	   </form>
-		   <div class="row">
-				<div class="col-md-6 col-xl-3 mb-4" >
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-					<a>&nbsp;</a>
-				</div>
-			</div>
-			<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
+		   <a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
 			<div class="row">
-				<h1 style = "text-align:center">Capital Budget Report</h1>
+				
 			</div>
+			<h1 class="text-center">Capital Budget Report</h1>
 			<div class="row">
             <div class="col-md-6 col-xl-3 mb-4" >
                 <div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Total Building Costs ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{building_month}}</span></div>
+                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{building_month}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -141,10 +124,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Total Building Costs ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">${{building_year}}</span></div>
+                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{year}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">&nbsp;${{building_year}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -154,10 +137,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Business Space Costs  ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{space_month}}</span></div>
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_month}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i>&nbsp;</div>
                         </div>
                     </div>
                 </div>
@@ -167,10 +150,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Business Space Costs  ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{space_year}}</span></div>
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{year}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_year}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -198,7 +181,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Capital Costs  ({{year}}))</h6>
+					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Building Costs  ({{year}}))</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -215,7 +198,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Monthly  Taxable Capital Costs  ({{month}})</h6>
+					<h6 class="text-primary font-weight-bold m-0">Monthly  Taxable Building Costs  ({{month}})</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -260,16 +243,17 @@
 				</tbody>
 			</table>
 		</div>
+		<h2 class="text-center">Vehicle Costs</h2>
 		<class="row">
             <div class="col-md-6 col-xl-3 mb-4" >
                 <div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Total Vehicle Costs ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_month}}</span></div>
+                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Vehicle Costs ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{vehicle_month}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -279,10 +263,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Total Vehicle Costs ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">${{vehicle_year}}</span></div>
+                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Vehicle Costs ({{year}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">&nbsp;${{vehicle_year}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -292,10 +276,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Vehicle Business Use Costs  ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_month_taxable}}</span></div>
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Vehicle Business Use Costs  ({{month}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{vehicle_month_taxable}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -305,10 +289,10 @@
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">Vehicle Business Use Costs  ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">${{vehicle_year_taxable}}</span></div>
+                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Vehicle Business Use Costs  ({{year}})</span></div>
+                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{vehicle_year_taxable}}</span></div>
                             </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i></div>
+                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
                         </div>
                     </div>
                 </div>
@@ -335,7 +319,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Capital Costs  ({{year}}))</h6>
+					<h6 class="text-primary font-weight-bold m-0">Year to Date Taxable Vehicle Costs  ({{year}}))</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -351,7 +335,7 @@
 		<div class="col-lg-4 col-xl-4">
 			<div class="card shadow mb-4">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Monthly Taxable Capital Costs  ({{month}})</h6>
+					<h6 class="text-primary font-weight-bold m-0">Monthly Taxable Vehicle Costs  ({{month}})</h6>
 					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
 						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
 							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
@@ -390,7 +374,8 @@
 					{% endfor %}
 				</tbody>
 			</table>
-	   </main>
+		</div>
+   </main>
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
