@@ -73,10 +73,10 @@ class AssetsView(View):
             personnel=[]
             operator = str(self.request.user)
             phone = self.request.user.userprofileinfo.phone
-            message = 'message'
-            #com=Comunication(phone,message)
-            #print('com=',com)
-            #com.send_sms()
+            message = 'hello this is a test'
+            com=Comunication(phone,message)
+            print('com=',com)
+            com.send_sms()
             month_list = -1
             year_list = -1
             timestamp = date.today()

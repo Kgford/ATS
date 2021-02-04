@@ -24,6 +24,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
 
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~Django~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #STATIC_DIR = os.path.join(BASE_DIR,'static')
 #STATICFILES_DIRS = [STATIC_DIR]
@@ -46,14 +49,15 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
+TILL_USERNAME = os.environ.get('TILL_USERNAME')
+TILL_API_KEY = os.environ.get('TILL_API_KEY')
 
 
 ALLOWED_HOSTS = ['automatedtestsolution.com','automatedtestsolutions.herokuapp.com','127.0.0.1', 'localhost']

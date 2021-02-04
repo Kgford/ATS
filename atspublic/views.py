@@ -9,6 +9,7 @@ from django.views import View
 import datetime
 from django.contrib.auth.decorators import login_required
 from atspublic.models import Blog, Category
+from ATS.overhead import Comunication,Email
 #from django.shortcuts import render_to_response, get_object_or_404
  
    
@@ -23,21 +24,34 @@ class SignupView(View):
         inv=-1
         try:
             print('in Get')
+            phone = '+15165216818'
+            message = 'Some one is Signing in'
+            com=Comunication(phone,message)
+            print('com=',com)
+            com.send_sms()
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'signup.html',{"inventory": inv})
+        return render(self.request,'atspublic/signup.html',{"inventory": inv})
     
     def post(self, request, *args, **kwargs):
         inv=-1
         try: 
             print("in POST")
+            recepient = 'automatedtestsolutions@gmail.com'
+            subject = 'Welcome to Automated Test Solutions'
+            message = 'Hello Michael Nice to meet you'
+            email=Email(recepient,subject, message)
+            email.send_email()
             success = True
+            
+            
+            
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'signup.html',{"inventory": inv})
+        return render(self.request,'atspublic/signup.html',{"inventory": inv})
         
 class SigninView(View):
     template_name = "signin.html"

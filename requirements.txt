@@ -11,4 +11,5 @@ django-storages
 django-background-tasks
 pygooglevoice
 django-phone-field
+requests
 
