@@ -9,10 +9,32 @@ class UserProfileInfo(models.Model):
     USER = 1
     SUPERVISOR = 2
     MANAGER = 3
+    OWNER = 4
+    ENGINEER = 5
+    TECHNICIAN = 6
+    CONTRACTOR = 7
+    DEVELOPER = 8
+    MARKETING = 9
+    SALES = 10
+    SOCIAL_MEDIA = 11
+    WEB_MONITOR = 12
+    HELP_DESK = 13
+    SECURITY = 14
     ROLE_CHOICES = (
         (USER, 'User'),
         (SUPERVISOR, 'Supervisor'),
         (MANAGER, 'Manager'),
+        (OWNER, 'Owner'),
+        (ENGINEER, 'Engineer'),
+        (TECHNICIAN, 'Technician'),
+        (CONTRACTOR, 'Contractor'),
+        (DEVELOPER, 'Developer'),
+        (MARKETING, 'Marketing'),
+        (SALES, 'Sales'),
+        (SOCIAL_MEDIA, 'Social_Media'),
+        (WEB_MONITOR, 'Web_Monitor'),
+        (HELP_DESK, 'Help_Desk'),
+        (SECURITY, 'Security'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = PhoneField(blank=True, help_text='Contact phone number')
@@ -25,6 +47,16 @@ class UserProfileInfo(models.Model):
     portfolio_site = models.URLField(blank=True)
     profile_pic = models.ImageField(upload_to='profile_pics',blank=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True, blank=True)
+    #defining email an sms alert lists
+    alerts_manager = models.BooleanField("alerts_manager",unique=False,null=True,default=False)
+    alerts_help_desk = models.BooleanField("alerts_help_deskp",unique=False,null=True,default=False)
+    alerts_marketing = models.BooleanField("alerts_marketing",unique=False,null=True,default=False)
+    alerts_social_media = models.BooleanField("alerts_social_media",unique=False,null=True,default=False)
+    alerts_web_monitor = models.BooleanField("alerts_web_monitor",unique=False,null=True,default=False)
+    alerts_sales = models.BooleanField("alerts_sales",unique=False,null=True,default=False)
+    alerts_developer = models.BooleanField("alerts_developer",unique=False,null=True,default=False)
+    alerts_security = models.BooleanField("alerts_security",unique=False,null=True,default=False)
+    alerts_accounting = models.BooleanField("alerts_accounting",unique=False,null=True,default=False)
 
     def __str__(self):  # __unicode__ for Python 2
         return self.user.username

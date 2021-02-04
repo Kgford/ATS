@@ -32,7 +32,7 @@ class SignupView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'atspublic/signup.html',{"inventory": inv})
+        return render(self.request,'signup.html',{"inventory": inv})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -44,14 +44,11 @@ class SignupView(View):
             email=Email(recepient,subject, message)
             email.send_email()
             success = True
-            
-            
-            
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'atspublic/signup.html',{"inventory": inv})
+        return render(self.request,'signup.html',{"inventory": inv})
         
 class SigninView(View):
     template_name = "signin.html"

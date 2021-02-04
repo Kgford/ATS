@@ -89,7 +89,8 @@
 				<h1 class="text-center">Sign up</h1>
 				<p class="hint-text text-center">Sign up to get all the full features from ATS.</p>
 				<p class="hint-text text-center">&nbsp;</p>
-				<form action="{% url 'atspublic:signup' %} method="post">
+				<form action="{% url 'atspublic:signup' %}" method="post">
+				{% csrf_token %}
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">

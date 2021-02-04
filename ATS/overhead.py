@@ -53,7 +53,8 @@ class Comunication:
             ), 
             json={
                 "phone": [self.number],
-                "text" : self.message
+                "text" : self.message,
+                "tag": "New User Alert"
             }
         )
     def send_sms_question(self):
