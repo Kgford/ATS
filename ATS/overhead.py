@@ -8,6 +8,8 @@ from six.moves import input
 import sys
 from ATS import settings
 from django.core.mail import send_mail
+from users.models import UserProfileInfo
+
 
 
 #https://data-flair.training/blogs/django-send-email/
@@ -29,18 +31,52 @@ class Email:
 
 
 
+
 #https://sphinxdoc.github.io/pygooglevoice/examples.html#send-sms-messages
 class Comunication:
     def __init__ (self, number,message):
-        print('number=',number)
-        numeric_filter = filter(str.isdigit, str(number))
-        number = "".join(numeric_filter)
-        print('numeric_string=',number)
-        self.number = '+1' + number
+        num_list = []
+        if isinstance(number, list):
+            print('list number=',number)
+            for num in number:
+                if '+1' in num:
+                    num_list.append(num)
+                    print('this phone number in this list is already properly formated')
+                else:
+                    print('number=',num)
+                    numeric_filter = filter(str.isdigit, str(num))
+                    number = "".join(numeric_filter)
+                    print('numeric_string=',number)
+                    print('numeric_string=',number[0])
+                    if not number[0] == '1':
+                        print('adding 1')
+                        num_list.append('+1' + number)
+                    else:
+                        print('not adding 1')
+                        num_list.append('+' + number)
+        else:
+            if '+1' in number:
+                num_list.append(number)
+                print('phone number is already properly formated')
+            else:
+                print('number=',number)
+                numeric_filter = filter(str.isdigit, str(number))
+                number = "".join(numeric_filter)
+                print('numeric_string=',number)
+                print('numeric_string=',number[0])
+                if not number[0] == '1':
+                    print('adding 1')
+                    num_list.append('+1' + number)
+                else:
+                    print('not adding 1')
+                    num_list.append('+' + number)
+                
+            
         self.message = message
+        self.number = num_list
         print('message=',self.message)
-        print('number=',self.number)
-    
+        print('num_list in com =',self.number)
+                
 
     def send_sms(self):
         till_username = settings.TILL_USERNAME
@@ -52,7 +88,7 @@ class Comunication:
                 till_api_key
             ), 
             json={
-                "phone": [self.number],
+                "phone": self.number,
                 "text" : self.message,
                 "tag": "New User Alert"
             }

@@ -8,6 +8,7 @@ from atspublic import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^', include("background_app.urls")),
     url(r'^$',views.index,name='public'),
     path('staff/', include("users.urls")),

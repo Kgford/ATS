@@ -1,8 +1,22 @@
 from django.db import models
+from django.contrib.auth.models import User
+
  
 # Create your models here.
 #https://www.skysilk.com/blog/2017/how-to-make-a-blog-with-django/#:~:text=Django%20Blog%201%20Installing%20Django.%20First%20login%20to,small%20handful%20of%20its%20functionality%20in%20this%20example.
- 
+class Visitor(models.Model):
+    visitor = models.CharField('visitor', max_length=50, blank=True)
+    email = models.CharField('email',max_length=50, blank=True)
+    session_id = models.CharField('session_id',max_length=100, blank=True)
+    client_id = models.CharField('client_id',max_length=200, blank=True)
+    user_agent = models.CharField('user_agent',max_length=200, blank=True)
+    visitor_ip = models.CharField('visitor_ip',max_length=100, blank=True)
+    blocked = models.BooleanField("blocked",unique=False,null=True,default=False)
+    blocked_reason = models.CharField('blocked_reason',max_length=200, blank=True)
+    created_on = models.DateField(null=True)
+    last_entry = models.DateField(null=True)
+
+
 class Blog(models.Model):
    title = models.CharField(max_length=100, unique=True)
    slug = models.SlugField(max_length=100, unique=True)

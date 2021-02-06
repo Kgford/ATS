@@ -12,4 +12,6 @@ django-background-tasks
 pygooglevoice
 django-phone-field
 requests
+django-user-visit==0.4
+django-allauth
 

@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from phone_field import PhoneField
 
 # Create your models here.
 class UserProfileInfo(models.Model):
@@ -36,8 +35,8 @@ class UserProfileInfo(models.Model):
         (HELP_DESK, 'Help_Desk'),
         (SECURITY, 'Security'),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = PhoneField(blank=True, help_text='Contact phone number')
+    user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=50, blank=True)
     email = models.CharField(max_length=50, blank=True)
     address = models.CharField(max_length=60, blank=True)
     city = models.CharField(max_length=60, blank=True)
@@ -49,7 +48,7 @@ class UserProfileInfo(models.Model):
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True, blank=True)
     #defining email an sms alert lists
     alerts_manager = models.BooleanField("alerts_manager",unique=False,null=True,default=False)
-    alerts_help_desk = models.BooleanField("alerts_help_deskp",unique=False,null=True,default=False)
+    alerts_help_desk = models.BooleanField("alerts_help_desk",unique=False,null=True,default=False)
     alerts_marketing = models.BooleanField("alerts_marketing",unique=False,null=True,default=False)
     alerts_social_media = models.BooleanField("alerts_social_media",unique=False,null=True,default=False)
     alerts_web_monitor = models.BooleanField("alerts_web_monitor",unique=False,null=True,default=False)
@@ -66,14 +65,6 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfileInfo.objects.create(user=instance)
     instance.userprofileinfo.save()
-    
-    
-    
-    
-    
-    
-    
-    
      
 
 def __str__(self):
