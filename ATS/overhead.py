@@ -244,23 +244,14 @@ class Security:
     def visitor_monitor(self):
         timestamp = date.today()
         visitor =  self.get_visitor()
-        print('visitor=',visitor)
         client_id=self.get_client_id()
-        print('client_id=',client_id)
         user_agent=self.get_user_agent()
-        print('user_agent=',user_agent)
         session_id = self.get_session_id()
-        print('session_id=',session_id)
         visitor_ip = self.get_visitor_ip()
-        print('visitor_ip=',visitor_ip)
         phone_list = self.get_security_phone_list()
-        print('phone_lis=',phone_list)
         email_list = self.get_security_email_list()
-        print('email_list=',email_list)
         cookie = self.get_cookie()
-        print('cookie=',cookie)
         email = self.get_email()
-        print('email=',email)
         print('In visitor_monitor')
         reason = -1
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -294,6 +285,7 @@ class Security:
 
     def get_cookie(self):
         cookie = str(self.request.headers.get('Cookie'))
+        print('cookie=',cookie)
         return cookie
         
     def get_visitor(self):
@@ -303,6 +295,7 @@ class Security:
             isthere = Visitor.objects.filter(client_id=client_id)
             visitor = isthere[0].visitor
         
+        print('visitor=',visitor)
         return visitor
         
     def get_email(self):
@@ -310,6 +303,7 @@ class Security:
             email = str(self.request.user.email)
         else:
             email = 'N/A'
+        print('email=',email)
         return email
         
     def get_client_id(self):
@@ -321,6 +315,7 @@ class Security:
         print('Cookie=',cookie)
         inner_array=cookie_array[0].split( '=',-1) 
         client_id=inner_array[1]
+        print('client_id=',client_id)
         return client_id    
     
     def get_session_id(self):
@@ -390,8 +385,8 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
+        return email_list
     
     def get_marketing_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -415,9 +410,9 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
-    
+        return email_list
+        
     def get_security_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
         profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) |  Q(alerts_security=True)).all()
@@ -440,8 +435,8 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
+        return email_list
     
     def get_newuser_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -465,8 +460,8 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
+        return email_list
     
     def get_monitor_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -490,8 +485,8 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
+        return email_list
     
     def get_security_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -515,11 +510,11 @@ class Security:
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
         return email_list
     
     def get_visitor_ip(self):
+        PRIVATE_IPS_PREFIX = ('10.', '172.', '192.', )
         remote_address = self.request.META.get('HTTP_X_FORWARDED_FOR') or self.request.META.get('REMOTE_ADDR')
         print("remote_address=",remote_address)
         ip = remote_address
