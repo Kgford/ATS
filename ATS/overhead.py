@@ -256,8 +256,8 @@ class Security:
         reason = -1
         error_message =-1
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if Visitor.objects.filter(client_id=client_id).exists():
-            isthere = Visitor.objects.filter(client_id=client_id)
+        if Visitor.objects.filter(Q(client_id=client_id) | Q(visitor=visitor) | Q(user_agent=user_agent) | Q(visitor_ip=visitor_ip)).exists():
+            isthere = Visitor.objects.filter(Q(client_id=client_id) | Q(visitor=visitor) | Q(user_agent=user_agent) | Q(visitor_ip=visitor_ip))
             visitor = isthere[0].visitor
             email = isthere[0].email
             reason = isthere[0].blocked_reason
