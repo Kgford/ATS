@@ -603,7 +603,6 @@ class AssetsView(View):
                                      'vehicle_month':vehicle_month, 'vehicle_year':vehicle_year, 'vehicle_month_taxable':vehicle_month_taxable, 'vehicle_year_taxable':vehicle_year_taxable})
 
 
-
     def post(self, *args, **kwargs):
         try:
             tmonth_list = -1

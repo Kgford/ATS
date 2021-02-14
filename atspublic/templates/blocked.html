@@ -1,0 +1,35 @@
+{% extends "atspublic/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ index_type }}
+{% endblock %}
+
+{% block body %}
+  
+<main role="main">
+
+<body>
+<div class="container-xl">
+	<img src="{% static 'atspublic/images/logo.png' %}" class="img-fluid center-block "; "max-width: 50%;" ;alt="Responsive image">
+	<div class="row">
+		<div class="col-md-8 mx-auto">
+			<div class="contact-form">
+				<h1 class="text-center">{{visitor}}</h1>
+				<h1 class="text-center">You have been blocked from this page!</h1>
+				<p class="hint-text text-center">&nbsp;</p>
+				<h3 class="text-center">REASON:&nbsp;{{error_message}}!</h3>
+				<p class="hint-text text-center">Contact Automated Test Solutions</p>
+				<p class="hint-text text-center">&nbsp;</p>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="{% static 'atspublic/js/jquery.slim.min.js' %}"><\/script>')</script><script src="{% static 'atspublic/js/bootstrap.bundle.js' %}" ></script></body>
+{% endblock %}
+</html>

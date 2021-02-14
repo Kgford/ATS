@@ -1,15 +1,20 @@
 import math
 import os, requests
+from django.http import request
 from client.models import Clients
 from contractors.models import Contractors
 from googlevoice import Voice
 #from googlevoice.util import input
 from six.moves import input
 import sys
+from datetime import date
 from ATS import settings
 from django.core.mail import send_mail
 from users.models import UserProfileInfo
-
+from django.contrib.auth.models import User
+from django.db.models import Q
+from atspublic.models import Visitor
+from django.shortcuts import render
 
 
 #https://data-flair.training/blogs/django-send-email/
@@ -225,5 +230,362 @@ class Equations:
         
     def get_num(self,x):
         return float(''.join(ele for ele in x if ele.isdigit() or ele == '.'))
+        
+        
+
+class Security:
+    def __init__ (self, request, page):
+        self.page = page
+        self.request = request
+        print('In security')
+        print('self.page=',self.page)
+        print('self.request=',self.request)
+        
+    def visitor_monitor(self):
+        timestamp = date.today()
+        visitor =  self.get_visitor()
+        print('visitor=',visitor)
+        client_id=self.get_client_id()
+        print('client_id=',client_id)
+        user_agent=self.get_user_agent()
+        print('user_agent=',user_agent)
+        session_id = self.get_session_id()
+        print('session_id=',session_id)
+        visitor_ip = self.get_visitor_ip()
+        print('visitor_ip=',visitor_ip)
+        phone_list = self.get_security_phone_list()
+        print('phone_lis=',phone_list)
+        email_list = self.get_security_email_list()
+        print('email_list=',email_list)
+        cookie = self.get_cookie()
+        print('cookie=',cookie)
+        email = self.get_email()
+        print('email=',email)
+        print('In visitor_monitor')
+        reason = -1
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if Visitor.objects.filter(client_id=client_id).exists():
+            isthere = Visitor.objects.filter(client_id=client_id)
+            visitor = isthere[0].visitor
+            email = isthere[0].email
+            reason = isthere[0].blocked_reason
+            isblocked = isthere[0].blocked
+            print('blocked=',isblocked)
+            print('visitor=',visitor)
+            if isblocked:
+                error_message = isthere[0].blocked_reason
+                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message to staff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                subject = 'Blocked user visiting ATS ' + self.page + ' page'
+                email_body = visitor + ' is attempting re-entry onto this page after being blocked\n\nBlocked Reason: ' + reason + '\n\nvisitor_ip: ' + visitor_ip + '\n\nClient_id: ' + client_id + '\n\nCookie: ' + cookie + '\n\nUser Agent: ' + user_agent
+                email=Email(email_list,subject, email_body)
+                print('email=',email)
+                email.send_email()
+                mes= 'Blocked user visiting  ' + self.page + ' page' + ' Check your email' 
+                com=Comunication(phone_list,mes)
+                print('com=',com)
+                com.send_sms()
+                blocked = True
+        else:
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save New visitor info to Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
+                                user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
+        return reason
     
+
+    def get_cookie(self):
+        cookie = str(self.request.headers.get('Cookie'))
+        return cookie
+        
+    def get_visitor(self):
+        visitor = str(self.request.user)
+        client_id=self.get_client_id()
+        if Visitor.objects.filter(client_id=client_id).exists():
+            isthere = Visitor.objects.filter(client_id=client_id)
+            visitor = isthere[0].visitor
+        
+        return visitor
+        
+    def get_email(self):
+        if str(self.request.user) != 'AnonymousUser':
+            email = str(self.request.user.email)
+        else:
+            email = 'N/A'
+        return email
+        
+    def get_client_id(self):
+        cookie_array =[]
+        inner_array =[]
+        email='N/A'
+        cookie = str(self.request.headers.get('Cookie'))
+        cookie_array= cookie.split( ';',-1)
+        print('Cookie=',cookie)
+        inner_array=cookie_array[0].split( '=',-1) 
+        client_id=inner_array[1]
+        return client_id    
     
+    def get_session_id(self):
+        cookie_array =[]
+        inner_array =[]
+        email='N/A'
+        cookie = str(self.request.headers.get('Cookie'))
+        cookie_array= cookie.split( ';',-1)
+        visitor = str(self.request.user)
+        session_id ='N/A'
+        if visitor!='AnonymousUser':
+            inner_array=cookie_array[2].split( '=',-1) 
+            session_id=inner_array[1]
+            print('session_id=',session_id)
+ 
+        return session_id    
+    
+    def get_user_agent(self):
+        user_agent = str(self.request.headers.get('User-Agent'))
+        return user_agent    
+        
+   
+    def get_contactus_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) |  Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_contactus_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_help_desk=True) | Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_sales_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_sales=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_sales_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_help_desk=True)| Q(alerts_sales=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_marketing_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_marketing_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_security_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) |  Q(alerts_security=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_security_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) |  Q(alerts_security=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_newuser_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_newuser_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_monitor_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_monitor_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+    
+    def get_security_phone_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_security=True) | Q(alerts_developer=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                phone_list.append(staff.phone)
+        print('phone_list=',phone_list)
+        return phone_list
+    
+    def get_security_email_list(self):
+        #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
+        profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_security=True) | Q(alerts_developer=True)).all()
+        print('profiles=',profiles)
+        phone_list=[]
+        email_list=[]
+        print('profiles[0]=',profiles[0].address)
+        for staff in profiles:
+            if staff.alerts_web_monitor:
+                email_list.append(staff.email)
+        print('phone_list=',phone_list)
+        print('email_list=',email_list)
+        return email_list
+    
+    def get_visitor_ip(self):
+        remote_address = self.request.META.get('HTTP_X_FORWARDED_FOR') or self.request.META.get('REMOTE_ADDR')
+        print("remote_address=",remote_address)
+        ip = remote_address
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        print("x_forwarded_for=",x_forwarded_for)
+        if x_forwarded_for:
+            proxies = x_forwarded_for.split(',')
+            while (len(proxies) > 0 and proxies[0].startswith(PRIVATE_IPS_PREFIX)):
+                proxies.pop(0)
+                if len(proxies) > 0:
+                    ip = proxies[0]
+                    print("IP Address",ip)
+        visitor_ip = ip
+        print('visitor_ip=',visitor_ip)
+        return visitor_ip
+ 
+class Style:
+    BOLD = '\x1b[1m'
+    DIM = '\x1b[2m'
+    NORMAL = '\x1b[22m'
+    ITALIC = '\x1b[2m'
+    UNDERLINE = '\x1b[4m'
+    DBL_UNDERLINE = '\x1b[21m'
+    NO_UNDERLINE = '\x1b[24m'
+    OVERLINE = '\x1b[53m'
+    NOT_OVERLINE = '\x1b[55m'
+    SLOW_BLINK = '\x1b[5m'
+    FAST_BLINK = '\x1b[6m'
+    NO_BLINK = '\x1b[25m'
+    REVERSE= '\x1b[7m'
+    NO_REVERSE = '\x1b[27m'
+    STRIKE = '\x1b[9m'
+    NO_STRIKE = '\x1b[29m'
+    FONT1 = '\x1b[10m'
+    FONT2 = '\x1b[11m'
+    FONT3 = '\x1b[12m'
+    FONT4 = '\x1b[13m'
+    FONT5 = '\x1b[14m'
+    FONT6 = '\x1b[15m'
+    FONT7 = '\x1b[16m'
+    FONT8 = '\x1b[17m'
+    FONT9 = '\x1b[18m'
+    FONT10 = '\x1b[19m'
+    ITALIC_UNDERLINE = '\ x1b[2;4m'
+    END = '\x1b[0m'
+    RED = '\x1b[31m'
+    GREEN = '\x1b[32m'
+    BLUE = '\x1b[34m'
+    YELLOW = '\x1b[33m'
+    MAGENTA = '\x1b[35m'
+    CYAN = '\x1b[36m'
+    BLACK = '\x1b[30m'
+    WHITE = '\x1b[37m'
+    RED_BG = '\x1b[41m'
+    GREEN_BG = '\x1b[42m'
+    BLUE_BG = '\x1b[44m'
+    YELLOW_BG = '\x1b[43m'
+    MAGENTA_BG = '\x1b[45m'
+    CYAN_BG = '\x1b[46m'
+    BLACK_BG = '\x1b[40m'
+    WHITE = '\x1b[37m'
+    INVERSE = '\x1b[37;40m'
+    INVERSE_BOLD= '\x1b[37;40m'
+    BOLD_RED = '\x1b[1;31m'
+    BOLD_GREEN = '\x1b[1;32m'
+    HILITE = '\x1b[43m'
+    BOLD_HILITE = '\x1b[1;43m'
+    
+        

@@ -9,7 +9,7 @@ from django.views import View
 import datetime
 from django.contrib.auth.decorators import login_required
 from atspublic.models import Blog, Category, Visitor
-from ATS.overhead import Comunication,Email
+from ATS.overhead import Comunication, Email, Style, Security
 from django.contrib.auth.models import User
 from users.models import UserProfileInfo
 from django.db.models import Q
@@ -28,48 +28,23 @@ class SignupView(View):
         try:
             print('in Get')
             timestamp = date.today()
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~
-            error_message = 'this is a test'
-            cookie_array =[]
-            inner_array =[]
-            email=-1
-            cookie = str(self.request.headers.get('Cookie'))
-            cookie_array= cookie.split( ';',-1)
-            print('Cookie=',cookie)
-            inner_array=cookie_array[0].split( '=',-1) 
-            client_id=inner_array[1]
+            security = Security(self.request,'signup')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            
+            client_id=security.get_client_id()
             print('client_id=',client_id)
-            visitor_ip = str(self.request.headers.get('visitor_ip'))
-            print('visitor_ip=',visitor_ip)
-            user_agent = str(self.request.headers.get('User-Agent'))
-            print('user_agent=',user_agent)
-            visitor = str(self.request.user)
-            session_id ='N/A'
-            if visitor!='AnonymousUser':
-                inner_array=cookie_array[2].split( '=',-1) 
-                session_id=inner_array[1]
-                print('session_id=',session_id)
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
-            print('profiles=',profiles)
-            email_list=[]
-            phone_list=[]
-            print('profiles[0]=',profiles[0].address)
-            for staff in profiles:
-                if staff.alerts_web_monitor:
-                    email_list.append(staff.email)
-                    phone_list.append(staff.phone)
-            print('email_list=',email_list)
-            print('phone_list=',phone_list)
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            print(self.request.user)        
+            phone_list = security.get_monitor_phone_list()
+            print('phone_lis=',phone_list)
             message = 'ATS ' + visitor +' is Signing up for updates and news letters.\n' + 'Client_Id:  ' + client_id 
             print(message)
             com=Comunication(phone_list,message)
             print('com=',com)
             com.send_sms()
             success = True
+            
         except IOError as e:
             print('error = ',e) 
         return render(self.request,'signup.html',{"error_message": error_message,'email':email})
@@ -85,39 +60,16 @@ class SignupView(View):
             email_list = [email]
             print('email=',email_list)
             error_message = -1
-                                   
-           #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~
-            cookie_array =[]
-            inner_array =[]
-            cookie = str(self.request.headers.get('Cookie'))
-            cookie_array= cookie.split( ';',-1)
-            print('Cookie=',cookie)
-            inner_array=cookie_array[0].split( '=',-1) 
-            client_id=inner_array[1]
-            print('client_id=',client_id)
-            visitor_ip = str(self.request.headers.get('visitor_ip'))
-            print('visitor_ip=',visitor_ip)
-            user_agent = str(self.request.headers.get('User-Agent'))
-            print('user_agent=',user_agent)
-            visitor = str(self.request.user)
-            session_id ='N/A'
-            if visitor!='AnonymousUser':
-                inner_array=cookie_array[2].split( '=',-1) 
-                session_id=inner_array[1]
-                print('session_id=',session_id)
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
-            print('profiles=',profiles)
-            phone_list=[]
-            print('profiles[0]=',profiles[0].address)
-            for staff in profiles:
-                if staff.alerts_web_monitor:
-                    phone_list.append(staff.phone)
-            print('phone_list=',phone_list)
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            
+            security = Security(self.request,'signup')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            client_id=security.get_client_id()
+            user_agent=security.get_user_agent()
+            session_id = security.get_session_id()
+            visitor_ip = security.get_visitor_ip()
+            phone_list = security.get_security_phone_list()
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if Visitor.objects.filter(visitor=username).exists():
                 error_message = 'Username: ' + username + ' already exists please choose another'
@@ -125,17 +77,15 @@ class SignupView(View):
             else:
                 Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
                                     user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
-            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             
-           
-           #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            subject = 'Welcome to Automated Test Solutions'
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            subject = 'Welcome to Automated Test Solutions' 
             email_body = 'Hello ' + username + ' Nice to meet you!\n\nYou are now on the ATS list to recieve our News Letter, price updates, and any new technology advances.\n\nThanks,\nATS Staff\nhttps://automatedtestsolutions.herokuapp.com/.'
             print(email_body)
             email=Email(email_list,subject, email_body)
             print('email=',email)
             email.send_email()
-            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           
             
             success = True
         except IOError as e:
@@ -152,41 +102,22 @@ class SigninView(View):
         try:
             print('in Get')
             timestamp = date.today()
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~
-            error_message = 'this is a test'
-            cookie_array =[]
-            inner_array =[]
-            email=-1
-            cookie = str(self.request.headers.get('Cookie'))
-            cookie_array= cookie.split( ';',-1)
-            print('Cookie=',cookie)
-            inner_array=cookie_array[0].split( '=',-1) 
-            client_id=inner_array[1]
-            print('client_id=',client_id)
-            visitor_ip = str(self.request.headers.get('visitor_ip'))
-            print('visitor_ip=',visitor_ip)
-            user_agent = str(self.request.headers.get('User-Agent'))
-            print('user_agent=',user_agent)
-            visitor = str(self.request.user)
-            session_id ='N/A'
-            if visitor!='AnonymousUser':
-                inner_array=cookie_array[2].split( '=',-1) 
-                session_id=inner_array[1]
-                print('session_id=',session_id)
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
-            print('profiles=',profiles)
-            email_list=[]
-            phone_list=[]
-            print('profiles[0]=',profiles[0].address)
-            for staff in profiles:
-                if staff.alerts_web_monitor:
-                    email_list.append(staff.email)
-                    phone_list.append(staff.phone)
-            print('email_list=',email_list)
-            print('phone_list=',phone_list)
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
+            username = self.request.POST.get('_user_name', -1)
+            print('username=',username)
+            email = self.request.POST.get('_email', -1)
+            email_list = [email]
+            print('email=',email_list)
+            security = Security(self.request,'signin')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            visitor = security.get_visitor()
+            client_id=security.get_client_id()
+            phone_list = security.get_monitor_phone_list()
+            email_list = security.get_monitor_email_list()
+            cookie = security.get_cookie()
+            
             print(self.request.user)        
             message = 'ATS ' + visitor +' is Signing up for updates and news letters.\n' + 'Client_Id:  ' + client_id 
             print(message)
@@ -203,7 +134,32 @@ class SigninView(View):
         inv=-1
         try: 
             print("in POST")
-            success = True
+            timestamp = date.today()
+            print("in POST")
+            username = self.request.POST.get('_user_name', -1)
+            print('username=',username)
+            email = self.request.POST.get('_email', -1)
+            email_list = [email]
+            print('email=',email_list)
+            error_message = -1
+            security = Security(self.request,'signup')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            client_id=security.get_client_id()
+            user_agent=security.get_user_agent()
+            session_id = security.get_session_id()
+            visitor_ip = security.get_visitor_ip()
+            phone_list = security.get_security_phone_list()
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            if Visitor.objects.filter(visitor=username).exists():
+                error_message = 'Username: ' + username + ' does not exist in out database. please signup'
+                return render(self.request,'signup.html',{"error_message": error_message,'email':email})
+            else:
+                Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
+                                    user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
+            
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
@@ -217,6 +173,11 @@ class TestimonialView(View):
         inv=-1
         try:
             print('in Get')
+            security = Security(self.request,'testimonial')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -226,6 +187,11 @@ class TestimonialView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'testimonial')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -241,43 +207,17 @@ class ContactView(View):
         try:
             print('in Get')
             timestamp = date.today()
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~
-            error_message = 'this is a test'
-            cookie_array =[]
-            inner_array =[]
-            email=-1
-            cookie = str(self.request.headers.get('Cookie'))
-            cookie_array= cookie.split( ';',-1)
-            print('Cookie=',cookie)
-            inner_array=cookie_array[0].split( '=',-1) 
-            client_id=inner_array[1]
-            print('client_id=',client_id)
-            visitor_ip = str(self.request.headers.get('visitor_ip'))
-            print('visitor_ip=',visitor_ip)
-            user_agent = str(self.request.headers.get('User-Agent'))
-            print('user_agent=',user_agent)
-            visitor = str(self.request.user)
-            session_id ='N/A'
-            if visitor!='AnonymousUser':
-                inner_array=cookie_array[2].split( '=',-1) 
-                session_id=inner_array[1]
-                print('session_id=',session_id)
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_help_desk=True) | Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
-            print('profiles=',profiles)
-            email_list=[]
-            phone_list=[]
-            print('profiles[0]=',profiles[0].address)
-            for staff in profiles:
-                if staff.alerts_web_monitor:
-                    email_list.append(staff.email)
-                    phone_list.append(staff.phone)
-            print('email_list=',email_list)
-            print('phone_list=',phone_list)
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
+            security = Security(self.request,'contact us')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            client_id=security.get_client_id()
+            visitor_ip = security.get_visitor_ip()
+            phone_list = security.get_monitor_phone_list()
+                                 
             print(self.request.user)        
-            message = 'ATS ' + visitor +' is Signing up for updates and news letters.\n' + 'Client_Id:  ' + client_id 
+            message = 'ATS ' + visitor +' is visiting Sign up for updates and news letters.\n' + 'Client_Id:  ' + client_id 
             print(message)
             com=Comunication(phone_list,message)
             print('com=',com)
@@ -301,43 +241,17 @@ class ContactView(View):
             print('email=',user_email)
             print('message=',message)
             error_message = -1
-                                   
-           #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~
-            cookie_array =[]
-            inner_array =[]
-            cookie = str(self.request.headers.get('Cookie'))
-            cookie_array= cookie.split( ';',-1)
-            print('Cookie=',cookie)
-            inner_array=cookie_array[0].split( '=',-1) 
-            client_id=inner_array[1]
-            print('client_id=',client_id)
-            visitor_ip = str(self.request.headers.get('visitor_ip'))
-            print('visitor_ip=',visitor_ip)
-            user_agent = str(self.request.headers.get('User-Agent'))
-            print('user_agent=',user_agent)
-            visitor = str(self.request.user)
-            session_id ='N/A'
-            if visitor!='AnonymousUser':
-                inner_array=cookie_array[2].split( '=',-1) 
-                session_id=inner_array[1]
-                print('session_id=',session_id)
-            
-                
-            #~~~~~~~~~~~~~~~~~~~~Get visitor information ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
-            profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_help_desk=True) | Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
-            print('profiles=',profiles)
-            phone_list=[]
-            email_list=[]
-            print('profiles[0]=',profiles[0].address)
-            for staff in profiles:
-                if staff.alerts_web_monitor:
-                    email_list.append(staff.email)
-                    phone_list.append(staff.phone)
-            print('email_list=',email_list)
-            print('phone_list=',phone_list)
-            #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list ~~~~~~~~~~~~~~~~~~~~~~~~
+            security = Security(self.request,'contact us')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            client_id=security.get_client_id()
+            user_agent=security.get_user_agent()
+            session_id = security.get_session_id()
+            visitor_ip = security.get_visitor_ip()
+            phone_list = security.get_contactus_phone_list()
+            email_list = security.get_contactus_email_list()
             
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if not Visitor.objects.filter(Q(visitor=username) | Q(session_id=session_id)).exists():
@@ -379,6 +293,23 @@ class NewsView(View):
         inv=-1
         try:
             print('in Get')
+            timestamp = date.today()
+            security = Security(self.request,'News letter')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+            visitor = security.get_visitor()
+            client_id=security.get_client_id()
+            visitor_ip = security.get_visitor_ip()
+            phone_list = security.get_monitor_phone_list()
+                                 
+            print(self.request.user)        
+            message = 'ATS ' + visitor +' is visiting news letters.\n' + 'Client_Id:  ' + client_id 
+            print(message)
+            com=Comunication(phone_list,message)
+            print('com=',com)
+            com.send_sms()
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -388,6 +319,12 @@ class NewsView(View):
         inv=-1
         try: 
             print("in POST")
+            timestamp = date.today()
+            security = Security(self.request,'News letter')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -402,6 +339,11 @@ class BlogView(View):
         inv=-1
         try:
             print('in Get')
+            security = Security(self.request,'blog')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -411,6 +353,11 @@ class BlogView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'blog')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -428,6 +375,11 @@ class CategoryView(View):
             #slug = request.POST.get('slug', -1)
             #category = get_object_or_404(Category, slug=slug)
             category = -1
+            security = Security(self.request,'robot')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             print('in Get')
             success = True
         except IOError as e:
@@ -443,6 +395,11 @@ class PostView(View):
         inv=-1
         try:
             category = -1
+            security = Security(self.request,'blog')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             print('in Get')
             success = True
         except IOError as e:
@@ -468,8 +425,14 @@ class PublicView(View):
     def get(self, *args, **kwargs):
         inv=-1
         try:
-            print('in Get')
+            print('in index Get')
             success = True
+            security = Security(self.request,'ATS')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+           
         except IOError as e:
             print('error = ',e) 
         return render (self.request,"index.html",{"inventory": inv})
@@ -495,6 +458,11 @@ class WorkstationView(View):
         inv=-1
         try:
             print('in Get')
+            security = Security(self.request,'workstation')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -504,6 +472,11 @@ class WorkstationView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'workstation')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -519,6 +492,11 @@ class RobotView(View):
     def get(self, *args, **kwargs):
         inv=-1
         try:
+            security = Security(self.request,'robot')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             video = self.request.GET.get('video', -1)
             print('video=',video)
             print('in Get')
@@ -531,6 +509,11 @@ class RobotView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'robot')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -548,6 +531,11 @@ class FieldView(View):
         try:
             print('in Get')
             video=-1
+            security = Security(self.request,'field')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -557,6 +545,11 @@ class FieldView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'field')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None
@@ -569,10 +562,15 @@ class SoftwareView(View):
     template_name = "software.html"
     success_url = reverse_lazy('atspublic:software')
 	
-    def get(self, *args, **kwargs):
+    def get(self,request, *args, **kwargs):
         inv=-1
         try:
-            print('in Get')
+            print('in Software Get')
+            security = Security(self.request,'Software')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             print('error = ',e) 
@@ -582,6 +580,11 @@ class SoftwareView(View):
         inv=-1
         try: 
             print("in POST")
+            security = Security(self.request,'software')
+            error_message = security.visitor_monitor()
+            visitor = security.get_visitor()
+            if error_message !=-1:
+                return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
             success = True
         except IOError as e:
             inv_list = None

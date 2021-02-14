@@ -13,7 +13,8 @@ app_name = 'users'
 # Be careful setting the name to just /login use userlogin instead!
 urlpatterns=[
     url(r'^register/$',views.register,name='register'),
-    url(r'^user_login/$',views.user_login,name='user_login'),   
+    url(r'^user_login/$',views.user_login,name='user_login'), 
+    url(r'^password_reset/$',views.user_login,name='password_reset'), 
     url(r'^$',views.index,name='base'),
     url(r'^special/',views.special,name='special'),
     url(r'^logout/$', views.user_logout, name='logout'),    
