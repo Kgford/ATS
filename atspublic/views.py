@@ -18,7 +18,17 @@ from django.db.models import Q
    
 # Create your views here.
 def index(request):
-	return render(request,'atspublic/index.html')
+    template_name = "index.html"
+    success_url = reverse_lazy('atspublic:public')
+    timestamp = date.today()
+    security = Security(request,'signup')
+    error_message = security.visitor_monitor()
+    email = security.get_email()
+    visitor = security.get_visitor()
+    if error_message !=-1:
+        return render(request,'blocked.html',{"error_message":error_message,"visitor":visitor})
+
+    return render(request,'atspublic/index.html',{"error_message":error_message,"visitor":visitor})
 
 class SignupView(View):
     template_name = "signup.html"
@@ -30,6 +40,7 @@ class SignupView(View):
             timestamp = date.today()
             security = Security(self.request,'signup')
             error_message = security.visitor_monitor()
+            email = security.get_email()
             visitor = security.get_visitor()
             if error_message !=-1:
                 return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})
@@ -47,7 +58,7 @@ class SignupView(View):
             
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'signup.html',{"error_message": error_message,'email':email})
+        return render(self.request,'signup.html',{"error_message": error_message,'email':email, "visitor": visitor})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -92,7 +103,7 @@ class SignupView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'signup.html',{"error_message": error_message})
+        return render(self.request,'signup.html',{"error_message": error_message, "visitor": visitor})
         
 class SigninView(View):
     template_name = "signin.html"
@@ -153,18 +164,18 @@ class SigninView(View):
             visitor_ip = security.get_visitor_ip()
             phone_list = security.get_security_phone_list()
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            if Visitor.objects.filter(visitor=username).exists():
+            if Visitor.objects.filter(Q(visitor=username) | Q(session_id=session_id) | Q(visitor_ip=visitor_ip) | Q(user_agent=user_agent)).exists():
+                Visitor.objects.filter(Q(visitor=username) | Q(session_id=session_id) | Q(visitor_ip=visitor_ip) | Q(user_agent=user_agent)).update(visitor=username,email=email,session_id=session_id,client_id=client_id,
+                                    user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
+            else:
                 error_message = 'Username: ' + username + ' does not exist in out database. please signup'
                 return render(self.request,'signup.html',{"error_message": error_message,'email':email})
-            else:
-                Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
-                                    user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
             
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'signin.html',{"inventory": inv})
+        return render(self.request,'signin.html',{"visitor": visitor})
 
 class TestimonialView(View):
     template_name = "testimonial.html"
@@ -181,7 +192,7 @@ class TestimonialView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'testimonial.html',{"inventory": inv})
+        return render(self.request,'testimonial.html',{"visitor": visitor})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -197,7 +208,7 @@ class TestimonialView(View):
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'testimonial.html',{"inventory": inv})
+        return render(self.request,'testimonial.html',{"visitor": visitor})
         
 class ContactView(View):
     template_name = "contact_us.html"
@@ -216,16 +227,10 @@ class ContactView(View):
             visitor_ip = security.get_visitor_ip()
             phone_list = security.get_monitor_phone_list()
                                  
-            print(self.request.user)        
-            message = 'ATS ' + visitor +' is visiting Sign up for updates and news letters.\n' + 'Client_Id:  ' + client_id 
-            print(message)
-            com=Comunication(phone_list,message)
-            print('com=',com)
-            com.send_sms()
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'contact_us.html',{"inventory": inv})
+        return render(self.request,'contact_us.html',{"visitor": visitor})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -238,7 +243,7 @@ class ContactView(View):
             email = self.request.POST.get('_email', -1)
             user_email = [email]
             message = self.request.POST.get('_message', -1)
-            print('email=',user_email)
+            print('email123=',user_email)
             print('message=',message)
             error_message = -1
             security = Security(self.request,'contact us')
@@ -252,9 +257,11 @@ class ContactView(View):
             visitor_ip = security.get_visitor_ip()
             phone_list = security.get_contactus_phone_list()
             email_list = security.get_contactus_email_list()
+            print('email_list1234=',email_list)
+            print('phone_list1234=',phone_list)
             
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            if not Visitor.objects.filter(Q(visitor=username) | Q(session_id=session_id)).exists():
+            if not Visitor.objects.filter(Q(visitor=username) | Q(session_id=session_id) | Q(visitor_ip=visitor_ip) | Q(user_agent=user_agent)).exists():
                 Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
                                     user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -279,12 +286,13 @@ class ContactView(View):
             print('com=',com)
             com.send_sms()
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message to staff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
             success = True
         except IOError as e:
             inv_list = None
             print ("Lists load Failure ", e)
 
-        return render(self.request,'contact_us.html',{"inventory": inv})
+        return render(self.request,'contact_us.html',{"visitor": visitor})
 
 class NewsView(View):
     template_name = "newsletter.html"
@@ -313,7 +321,7 @@ class NewsView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'newsletter.html',{"inventory": inv})
+        return render(self.request,'newsletter.html',{"visitor": visitor})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -384,7 +392,7 @@ class CategoryView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render(self.request,'view_category.html', {'category': category,'posts': Blog.objects.filter(category=category)[:5]})
+        return render(self.request,'view_category.html', {'category': category,"visitor": visitor, 'posts': Blog.objects.filter(category=category)[:5]})
  
 
 # Create your views here.
@@ -435,7 +443,7 @@ class PublicView(View):
            
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"index.html",{"inventory": inv})
+        return render (self.request,"index.html",{"visitor": visitor})
     
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -447,7 +455,7 @@ class PublicView(View):
             print ("Lists load Failure ", e)
 
         print('inv_list',inv)
-        return render (self.request,"index.html",{"inventory": inv})
+        return render (self.request,"index.html",{"visitor": visitor})
 
 		   
 class WorkstationView(View):
@@ -466,7 +474,7 @@ class WorkstationView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"racks.html",{"inventory": inv})
+        return render (self.request,"racks.html",{"visitor": visitor})
 		
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -483,7 +491,7 @@ class WorkstationView(View):
             print ("Lists load Failure ", e)
 
         print('inv_list',inv)
-        return render (self.request,"racks.html",{"inventory": inv})
+        return render (self.request,"racks.html",{"visitor": visitor})
         
 class RobotView(View):
     template_name = "robotLab.html"
@@ -503,7 +511,7 @@ class RobotView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"robotLab.html",{"inventory": inv, 'video':video})
+        return render (self.request,"robotLab.html",{"visitor": visitor, 'video':video})
 		
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -520,7 +528,7 @@ class RobotView(View):
             print ("Lists load Failure ", e)
 
         print('inv_list',inv)
-        return render (self.request,"robotLab.html",{"inventory": inv})
+        return render (self.request,"robotLab.html",{"visitor": visitor})
         
 class FieldView(View):
     template_name = "field.html"
@@ -539,7 +547,7 @@ class FieldView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"field.html",{"inventory": inv})
+        return render (self.request,"field.html",{"visitor": visitor})
 		
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -575,7 +583,7 @@ class SoftwareView(View):
             success = True
         except IOError as e:
             print('error = ',e) 
-        return render (self.request,"software.html",{"inventory": inv})
+        return render (self.request,"software.html",{"visitor": visitor})
 		
     def post(self, request, *args, **kwargs):
         inv=-1
@@ -592,4 +600,4 @@ class SoftwareView(View):
             print ("Lists load Failure ", e)
 
         print('inv_list',inv)
-        return render (self.request,"software.html",{"inventory": inv})
+        return render (self.request,"software.html",{"visitor": visitor})

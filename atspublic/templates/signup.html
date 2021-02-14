@@ -63,7 +63,7 @@
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Staff</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown03">
 						{% if user.is_authenticated %}
-							<a class="dropdown-item" href="{% url 'users:logout' %}">Staff Logout/a>
+							<a class="dropdown-item" href="{% url 'users:logout' %}">Staff Logout</a>
 						{% else %}
 							<a class="dropdown-item" href="{% url 'users:user_login' %}">Staff Login</a>
 						{% endif %}

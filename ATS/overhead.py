@@ -344,7 +344,6 @@ class Security:
         profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) |  Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
         print('profiles=',profiles)
         phone_list=[]
-        print('profiles[0]=',profiles[0].address)
         for staff in profiles:
             if staff.alerts_web_monitor:
                 phone_list.append(staff.phone)
@@ -355,14 +354,12 @@ class Security:
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
         profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True) | Q(alerts_help_desk=True) | Q(alerts_security=True) | Q(alerts_sales=True) | Q(alerts_marketing=True)).all()
         print('profiles=',profiles)
-        phone_list=[]
         email_list=[]
-        print('profiles[0]=',profiles[0].address)
         for staff in profiles:
             if staff.alerts_web_monitor:
                 email_list.append(staff.email)
-        print('phone_list=',phone_list)
         print('email_list=',email_list)
+        return email_list
     
     def get_sales_phone_list(self):
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -480,7 +477,6 @@ class Security:
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
         profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_developer=True)).all()
         print('profiles=',profiles)
-        phone_list=[]
         email_list=[]
         print('profiles[0]=',profiles[0].address)
         for staff in profiles:
@@ -505,7 +501,6 @@ class Security:
         #~~~~~~~~~~~~~~~~~~~~Get Web_monitor email/phone list/security ~~~~~~~~~~~~~~~~~~~~~~~~
         profiles = UserProfileInfo.objects.filter(Q(alerts_web_monitor=True) | Q(alerts_security=True) | Q(alerts_developer=True)).all()
         print('profiles=',profiles)
-        phone_list=[]
         email_list=[]
         print('profiles[0]=',profiles[0].address)
         for staff in profiles:

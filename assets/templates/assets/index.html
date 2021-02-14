@@ -78,104 +78,101 @@
 			</div>
 		</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-	<div class="container-fluid">
+		<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-6 col-xl-3 mb-4" >
 				<a ></a></div>
 			</div>
-		
-		<form action = "{% url 'assets:assets' %}" method="post">
-			{% csrf_token %}
-			<div class="d-sm-flex justify-content-between align-items-center mb-4">
-			<select id='_year' name = "_year"  onchange="this.form.submit()">
-				<option selected>{{year}}</option>
-				{% for year in year_list %}
-					<option data-desc = 'year', value = "{{year}}">{{year}}</option>
-				{% endfor %}
-			</select>
-		   <select id='_month' name = "_month" onchange="this.form.submit()">
-				<option selected>{{month}}</option>
-				{% for mon in month_list %}
-					<option data-desc = 'inc_type', value = "{{mon}}">{{mon}}</option>
-				{% endfor %}
-		  </select>
-	   </form>
-		   <a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
-			<div class="row">
-				
-			</div>
+			<form action = "{% url 'assets:assets' %}" method="post">
+				{% csrf_token %}
+				<div class="d-sm-flex justify-content-between align-items-center mb-4">
+				<select id='_year' name = "_year"  onchange="this.form.submit()">
+					<option selected>{{year}}</option>
+					{% for year in year_list %}
+						<option data-desc = 'year', value = "{{year}}">{{year}}</option>
+					{% endfor %}
+				</select>
+			   <select id='_month' name = "_month" onchange="this.form.submit()">
+					<option selected>{{month}}</option>
+					{% for mon in month_list %}
+						<option data-desc = 'inc_type', value = "{{mon}}">{{mon}}</option>
+					{% endfor %}
+			  </select>
+		    </form>
+			<a class="btn btn-primary btn-sm d-none d-sm-inline-block"" role="button" href="{% url 'dashboard:report' %}?year={{year}}&month={{month}}" style="background-color: rgb(32,85,165);"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
+			<div class="row"></div>
 			<h1 class="text-center">Capital Budget Report</h1>
 			<div class="row">
-            <div class="col-md-6 col-xl-3 mb-4" >
-                <div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{building_month}}</span></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow d-xl-flex justify-content-xl-center border-left-success py-2" href="{% url 'assets:building' %}" style="background-color: #02d2a5;line-height: 1;">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">&nbsp;${{building_year}}</span></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow d-xl-flex justify-content-xl-center border-left-warning py-2" href="{% url 'assets:building' %}" style="background-color: #ababab;line-height: 1;">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{month}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_month}}</span></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i>&nbsp;</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4">
-                <div class="card shadow d-xl-flex justify-content-xl-center border-left-warning py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;line-height: 1;">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{year}})</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_year}}</span></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
-	<div class="row">
-		<input type='hidden' id ='_tot_tax_data' name = '_tot_tax_data' value = "{{total_taxed}}"/>
-		<div class="col-lg-4 col-xl-4">
-			<div class="card shadow mb-4">
-				<div class="card-header d-flex justify-content-between align-items-center">
-					<h6 class="text-primary font-weight-bold m-0">Total vs Taxable  ({{year}})</h6>
-					<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-						<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
-							<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
-							<div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a></div>
+				<div class="col-md-6 col-xl-3 mb-4" >
+					<div class="card text-uppercase text-left d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center border-left-primary py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;color: rgb(255,255,255);line-height: 1;">
+						<div class="card-body">
+							<div class="row align-items-center no-gutters">
+								<div class="col mr-2">
+									<div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{month}})</span></div>
+									<div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{building_month}}</span></div>
+								</div>
+								<div class="col-auto"><i class="fas fa-balance-scale-left fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div style="width:100%;">
-					<canvas id="myChart1" width="400" height="400"></canvas>
+				<div class="col-md-6 col-xl-3 mb-4">
+					<div class="card shadow d-xl-flex justify-content-xl-center border-left-success py-2" href="{% url 'assets:building' %}" style="background-color: #02d2a5;line-height: 1;">
+						<div class="card-body">
+							<div class="row align-items-center no-gutters">
+								<div class="col mr-2">
+									<div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Total Building Costs ({{year}})</span></div>
+									<div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;font-size: 20;">&nbsp;${{building_year}}</span></div>
+								</div>
+								<div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xl-3 mb-4">
+					<div class="card shadow d-xl-flex justify-content-xl-center border-left-warning py-2" href="{% url 'assets:building' %}" style="background-color: #ababab;line-height: 1;">
+						<div class="card-body">
+							<div class="row align-items-center no-gutters">
+								<div class="col mr-2">
+									<div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{month}})</span></div>
+									<div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_month}}</span></div>
+								</div>
+								<div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;"></i>&nbsp;</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xl-3 mb-4">
+					<div class="card shadow d-xl-flex justify-content-xl-center border-left-warning py-2" href="{% url 'assets:building' %}" style="background-color: #2055a5;line-height: 1;">
+						<div class="card-body">
+							<div class="row align-items-center no-gutters">
+								<div class="col mr-2">
+									<div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="color: #ffffff;">&nbsp;Business Space Costs  ({{year}})</span></div>
+									<div class="text-dark font-weight-bold h5 mb-0"><span style="color: #ffffff;">&nbsp;${{space_year}}</span></div>
+								</div>
+								<div class="col-auto"><i class="fas fa-coins fa-2x text-gray-300" style="color: #ffffff;">&nbsp;</i></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+			<div class="row">
+				<input type='hidden' id ='_tot_tax_data' name = '_tot_tax_data' value = "{{total_taxed}}"/>
+				<div class="col-lg-4 col-xl-4">
+					<div class="card shadow mb-4">
+						<div class="card-header d-flex justify-content-between align-items-center">
+							<h6 class="text-primary font-weight-bold m-0">Total vs Taxable  ({{year}})</h6>
+							<div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+								<div class="dropdown-menu shadow dropdown-menu-right animated--fade-in">
+									<p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+									<div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a></div>
+								</div>
+							</div>
+						<div style="width:100%;">
+							<canvas id="myChart1" width="400" height="400"></canvas>
+						</div>
+					</div>
+				</div>
 		<input type='hidden' id ='_total_y_data' name = '_total_y_data' value = "{{cost_list_year}}"/>
 		<input type='hidden' id ='_exp_year' name = '_exp_year' value = "{{year}}"/>
 		<div class="col-lg-4 col-xl-4">
