@@ -254,12 +254,12 @@ class Security:
         email = self.get_email()
         print('In visitor_monitor')
         reason = -1
+        error_message =-1
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if Visitor.objects.filter(client_id=client_id).exists():
             isthere = Visitor.objects.filter(client_id=client_id)
             visitor = isthere[0].visitor
             email = isthere[0].email
-            error_message =-1
             reason = isthere[0].blocked_reason
             isblocked = isthere[0].blocked
             print('blocked=',isblocked)
