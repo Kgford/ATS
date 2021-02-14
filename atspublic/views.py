@@ -568,6 +568,7 @@ class SoftwareView(View):
             print('in Software Get')
             security = Security(self.request,'Software')
             error_message = security.visitor_monitor()
+            print('error_message=',error_message)
             visitor = security.get_visitor()
             if error_message !=-1:
                 return render(self.request,'blocked.html',{"error_message":error_message,"visitor":visitor})

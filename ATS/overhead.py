@@ -259,6 +259,7 @@ class Security:
             isthere = Visitor.objects.filter(client_id=client_id)
             visitor = isthere[0].visitor
             email = isthere[0].email
+            error_message =-1
             reason = isthere[0].blocked_reason
             isblocked = isthere[0].blocked
             print('blocked=',isblocked)
@@ -280,7 +281,7 @@ class Security:
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save New visitor info to Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
                                 user_agent=user_agent,visitor_ip=visitor_ip,created_on=timestamp,last_entry=timestamp)
-        return reason
+        return error_message
     
 
     def get_cookie(self):
@@ -531,6 +532,7 @@ class Security:
         print('visitor_ip=',visitor_ip)
         return visitor_ip
  
+
 class Style:
     BOLD = '\x1b[1m'
     DIM = '\x1b[2m'
