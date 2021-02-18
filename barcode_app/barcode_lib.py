@@ -1,5 +1,4 @@
-import cv2
-
+#import cv2
 import barcode #https://pypi.org/project/python-barcode/
 from pyzbar import pyzbar #https://towardsdatascience.com/building-a-barcode-qr-code-reader-using-python-360e22dfb6e5
 from barcode.writer import ImageWriter
@@ -16,7 +15,7 @@ class Barcode:
         print('file_path =',self.file_path)
         print('standard =',self.standard)
         
-    
+    '''
     def read_barcodes(self):
         #1
         camera = cv2.VideoCapture(0)
@@ -53,7 +52,7 @@ class Barcode:
             with open("barcode_result.txt", mode ='w') as file:
                 file.write("Recognized Barcode:" + barcode_info)
         return frame
-    
+    '''
     def create_barcode_svg(self):
         # class and pass the number 
         if self.standard =='code39':
