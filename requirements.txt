@@ -17,4 +17,4 @@ django-allauth
 opencv-python
 pyzbar
 python-barcode
-"python-barcode[images]"
+python-barcode[images]
