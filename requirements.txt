@@ -15,6 +15,6 @@ requests
 django-user-visit==0.4
 django-allauth
 opencv-python
-pyzbar
+pyzbar==0.1.8
 python-barcode
 python-barcode[images]
