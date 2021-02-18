@@ -14,4 +14,7 @@ django-phone-field
 requests
 django-user-visit==0.4
 django-allauth
-
+opencv-python
+pyzbar
+python-barcode
+"python-barcode[images]"

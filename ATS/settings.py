@@ -51,7 +51,7 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'vendor',
     'phone_field',
     'user_visit',
+    'barcode_app',
     'background_task',
     'background_app',
     'whitenoise.runserver_nostatic',
