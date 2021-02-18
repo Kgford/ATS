@@ -1,6 +1,6 @@
 #import cv2
 import barcode #https://pypi.org/project/python-barcode/
-from pyzbar import pyzbar #https://towardsdatascience.com/building-a-barcode-qr-code-reader-using-python-360e22dfb6e5
+#from pyzbar import pyzbar #https://towardsdatascience.com/building-a-barcode-qr-code-reader-using-python-360e22dfb6e5
 from barcode.writer import ImageWriter
 from io import BytesIO
 from django.core.files import File
