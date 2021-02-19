@@ -25,7 +25,13 @@ EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD.replace("'", "")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
+CLOUDINARY_STORAGE = {
+             'CLOUD_NAME': 'automated-test-solutions',
+             'API_KEY': '744644621367363',
+             'API_SECRET': 'zf37AK6AG0E7s98LaZxxRgxS7FI'
+            }
 
+DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 
@@ -51,7 +57,7 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~WhiteNoiseMiddleware~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from barcode_app.models import Barcodes
 from barcode_app.barcode_lib import Barcode
 from base64 import *
+from io import BytesIO
+from django.core.files import File
 
 # Create your views here.
 
@@ -45,11 +47,16 @@ class BarcodeView(View):
             media_save_folder = settings.MEDIA_ROOT + '\\barcodes\\'
             media_folder =settings.MEDIA_URL
             message = -1
-                                    
+            timestamp = date.today()
+            
             part_num = self.request.POST.get('_part_num',-1)
             print('part_num=',part_num)
             description = self.request.POST.get('_desc',-1)
             print('description=',description)
+            if description ==-1:
+                desc = 'N/A'
+            else: 
+                desc = description
             standard = self.request.POST.get('_standard',-1)
             if standard == 'Code 39':
                 standard = 'code39'
@@ -65,7 +72,7 @@ class BarcodeView(View):
                     uploaded_file_url=media_folder + 'barcodes/mustonlycontainnumbers.jpg'
                     return render(self.request,'index.html',{'description':description, 'message':message, 'standard':standard, 'part_num':part_num,"barcode": barcode,"uploaded_file_url":uploaded_file_url})
                 if len(part_num) < 12: 
-                    message = standard + ' needs at least 12 digits'
+                    message = standard + ' needsatleast12digits'
                     uploaded_file_url=media_folder + 'barcodes/needsatleast12digits.jpg'
                     return render(self.request,'index.html',{'description':description, 'message':message, 'standard':standard, 'part_num':part_num,"barcode": barcode,"uploaded_file_url":uploaded_file_url})
             word = 'GTIN'
@@ -91,18 +98,26 @@ class BarcodeView(View):
                     message = standard + ' must start with 978 or 979'
                     uploaded_file_url=media_folder + 'barcodes/muststartwith978or979.jpg'
                     return render(self.request,'index.html',{'description':description, 'message':message, 'standard':standard, 'part_num':part_num,"barcode": barcode,"uploaded_file_url":uploaded_file_url})
-            
+            '''
             b = Barcode(part_num,media_save_folder,standard,'test')
             image = b.create_barcode_jpg()
             print('image',image)
             print('uploaded_file_url',uploaded_file_url)
             
+            rv = b.create_barcode_byte()
+            print('byte=',File(rv))
+            '''
             save = self.request.POST.get('_save',-1)
             print('save',save)
             if save !=-1:
                 print('in save')
-                uploaded_file_url=media_folder + 'barcodes/' + part_num +'.jpg'
-                print('uploaded_file_url',uploaded_file_url)
+                bc = Barcodes.objects.create(part_number=part_num, standard=standard)
+                bc = Barcodes.objects.latest('id')
+                print('bc',bc)
+                bc.save()
+                barcode = Barcodes.objects.latest('id')
+                
+                
             
             update = self.request.POST.get('_update',-1)
             print('update',update)   

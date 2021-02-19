@@ -112,7 +112,7 @@ class Barcode:
              my_code = CODE39(str(self.part_num), writer=ImageWriter()).write(rv)
         elif self.standard =='code128':
              CODE128 = barcode.get_barcode_class('code128')
-             my_code = COD128(str(self.part_num), writer=ImageWriter()).write(rv)
+             my_code = CODE128(str(self.part_num), writer=ImageWriter()).write(rv)
         elif self.standard =='ean':
              EAN = barcode.get_barcode_class('ean')    
              my_code = EAN(str(self.part_num), writer=ImageWriter()).write(rv)
