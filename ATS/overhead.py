@@ -315,7 +315,9 @@ class Security:
         cookie_array= cookie.split( ';',-1)
         print('Cookie=',cookie)
         inner_array=cookie_array[0].split( '=',-1) 
-        if inner_array.size >=1:
+        print('inner_array=',inner_array)
+        print('len(inner_array=',len(inner_array))
+        if len(inner_array) >=2:
             client_id=inner_array[1]
         else:
             client_id='Unknown'
@@ -332,7 +334,7 @@ class Security:
         session_id ='N/A'
         if visitor!='AnonymousUser':
             inner_array=cookie_array[2].split( '=',-1) 
-            if inner_array.size >=1:
+            if len(inner_array) >=2:
                 session_id=inner_array[1]
             else:
                 session_id='Unknown'
