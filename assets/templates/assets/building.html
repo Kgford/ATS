@@ -230,7 +230,7 @@
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
 						<label for="_space">Fuel</label>
-						{% if build_space == -1 %}
+						{% if sx == -1 %}
 							<input id = "_fuel_cost" name = "_fuel_cost" input class="form-control" placeholder="Fuel costs"  required >
 						{% else %}
 							<input id = "_fuel_cost" name = "_fuel_cost" input class="form-control" value = "{{build_space.fuel_cost}}"  required >
@@ -253,15 +253,18 @@
 			<div class="row">	
 				<div class="col-sm-3 col-lg-4 grid-col">
 					<div class="form-group">
-					    <label for="_upload"> Select an Equipment Image</label> 
-						<input type="file" name="uploaded_file" id="uploaded_file"> 
+					    {{ form.as_p }}
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-2 col-lg-3 grid-col">
 					<div class="thumbnail">
-					    <img src="{{ uploaded_file_url }}" class="img-responsive" alt="Cinque Terre">
+						{% if build_space != -1 %}
+							<img src="{{ build_space.image.url}}"  alt="{{file_name}} photo error" class="img-responsive">
+					   {% else %}
+							<img src="{% static 'assets/images/building_space.png' %}" class="img-responsive" >
+					   {% endif %}
 					</div>	
 				</div>
 			</div>
@@ -326,6 +329,19 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
 <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
+<script>
+	$(document).ready(function() {
+		var name = $('#_type').val();
+		$('#id_type').val(name);
+	});
+	
+	$(document).ready(function() {
+		// Get value on button click and show alert
+		$("#_type").on('change', function(){
+			$("#id_type").val($(this).val());
+			});
+	});
+</script>
 </body>
 {% endblock %}
 

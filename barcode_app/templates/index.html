@@ -81,15 +81,15 @@
 		</nav>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-		    {% if barcode %}
+		    {% if bc != -1 %}
 				<h1 class="h2">Update Barcode</h1>
 			{% else %}
 				<h1 class="h2">Create New Barcode</h1>
 			{% endif %}
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<div class="btn-group mr-2">
-					{% if barcode %}
-						<label> Last Update: {{barcode.last_update}}</label>
+					{% if bc != -1 %}
+						<label> Last Update: {{bc.last_update}}</label>
 					{% else %}
 						<label> Create Date: {{today}}  By: {{request.user}}</label>
 					{% endif %}
@@ -99,12 +99,14 @@
 		<div align="center">
 			<form align="center" action="{% url 'barcode_app:barcode' %}"  method="post">
 			  {% csrf_token %}
-			  <input type='hidden' id = 'inventory_id' value = {{barcode.id}} name='inventory_id' data-select='inventory_id'/>
+			  <input type='hidden' id = 'inventory_id' value = {{bc.id}} name='inventory_id' data-select='inventory_id'/>
 				<div class="row">
 					<div class="col-sm-1 col-lg-2 grid-col">
 						<div class="form-group">
 							<label for="_part_num">Skew (Inventory ID)</label>
-							{% if part_num != -1 %}
+							{% if bc != -1 %}
+								<input value = "{{bc.part_number}}" id = "_part_num" name = "_part_num" input class="form-control" placeholder="Enter Inventory ID" required>
+							{% elif part_num != -1%}
 								<input value = "{{part_num}}" id = "_part_num" name = "_part_num" input class="form-control" placeholder="Enter Inventory ID" required>
 							{% else %}
 								<input id = "_part_num" name = "_part_num" input class="form-control" placeholder="Enter Inventory ID" required>
@@ -114,11 +116,13 @@
 					</div>
 					<div class="form-group">
 						  <label>Barcode Type <span class="k-required"></span></label>
-						  <select id='_standard' name = "_standard" value = "{{standard}}" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
-							   {% if standard == -1 %}
-										 <option selected>Code 39</option>
+						  <select id='_standard' name = "_standard" value = "{{bc}}" class="browser-default custom-select custom-select-lg mb-3" onchange="this.form.submit()">
+							   {% if bc != -1%}
+									<option selected>{{bc.standard}}</option>
+							   {% elif standard != -1%}
+									<option selected>{{standard}}</option>
 							   {% else %}
-										 <option selected>{{standard}}</option>
+									<option selected>Code 39</option>
 							   {% endif %}
 							   <option data-desc = 'type', value = "code39">Code 39</option>
 							   <option data-desc = 'type', value = "code128">Code 128</option>
@@ -143,7 +147,7 @@
 					<div class="col-sm-1 col-lg-1 grid-col">
 						<div class="form-group">
 						<label for="_part_num">Barcode</label>
-							{% if barcode %}
+							{% if bc != -1 %}
 							    <button id = "_update" name = "_update"  data-search="update"  class="btn btn-info">Update</button>
 							 {% else %}
 								<button id = "_save" name = "_save"  data-search="save"  class="btn btn-success">Save</button>
@@ -160,22 +164,9 @@
 				<div class="row">	
 					<div class="col-sm-1 col-lg-3 grid-col">
 						<div class="form-group">
-							<label for="_desc">Description</label>
-							{% if description != -1 %}
-								<input value = "{{description}}" id = "_desc" name = "_desc" input class="form-control" placeholder="Enter skew description">
-							{% else %}
-								<input id = "_desc" name = "_desc" input class="form-control" placeholder="Enter skew description">
-							{% endif %}
-							
-						</div>
-					</div>
-				</div>
-				<div class="row">	
-					<div class="col-sm-1 col-lg-3 grid-col">
-						<div class="form-group">
 							</div>
 							{% if message != -1 %}
-								<h3>{{ message }}</h3>
+								<h3>{{ message}}</h3>
 							{% endif %}
 							</div>
 						</div>
@@ -185,15 +176,22 @@
 					<div class="col-sm-2 col-lg-3 grid-col">
 						<div class="thumbnail">
 						  <a href="">
-							<img src="{{ uploaded_file_url }}" class="img-responsive" >
-						</a>
+							  {% if bc != -1 %}
+									<img src="https://res.cloudinary.com/automated-test-solutions/image/upload/v1613832767/media/barcodes/{{image}}.png" class="img-responsive">
+							  {% elif staticfile == 'barcode1' %}
+									<img src="{% static 'barcode_app/images/mustonlycontainnumbers.jpg' %}" class="img-responsive" >
+							  {% elif staticfile == 'barcode2' %}
+									<img src="{% static 'barcode_app/images/needsatleast12digits.jpg' %}" class="img-responsive" >
+							  {% elif staticfile == 'barcode3' %}
+									<img src="{% static 'barcode_app/images/muststartwith978or979.jpg' %}" class="img-responsive" >
+							  {% else %}
+									<img src="{% static 'barcode_app/images/thisisasample.jpg' %}" class="img-responsive" >
+							  {% endif %}
+						  </a>
 						</div>
 					</div>
 				</div>
 				<hr class="my-1">
-				
-				
-				
 			</div>
 			</form>
 		</div>	

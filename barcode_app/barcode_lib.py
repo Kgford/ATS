@@ -113,6 +113,7 @@ class Barcode:
         elif self.standard =='code128':
              CODE128 = barcode.get_barcode_class('code128')
              my_code = CODE128(str(self.part_num), writer=ImageWriter()).write(rv)
+             print('COD128=',rv.getvalue())
         elif self.standard =='ean':
              EAN = barcode.get_barcode_class('ean')    
              my_code = EAN(str(self.part_num), writer=ImageWriter()).write(rv)
@@ -160,20 +161,12 @@ class Barcode:
         my_code.save("new_code")
     
     def create_barcode_jpg(self):
-        # pass the number with the ImageWriter() as the  
-        # writer 
-        COD128 = barcode.get_barcode_class('code128')
-        # my_code = COD128(str(self.part_num), writer=ImageWriter()) 
-        with open(self.file_path + str(self.part_num) + '.jpg', 'wb') as f:
-            COD128(str(self.part_num), writer=ImageWriter()).write(f)  
-        # Our barcode is ready. Let's save it. 
-        # my_code.save(str(self.part_num) + '.jpg') 
         if self.standard =='code39':
-             CODE39 = barcode.get_barcode_class('code39')
+             COD39 = barcode.get_barcode_class('code39')
              with open(self.file_path + str(self.part_num) + '.jpg', 'wb') as f:
-                CODE39(str(self.part_num), writer=ImageWriter()).write(f)  
+                CODE9(str(self.part_num), writer=ImageWriter()).write(f)  
         elif self.standard =='code128':
-             CODE128 = barcode.get_barcode_class('code128')
+             COD128 = barcode.get_barcode_class('code128')
              print('in 128')
              with open(self.file_path + str(self.part_num) + '.jpg', 'wb') as f:
                 COD128(str(self.part_num), writer=ImageWriter()).write(f)

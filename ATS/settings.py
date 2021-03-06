@@ -1,6 +1,6 @@
- 
 import os
 import django_heroku
+import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -28,12 +28,11 @@ DEFAULT_FROM_EMAIL = 'default from email'
 CLOUDINARY_STORAGE = {
              'CLOUD_NAME': 'automated-test-solutions',
              'API_KEY': '744644621367363',
-             'API_SECRET': 'zf37AK6AG0E7s98LaZxxRgxS7FI'
+             'API_SECRET': os.environ.get('API_SECRET')
             }
 
 DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
+CLOUDINARY_URL='cloudinary://744644621367363:' + os.environ.get('API_SECRET') + '@automated-test-solutions'
 
 #~~~~~~~~~~~~~~~~~~~~~~~~STATICFILES_STORAGE~~Django~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #STATIC_DIR = os.path.join(BASE_DIR,'static')
@@ -92,6 +91,7 @@ INSTALLED_APPS = [
     'background_task',
     'background_app',
     'whitenoise.runserver_nostatic',
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

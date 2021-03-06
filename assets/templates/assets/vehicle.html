@@ -1,9 +1,10 @@
-{% extends "equipment/layout.html" %}
+{% extends "assets/layout.html" %}
 {% load static %}
 
 {% block title %}
     {{ index_type }}
 {% endblock %}
+
 
 {% block body %}
 <body>
@@ -92,7 +93,6 @@
 		</div>
 		<form action = "{% url 'assets:vehicle' %}"  method="post" enctype="multipart/form-data">
 			{% csrf_token %}
-			{{ form.as_p }} 
 			<input type='hidden' id = 'veh_id' name='veh_id' value = "{{veh.id}}"/>
 			<input type='hidden' id = 'vehicle' name='vehicle' value = "{{veh.name}}"/>
 			<div class="row">
@@ -214,7 +214,7 @@
 					<div class="form-group">
 						<!-- year-->
 						<label>Year<span class="k-required"></span></label>
-						<input type='hidden' name='_year' data-select='cust'/>
+						<input type='hidden' name='year' data-select='cust'/>
 						<select id='_year' name ='_year' class="browser-default custom-select custom-select-lg mb-3" required>
 							{% if client == -1%}
 								<option data-desc = 'year', value = "select menu">select</option>
@@ -329,16 +329,19 @@
 			<div class="row">	
 				<div class="col-sm-3 col-lg-4 grid-col">
 					<div class="form-group">
-					    <label for="_upload"> Select an Equipment Image</label> 
-						<input type="file" name="uploaded_file" id="uploaded_file"> 
+					    {{ form.as_p }}
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-2 col-lg-3 grid-col">
 					<div class="thumbnail">
-					    <img src="{{ uploaded_file_url }}" class="img-responsive" alt="Cinque Terre">
-						</div>	
+					   {% if veh != -1 %}
+							<img src="{{ veh.image.url}}"  alt="{{file_name}} photo error" class="img-responsive">
+					   {% else %}
+							<img src="{% static 'assets/images/vehicle.png' %}" class="img-responsive" >
+					   {% endif %}
+					</div>	
 				</div>
 			</div>
 		<div class="row">
@@ -362,7 +365,7 @@
 				{% endif %}
 			</div>
 		</form>
-		{% if uploaded_file_url %}
+		{% if veh.image %}
 			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{uploaded_file_url}}</a></p>
 		{% endif %}
 		<h2 class="text-center">Vehicle List</h2>
@@ -398,6 +401,20 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script> 
 <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function() {
+		var name = $('#_name').val();
+		$('#id_name').val(name);
+	});
+	
+	$(document).ready(function() {
+		// Get value on button click and show alert
+		$("#_name").on('change', function(){
+			$("#id_name").val($(this).val());
+			});
+	});
+</script>
 </body>
 {% endblock %}
 
