@@ -3,12 +3,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.http import JsonResponse
 from django.core import serializers
-from .forms import EquipmentForm, ModelsForm
+from .forms import ModelsForm
 from datetime import date
 from django.urls import reverse,  reverse_lazy
 from django.urls import reverse
 from django.views import View
 from equipment.models import Model
+from vendor.models import Vendor
 from datetime import date, datetime
 from django.conf.urls import url
 from django.conf import settings
@@ -51,23 +52,26 @@ class UserLogin(View):
             return render(request, 'equipment/user_login.html', {})
 
 class EquipmentView(View):
-    form_class = EquipmentForm
+    form_class = ModelsForm
     template_name = "index.html"
     success_url = reverse_lazy('equipment:equipment')
     contSuccess = 0
     
     def get(self, *args, **kwargs):
         form = self.form_class()
+        
         try:
             models = Model.objects.all()
+            vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"equipment/index.html",{"form": form, "models": models, "index_type":"EQUIPMENT"})
+        return render (self.request,"equipment/index.html",{"form": form, "models": models, 'vendor_list':vendor_list, "index_type":"EQUIPMENT"})
 	   	
     def post(self, request, *args, **kwargs):
         form = self.form_class()
         search = request.POST.get('search', -1)
+        vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
         print('search =',search)
         success = True
         if not search ==-1:
@@ -76,102 +80,99 @@ class EquipmentView(View):
                 models = Model.objects.all()
         else:
             models = Model.objects.all()
-        return render (self.request,"equipment/index.html",{"form": form, "models": models, "index_type":"EQUIPMENT"})
+
+        return render (self.request,"equipment/index.html",{"form": form, "models": models, 'vendor_list':vendor_list, "index_type":"EQUIPMENT"})
 
 class ModelView(View):
     form_class = ModelsForm
     template_name = "model.html"
-    success_url = reverse_lazy('equipment:model')
+    success_url = reverse_lazy('equipment:newmodel')
    
-    slug = None
-    def get_object(self, queryset=None):
-        self.slug = self.kwargs.get('slug', None)
-        print('slug = ',self.slug)
-        mod= []
-        models= []
-        
     def get(self, *args, **kwargs):
         form = self.form_class()
         try:
+            model_id = self.request.GET.get('model_id', -1)
+            print('model_id=',model_id)
+            mod=-1
+            form=-1
+            uploaded_file_url=-1
+            if model_id !=-1:
+                mod = Model.objects.filter(id=model_id).all()
+                mod = mod[0]
+                uploaded_file_url=mod.image
+                print('uploaded_file_url=',uploaded_file_url)
+               
             models = Model.objects.all()
-            mod = Model.objects.filter(id=self.slug).all()
+            vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
+            
             print(models)
             print(mod)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        return render (self.request,"equipment/index.html",{"form": form, "models": models, "model": mod,  "index_type":"EQUIPMENT"})
+        return render (self.request,"equipment/model.html",{"form": form, "models": models, "mod": mod, 'vendor_list':vendor_list, 'uploaded_file_url':uploaded_file_url,  "index_type":"EQUIPMENT"})
         
     def post(self, *args, **kwargs):
         timestamp = date.today()
-        band = request.POST.POST('_band',-1)
-        category = request.POST.get('_category',-1)
-        description = request.POST.get('_desc',-1)
-        model = request.POSTget('_model',-1)
-        vendor= request.POST.get('_vendor',-1)
+        band = self.request.POST.get('_band',-1)
+        category = self.request.POST.get('_category',-1)
+        description = self.request.POST.get('_desc',-1)
+        model = self.request.POST.get('_model',-1)
+        vendor= self.request.POST.get('_vendor',-1)
         active = True
-        image_file = request.POST.get('fileupload',-1)
-        comments = request.POST.get('_comments',-1)
-        model_id = request.POST.get('m_id',-1)
-        save = request.POST.get('_save',-1)
-        update = request.POST.get('_update',-1)
-        delete = request.POST.get('_delete',-1)
+        image = self.request.POST.get('fileupload',-1)
+        print('image=',image)
+        comments = self.request.POST.get('_comments',-1)
+        model_id = self.request.POST.get('m_id',-1)
+        save = self.request.POST.get('_save',-1)
+        print('save=',save)
+        update = self.request.POST.get('_update',-1)
+        print('update=',update)
+        delete = self.request.POST.get('_delete',-1)
+        print('delete=',delete)
+        models = Model.objects.all()
+        vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
+        mod=-1
+        form=-1
         
-        if not save==None:	
+        if not save==-1:	
             try:		
                 Model.objects.create(description=description, category=category, band=band, vendor=vendor, model=model, 
-                        comments=comments, image_file=image_file, status=active, last_update=timestamp)
+                        comments=comments, status=active, last_update=timestamp)
+                        
+                m=Model.objects.filter(description=description,band=band, vendor=vendor, model=model)
+                form = ModelsForm(self.request.POST, self.request.FILES, instance = m[0], use_required_attribute=False)
+                print('form',form)       
+                if form.is_valid():
+                    print('form is valid')
+                    form.save()
+                mod = Model.objects.filter(description=description,band=band, vendor=vendor, model=model).all()
             except IOError as e:
                 success = False
                 print ("Models Save Failure ", e)
-        elif not update==None: 
+        elif not update==-1: 
             try:
                 #update existing event
-                Model.objects.filter(id=model_id).update({'description': description,'category':category,'band=':band,
-                    'model':model,'comment':comment,'locationname':locationname,'image_file':image_file,'vendor':vendor,'active':active,'last_update':last_update})
+                Model.objects.filter(id=model_id).update(description=description, category=category, band=band, vendor=vendor, model=model, 
+                        comments=comments, status=active, last_update=timestamp)
+                m=Model.objects.filter(description=description, band=band, vendor=vendor, model=model)
+                form = ModelsForm(self.request.POST, self.request.FILES, instance = m[0], use_required_attribute=False)
+                print('form',form)       
+                if form.is_valid():
+                    print('form is valid')
+                    form.save()
+                mod = Model.objects.filter(description=description,band=band, vendor=vendor, model=model).all()
             except IOError as e:
                 print ("Models Update Failure ", e)	
-        elif not delete==None: 
+        elif not delete==-1: 
             try:
                 Model.objects.filter(id=model_id).delete()
             except IOError as e:
                 print ("Models Delete Failure ", e)		
-        return render (self.request,"equipment/index.html",{"form": form, "models": models, "index_type":"EQUIPMENT"})
+        return render (self.request,"equipment/model.html",{"form": form, "models": models, 'vendor_list':vendor_list,  "mod": mod, "index_type":"EQUIPMENT"})
 
-def loadmodel(request, model_id):
-        models = []
-        mod = []
-        print('we are here')
-        # cast the request inventory_id from string to integer type.
-        model_id = int(model_id)
-        success = True 
-        try:	
-            models=Model.objects.all()
-            mod=Model.objects.filter(id=model_id)
-            mod=mod[0]
-            print('mod.image_file',mod.image_file)
-            uploaded_file_url=mod.photo
-            if uploaded_file_url==None or uploaded_file_url =="":
-                uploaded_file_url = '/tcli/media/inv1.jpg'
-            print('uploaded_file_url =',uploaded_file_url)
-        except IOError as e:
-            print ("load model Failure ", e)
-            print('error = ',e) 
-        return render(request,"equipment/model.html",{"models": models, "mod": mod, "uploaded_file_url":uploaded_file_url,  "index_type":"Model"})
-        
-def newmodel(request):
-        models = []
-        success = True 
-        try:	
-            mod = -1
-            models=Model.objects.all()
-            image_file = 'inv1.jpg'
-            uploaded_file_url = '/ATS/media/inv1.jpg'
-                       
-        except IOError as e:
-            print ("load model Failure ", e)
-            print('error = ',e) 
-        return render(request,"equipment/model.html",{"models": models, "mod": mod, "uploaded_file_url":uploaded_file_url, "image_file":image_file,  "index_type":"Model"})
+       
+
 
 @login_required
 def showimage(request):
@@ -201,31 +202,6 @@ def showimage(request):
         #print('imagefile =',imagefile)
     return render(request, 'equipment/images.html', {'form' : form}) 
    
-def loadEquipment():
-    import csv
-    contSuccess = 0
-    CSV_PATH = 'models.csv'
-    print('csv = ',CSV_PATH)
-    
-    # Remove all data from Table
-    Model.objects.all().delete()
-
-    f = open(CSV_PATH)
-    reader = csv.reader(f)
-    print('reader = ',reader)
-    for description, category, band, vendor, model, comments, image_file, status, last_update in reader:
-        print(description)
-        print (band)
-        print(vendor)
-        print(model)
-        print(comments)
-        print(image_file)
-        print(status)
-        print(last_update)
-        Model.objects.create(description=description, category=category, band=band, vendor=vendor, model=model, comments=comments, image_file=image_file, status=status, last_update=datetime.datetime.strptime(last_update, '%m/%d/%Y'))
-        contSuccess += 1
-    print(f'{str(contSuccess)} inserted successfully! ')
- 
 
 @login_required
 def savemodel(request):

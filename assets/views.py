@@ -1771,7 +1771,7 @@ class VehicleView(View):
                     if form.is_valid():
                         print('form is valid')
                         form.save()
-                        veh =Vehical.objects.filter(id=veh.id)
+                        veh =Vehical.objects.filter(id=veh[0].id)
             except IOError as e:
                 success = False
                 print ("Models Save Failure ", e)
@@ -1836,7 +1836,6 @@ class BuildingView(View):
                 space_id = self.request.GET.get('space_id', -1)
                 print('space_id = ',space_id)
                 buildings_list=Location.objects.order_by('name').values_list('name', flat=True).distinct()
-                build_space = Business_Space.objects.all()
                 space_type = self.request.GET.get('space_type', -1)
                 spaces = Business_Space.objects.all()
                 print('space_type=',space_type)
@@ -1874,6 +1873,8 @@ class BuildingView(View):
         print('building=',building)
         space_id = int(self.request.POST.get('_space_id', -1))
         print('space_id=',space_id)
+        space = self.request.POST.get('_space', -1)
+        print('space=',space)
         space_type = self.request.POST.get('_type',-1)
         print('space_type=',space_type)
         spaces = []
@@ -1921,43 +1922,14 @@ class BuildingView(View):
         print('space_id=',space_id)
         
         uploaded_file_url=-1
-        
-        if space_id != -1:
-            spa = Business_Space.objects.filter(id=space_id).all()
-            print('spa=',spa)
-            spa=spa[0]
-            print('spa=',spa)
-            print('spa.image_file',spa.image)
-            if image_file==-1:
-            
-                uploaded_file_url=spa.image
-                image_file = spa.image
-            else:
-                image_file_content = self.request.FILES['uploaded_file'].read()
-                print('image_file_content',image_file_content)
-                image_file_name = self.request.FILES.get('uploaded_file')
-                print('image_file_content',image_file_content)
-                image_file=image_file_name
-                print('image_file',image_file)
-        elif image_file==-1:
-            uploaded_file_url=image_file
-        else:
-            image_file_content = self.request.FILES['uploaded_file'].read()
-            print('image_file_content',image_file_content)
-            image_file_name = self.request.FILES.get('uploaded_file')
-            print('image_file_content',image_file_content)
-            image_file=image_file_name
-            print('image_file',image_file)
-       
-        media_folder = settings.MEDIA_URL
-        uploaded_file_url=media_folder + str(image_file)
         buildings_list=Location.objects.order_by('name').values_list('name', flat=True).distinct()
         spaces = Business_Space.objects.all()
         form = Business_SpaceForm(self.request.POST, self.request.FILES)
         if save!=-1:	
             try:		
-                if Business_Space.objects.filter(building=building,type=build_space).exists():
+                if Business_Space.objects.filter(building=building,type=space_type).exists():
                     duplicate=1
+                    build_space = Business_Space.objects.filter(building=building,type=space_type)
                     return render(self.request,"assets/building.html",{'main_building':main_building, 'space_id':space_id, 'spaces':spaces, "buildings_list": buildings_list, "build_space": build_space, "uploaded_file_url":uploaded_file_url,  "index_type":"building", 
                                                             'space_percentage':space_percentage,'power_percentage':power_percentage, 'internet_percentage':internet_percentage, 'insurance_percentage':insurance_percentage, 'fuel_percentage':fuel_percentage,'duplicate':duplicate,
                                                             'space_type':space_type, 'building':building, 'sqr_feet':sqr_feet, 'payment_cost':payment_cost, 'power_cost':power_cost, 'internet_cost':internet_cost, 'fuel_cost':fuel_cost, 'maintenance_cost':maintenance_cost })
@@ -1965,15 +1937,15 @@ class BuildingView(View):
                     Business_Space.objects.create(building=building, type=space_type, space_percentage=space_percentage, power_percentage=power_percentage, internet_percentage=internet_percentage, 
                                                     sqr_feet=sqr_feet,payment_cost=payment_cost,power_cost=power_cost,internet_cost=internet_cost,fuel_cost=fuel_cost,maintenance_cost=maintenance_cost,
                                                     insurance_percentage=insurance_percentage, fuel_percentage=fuel_percentage, last_update=timestamp)
-                    b=Business_Space.objects.get(building=building,type=build_space)
-                    Location.objects.filter(name=building).update(Business_Space=b)
+                    b=Business_Space.objects.filter(building=building,type=space_type)
+                    Location.objects.filter(name=building).update(Business_Space=b[0])
                     form = Business_SpaceForm(self.request.POST, self.request.FILES, instance = b[0], use_required_attribute=False)
                     print('form',form)       
                     if form.is_valid():
                         print('form is valid')
                         form.save()
-                        spaces=Business_Space.objects.get(building=building,type=space_type)
-                        
+                    build_space=Business_Space.objects.filter(building=building,type=space_type)
+                    uploaded_file_url=str(build_space[0].image)    
             except IOError as e:
                 success = False
                 print ("Models Save Failure ", e)
@@ -1991,12 +1963,18 @@ class BuildingView(View):
                 b=Business_Space.objects.filter(building=building,type=space_type)
                 Location.objects.filter(name=building).update(Business_Space=b[0])
                 form = Business_SpaceForm(self.request.POST, self.request.FILES, instance = b[0], use_required_attribute=False)
-                print('form',form)       
+                      
                 if form.is_valid():
                     print('form is valid')
                     form.save()
-                    build_space=Business_Space.objects.filter(building=building,type=build_space)
+                else:
+                    print('form is invalid')
                 print('updated location')
+                print('building',building) 
+                print('space_type',space_type) 
+                build_space=Business_Space.objects.get(building=building,type=space_type)
+                print('build_space',build_space) 
+                uploaded_file_url=str(build_space.image)
             except IOError as e:
                 print ("Models Update Failure ", e)	
         elif delete!=-1: 

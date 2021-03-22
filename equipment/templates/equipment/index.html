@@ -33,6 +33,10 @@
 					<span data-feather="dollar-sign"></span>
 					<a class="nav-link" href="{% url 'equipment:newmodel' %}">New Equipment&nbsp;&nbsp;</a>
 				</li>
+				<li class="nav-item">
+					<span data-feather="dollar-sign"></span>
+					<a class="nav-link" href="{% url 'barcode_app:barcode' %}">Barcodes&nbsp;&nbsp;</a>
+				</li>
 				<li class="nav-item ">
 					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'locations:location' %}" aria-disabled="true">Locations&nbsp;&nbsp;&nbsp;</a>
@@ -62,6 +66,7 @@
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:invoice_item' %}"><i class="fa fa-balance-scale"></i><span>&nbsp;&nbsp;&nbsp;Invoicing</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:quote_item' %}"><i class="fa fa-address-book"></i><span>&nbsp;&nbsp;&nbsp;Quotes</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:income' %}"><i class="fa fa-credit-card"></i><span>&nbsp;&nbsp;&nbsp;Income</span></a></li>
+					<li class="nav-item active"><a class="nav-link" href="{% url 'assets:assets' %}"><i class="fas fa-truck"></i><span>&nbsp;&nbsp;&nbsp;Capital Budget</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="{% url 'accounts:expenses' %}"><i class="fas fa-book-open"></i><span style="font-family: Nunito, sans-serif;"&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;Expenses</span></a>
 					<li class="nav-item"><a class="nav-link" href="{% url 'inventory:inven' %}"><i class="fa fa-barcode"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Inventory</span></a></li>
 					<li class="nav-item active"><a class="nav-link" href="{% url 'equipment:equipment' %}"><i class="fa fa-cogs"></i><span style="font-family: Nunito, sans-serif;">&nbsp;&nbsp;&nbsp;Equipment</span></a></li>
@@ -95,13 +100,13 @@
 				<tbody>
 					{% for model in models %}
 						<tr>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.id}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.description}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.category}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.band}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.model}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id %}">{{model.vendor}}</td>
-							<td><a class="nav-link" href="{% url 'equipment:model' model_id=model.id">{{model.status}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.id}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.description}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.category}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.band}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.model}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.vendor}}</td>
+							<td><a class="nav-link" href="{% url 'equipment:newmodel' %}?model_id={{model.id}}">{{model.status}}</td>
 						</tr>
 				{% endfor %}
 				</tbody>

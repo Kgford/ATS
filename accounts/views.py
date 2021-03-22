@@ -263,6 +263,7 @@ class SaveExpensesView(View):
             if exp_id !=-1:
                 exp = Expenses.objects.filter(id=exp_id)
                 exp = exp[0]
+                print('date=',exp.sale_date)
                 expense_desc = exp.expense_description
                 expense_type = exp.expense_type
                 vehicle = exp.item
@@ -311,10 +312,11 @@ class SaveExpensesView(View):
             item_type =-1
             image_file =-1
             vendor_id =-1
+            exp_id =-1
             vehicle_list = []
             timestamp = date.today()
             operator = str(self.request.user)
-            exp_id = request.POST.get('e_id', -1)
+            #exp_id = request.POST.get('e_id',-1)
             year = datetime.date.today().year
             print('exp_id =',exp_id)
             expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
@@ -322,9 +324,13 @@ class SaveExpensesView(View):
             vendor_list = Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
             vehicle_list = Vehical.objects.order_by('name').values_list('name', flat=True).distinct()
             buildings_list = Location.objects.order_by('name').values_list('name', flat=True).distinct()
-            if exp_id !=-1 and exp_id != '':
+            '''
+            if exp_id !=-1 :
                 exp = Expenses.objects.filter(id=exp_id).all()
-            
+                print('exp=',exp)
+                exp = exp[0]
+                print('date=',exp.sale_date)
+            '''
             business_use = request.POST.get('_use', -1)
             search = request.POST.get('search', -1)
             #print('search =',search)
