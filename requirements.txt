@@ -19,4 +19,4 @@ pyzbar==0.1.8
 python-barcode
 python-barcode[images]
 cloudinary==1.17.0
-django-cloudinary-storage==0.2.3
+
