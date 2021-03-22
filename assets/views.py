@@ -1429,7 +1429,7 @@ class VehicleView(View):
             except IOError as e:
                 print ("load vehicle Failure ", e)
                 print('error = ',e) 
-            return render(self.request,"assets/vehicle.html",{'form': form, 'image':image, 'image_file':image_file, "vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':vehicle_month, 
+            return render(self.request,"assets/vehicle.html",{'form': form, 'image':image, "vehicles": vehicles, "veh":veh, "uploaded_file_url":uploaded_file_url,  "index_type":"vehicle", 'month':month, 'year':year,'payment_month':vehicle_month, 
                                                             'payment_year':vehicle_year, 'insurance':insurance_vehicle_year, 'fuel_month':fuel_vehicle_month, 'fuel_year':fuel_vehicle_year, 'maintenance':mantenance_vehicle_year, 'repair':repair_vehicle_year, 'tires':tire_vehicle_year,
                                                             'inspection':inspection, 'operator':operator,'years':years,'duplicate':duplicate, 'business_use':business_use})
     
