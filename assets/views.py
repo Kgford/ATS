@@ -38,7 +38,7 @@ class UserLogin(View):
         
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
         
         except IOError as e:
            print('error = ',e) 
@@ -76,12 +76,13 @@ class AssetsView(View):
             vehicles=[]
             spaces=[]
             personnel=[]
-            operator = str(self.request.user)
-            phone = self.request.user.userprofileinfo.phone
-            message = 'hello this is a test'
-            com=Comunication(phone,message)
-            print('com=',com)
-            com.send_sms()
+            operator = str(self.request.user.get_short_name())
+            print('operator=',operator)
+            #phone = self.request.user.userprofileinfo.phone
+            #message = 'hello this is a test'
+            #com=Comunication(phone,message)
+            #print('com=',com)
+            #com.send_sms()
             month_list = -1
             year_list = -1
             timestamp = date.today()
@@ -96,7 +97,7 @@ class AssetsView(View):
             month = months[str(thismonth)]
             month_full = full_months[str(thismonth)]
             print('month =',month)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
@@ -617,7 +618,7 @@ class AssetsView(View):
             vehicles=[]
             spaces=[]
             personnel=[]
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             phone = self.request.user.userprofileinfo.phone
             message = 'message'
             month_list = -1
@@ -644,7 +645,7 @@ class AssetsView(View):
             thismonth = months_num[str(month)]
             month_full = full_months[str(thismonth)]
             print('thismonth =',thismonth)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
@@ -1158,7 +1159,7 @@ class VehicleView(View):
             success = True 
             try:	
                 timestamp = date.today()
-                operator = str(self.request.user)
+                operator = str(self.request.user.get_short_name())
                 dt = datetime.datetime.today()
                 thisyear = dt.year
                 thismonth = dt.month
@@ -1435,7 +1436,7 @@ class VehicleView(View):
     
     def post(self, *args, **kwargs):
         timestamp = date.today()
-        operator = str(self.request.user)
+        operator = str(self.request.user.get_short_name())
         dt = datetime.datetime.today()
         thisyear = dt.year
         thismonth = dt.month

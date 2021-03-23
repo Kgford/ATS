@@ -29,7 +29,7 @@ class UserLogin(View):
         
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
         
         except IOError as e:
            print('error = ',e) 
@@ -61,7 +61,7 @@ class ExpensesView(View):
     success_url = reverse_lazy('accounts:expenses')
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             contSuccess = 0
             year = datetime.date.today().year
             print('year=',year)
@@ -75,7 +75,7 @@ class ExpensesView(View):
             item_name = -1
             item_desc =-1
             vehicle =-1
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             desc_list = Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             type_list = Expenses.objects.order_by('expense_type').values_list('expense_type', flat=True).distinct()
             item_name_list = Expenses.objects.order_by('item').values_list('item', flat=True).distinct()
@@ -102,7 +102,7 @@ class ExpensesView(View):
     def post(self, request, *args, **kwargs):
         try: 
             #print("in POST")
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             type_list = []
             inv_list = []
             inv = []
@@ -252,7 +252,7 @@ class SaveExpensesView(View):
             vendor_id = self.request.GET.get('vendor_id', -1)
             print('exp_id =',exp_id)
             print('vendor_id =',vendor_id)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             expense_list = Expenses.objects.filter(sale_date__icontains=year).all()
             desc_list =  Expenses.objects.order_by('expense_description').values_list('expense_description', flat=True).distinct()
             vendor_list =  Vendor.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -315,7 +315,7 @@ class SaveExpensesView(View):
             exp_id =-1
             vehicle_list = []
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             #exp_id = request.POST.get('e_id',-1)
             year = datetime.date.today().year
             print('exp_id =',exp_id)
@@ -652,7 +652,7 @@ class InvoiceItemView(View):
             client_id = self.request.GET.get('client_id', -1)
             dt = datetime.datetime.today()
             year = dt.year
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             if item_id !=-1:
                 item = Invoice_Item.objects.filter(id=item_id)
                 item = item[0] 
@@ -680,7 +680,7 @@ class InvoiceItemView(View):
             else:
                 client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
                 
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             if client_id !=-1:
                 charge_list =  Charge_Code.objects.filter(client_id=client_id).values_list('charge', flat=True).distinct()
             else:
@@ -713,7 +713,7 @@ class InvoiceItemView(View):
         try: 
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
             contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -830,7 +830,7 @@ class SearchInvoiceView(View):
             timestamp = date.today()
             dt = datetime.datetime.today()
             year = dt.year
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             invoice_list = Invoice.objects.filter(invoice_date__contains=year).all()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -872,7 +872,7 @@ class SearchInvoiceView(View):
             paid =-1
             save_paid = "No"
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             invoice_list = Invoice.objects.all()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -1009,7 +1009,7 @@ class CreateInvoiceView(View):
             total = -1
             charge_code = -1
             print('invoice_list1 =',invoice_list)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             invoice_id = self.request.GET.get('invoice_id', -1)
             item_id = self.request.GET.get('item_id', -1)
             active = self.request.GET.get('active', -1)
@@ -1132,7 +1132,7 @@ class CreateInvoiceView(View):
             paid = False            
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             print('invoice_list1 =',invoice_list)
             invoice_id = request.POST.get('_invoice_id',-1)
             print('invoice_id=',invoice_id)
@@ -1331,7 +1331,7 @@ class ReconsileInvoiceView(View):
             total=0
             paid = 'off'
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             invoice_id = self.request.GET.get('invoice_id', -1)
             type = self.request.GET.get('type', -1)
             
@@ -1410,7 +1410,7 @@ class ReconsileInvoiceView(View):
             charge_code = -1
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             
             invoice_id = request.POST.get('_invoice_id',-1)
             print('invoice_id=',invoice_id)
@@ -1598,7 +1598,7 @@ class QuoteItemView(View):
             else:
                 client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
                 
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             if client_id !=-1:
                 charge_list =  Charge_Code.objects.filter(client_id=client_id).values_list('charge', flat=True).distinct()
             else:
@@ -1631,7 +1631,7 @@ class QuoteItemView(View):
         try: 
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             charge_list =  Charge_Code.objects.order_by('charge').values_list('charge', flat=True).distinct()
             contractor_list =  Contractors.objects.order_by('name').values_list('name', flat=True).distinct()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -1748,7 +1748,7 @@ class SearchQuoteView(View):
             timestamp = date.today()
             dt = datetime.datetime.today()
             year = dt.year
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             quote_list = Quote.objects.filter(quote_date__contains=year).all()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -1790,7 +1790,7 @@ class SearchQuoteView(View):
             paid =-1
             save_paid = "No"
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             quote_list = Quote.objects.all()
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             desc_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
@@ -1926,7 +1926,7 @@ class CreateQuoteView(View):
             quote_item = -1
             total = -1
             charge_code = -1
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             quote_id = self.request.GET.get('quote_id', -1)
             item_id = self.request.GET.get('item_id', -1)
             active = self.request.GET.get('active', -1)
@@ -2048,7 +2048,7 @@ class CreateQuoteView(View):
             paid = False            
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             
             quote_id = request.POST.get('_quote_id',-1)
             print('quote_id=',quote_id)
@@ -2238,7 +2238,7 @@ class ReconsileQuoteView(View):
             paid = 'off'
             
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             quote_id = self.request.GET.get('quote_id', -1)
             
             if quote_id !=-1:
@@ -2314,7 +2314,7 @@ class ReconsileQuoteView(View):
             charge_code = -1
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             
             quote_id = request.POST.get('_quote_id',-1)
             print('quote_id=',quote_id)
@@ -2484,7 +2484,7 @@ class Charge_codeView(View):
                 client = client[0].name
                 print('client=',client)
                 
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             charge_list =  Charge_Code.objects.all()
             print('charge_list = ',charge_list)
@@ -2508,7 +2508,7 @@ class Charge_codeView(View):
         try: 
             print("in POST")
             timestamp = date.today()
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             client_list =  Clients.objects.order_by('name').values_list('name', flat=True).distinct()
             charge_list =  Charge_Code.objects.all()
             print('charge_list = ',charge_list)
@@ -2569,7 +2569,7 @@ class Charge_codeView(View):
      
 def save_expenses_csv(delete):               
     #~~~~~~~~~~~Load expense database from csv. must put this somewhere else later"
-    operator = str(self.request.user)
+    operator = str(self.request.user.get_short_name())
     import csv
     timestamp  = date.today()
     CSV_PATH = 'C:\\src\\ats\\accounts\\Expenses.csv'
@@ -2720,7 +2720,7 @@ class IncomeView(View):
             year_list=[]
             total = 0
             exp_total = 0
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             timestamp = date.today()
             dt = datetime.datetime.today()
             thisyear = dt.year
@@ -2753,7 +2753,7 @@ class IncomeView(View):
             income=[]
             total = 0
             exp_total = 0
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             timestamp = date.today()
             dt = datetime.datetime.today()
             thisyear = dt.year
@@ -2839,7 +2839,7 @@ class ReportView(View):
             month_full = full_months[str(thismonth)]
             print('month =',month)
                 
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
            
             report_type = self.request.GET.get('report_type', -1)
             print('report_type',report_type)
@@ -2863,7 +2863,7 @@ class ReportView(View):
                 invoice_item = Invoice_Item.objects.filter(client_id=client_id, invoice_id=invoice_id).all()
                 print('invoice_item =',invoice_item)
                 invoice = Invoice.objects.filter(client_id=client_id, id=invoice_id).all()
-                operator = str(self.request.user)
+                operator = str(self.request.user.get_short_name())
                 if invoice:
                     invoice=invoice[0]
                     this_date = invoice.invoice_date
@@ -2892,7 +2892,7 @@ class ReportView(View):
                 invoice_item = Quote_Item.objects.filter(client_id=client_id, quote_id=invoice_id).all()
                 print('invoice_item =',invoice_item)
                 invoice = Quote.objects.filter(client_id=client_id, id=quote_id).all()
-                operator = str(self.request.user)
+                operator = str(self.request.user.get_short_name())
                 if invoice:
                     invoice=invoice[0]
                     this_date = invoice.invoice_date

@@ -20,7 +20,7 @@ class UserLogin(View):
         
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
         
         except IOError as e:
            print('error = ',e) 
@@ -65,7 +65,7 @@ class DashboardView(View):
             month = months[str(thismonth)]
             month_full = full_months[str(thismonth)]
             print('month =',month)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
@@ -270,7 +270,7 @@ class DashboardView(View):
             print('thismonth',thismonth)
             month_full = full_months[str(month)]
             print('month =',month)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
@@ -479,7 +479,7 @@ class ReportView(View):
             print('thismonth',thismonth)
             month_full = full_months[str(month)]
             print('month =',month)
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()

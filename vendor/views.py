@@ -17,7 +17,7 @@ class UserLogin(View):
         
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
         
         except IOError as e:
            print('error = ',e) 
@@ -50,7 +50,7 @@ class VendorView(View):
         
     def get(self, *args, **kwargs):
         form = self.form_class()
-        operator = str(self.request.user)
+        operator = str(self.request.user.get_short_name())
         active = "off"
         try:
             vendor = Vendor.objects.all()
@@ -63,7 +63,7 @@ class VendorView(View):
         
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
             timestamp = date.today()
             name = request.POST.get('_name', -1)
             address = request.POST.get('_addr', -1)

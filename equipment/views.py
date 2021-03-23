@@ -25,7 +25,7 @@ class UserLogin(View):
         
     def get(self, *args, **kwargs):
         try:
-            operator = str(self.request.user)
+            operator = str(self.request.user.get_short_name())
         
         except IOError as e:
            print('error = ',e) 
