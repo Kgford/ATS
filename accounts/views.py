@@ -857,7 +857,6 @@ class SearchInvoiceView(View):
         item_id = -1
         exp =-1
         vendor =-1
-        
         try: 
             print("in POST")
             timestamp = date.today()
@@ -914,7 +913,6 @@ class SearchInvoiceView(View):
                  
             if not clear==-1:
                 return HttpResponseRedirect(reverse('accounts:invoice'))
-            
             
             if not search ==-1:
                 if  Invoice.objects.filter(id__icontains=search).exists():
@@ -982,7 +980,6 @@ class SearchInvoiceView(View):
                     invoice_list = Invoice.objects.filter(paid__contains=save_paid, client_id__contains=client_id, invoice_desc=invoice_desc).all()  
                 if not invoice_desc == "Search by Title" and  not client == "Search by Client" and  not paid == "Search by paid or unpaid" and not year =='All years':
                     invoice_list = Invoice.objects.filter(invoice_desc=invoice_desc, client_id__contains=client_id, paid__contains=save_paid, invoice_date__contains=year).all()
-                    
             print('invoice_list =',invoice_list)
             print('paid =',paid)
         except IOError as e:

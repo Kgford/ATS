@@ -74,10 +74,11 @@ class DashboardView(View):
             
             #search for yealy income
             items_year = Invoice_Item.objects.filter(item_date__year=thisyear)
+            print('items_year =',items_year)
             rev_year=0
             for item in items_year:
                 rev_year = round(rev_year + item.total,2)
-                #print('rev_year =',rev_year)
+                print('rev_year =',rev_year)
             
             #search for monthly income
             items_month = Invoice_Item.objects.filter(item_date__year=thisyear, item_date__month=thismonth)
@@ -187,6 +188,7 @@ class DashboardView(View):
             
             #search for income report chart data
             income_report = Income_report.objects.filter(year=thisyear)
+            print('income_report=',income_report)
             months = []
             expen = []
             incom = []
