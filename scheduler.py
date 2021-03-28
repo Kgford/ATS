@@ -57,7 +57,7 @@ def update_reoccuring_expenses():
         temp_date = str(thisyear) + "-" + str(thismonth)  + "-" + str(day)
         print('temp_date =',temp_date)
         temp_date = str(thisyear) + "-" + str(thismonth)  + "-" + str(day)
-        if not Expenses.objects.filter(expense_description=expense_description, sale_date__month=thismonth).exists():
+        if not Expenses.objects.filter(expense_description=expense_description, sale_year__month=thisyear, sale_date__month=thismonth, sale_date__day=thisday).exists():
             Expenses.objects.create(vendor_id=vendor_id, expense_type=expense_type, expense_description=expense_description, sale_date=temp_date, item=item,
                                       item_desc=item_desc,quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=True, 
                                       reoccuring_interval=interval,operator=operator, last_update=timestamp)
