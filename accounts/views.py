@@ -230,6 +230,8 @@ class ExpensesView(View):
             print ("Lists load Failure ", e)
 
         #print('expense_list',expense_list)
+        print('expense_type = ',expense_type)
+        print('expense_desc = ',expense_desc)
         return render (self.request,"accounts/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
@@ -515,124 +517,124 @@ class SaveExpensesView(View):
             elif not save_exp==-1 or (exp_id !=-1 and exp_id != ''):
                 print('save_exp=',save_exp)
                 print('exp_id=',exp_id)
-                if Expenses.objects.filter(item=item_name).exists():
-                    exp = Expenses.objects.filter(item=item_name).all()
-                    return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
-                else:
+                #if Expenses.objects.filter(item=item_name).exists():
+                    #exp = Expenses.objects.filter(item=item_name).all()
+                    #return render (self.request,"accounts/save_expenses.html",{"expense_list": expense_list, "id":id, "vendor_list":vendor_list, 'desc_list':desc_list,"exp":exp, 'vendor':vendor, "operator":operator})
+                #else:
                    #save item	
-                    print('save item')
-                    print('vendor=',vendor)
-                    ven = Vendor.objects.filter(name=vendor)
-                    if ven:
-                        vendor_id = ven[0].id
-                        print('vendor_id=',vendor_id)
-                    print('vehicle=',vehicle)
-                    if vehicle !=-1:
-                        item_name = vehicle
-                        if item_desc ==-1:
-                            item_desc = vehicle
-                        v=Vehical.objects.get(name=vehicle)
-                        print('vehicle =',v)
-                        if expense_desc=='Gas':
-                            print('in gas')
-                            Expenses.objects.create(v_fuel=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Payment':
-                            print('in payment')
-                            Expenses.objects.create(v_payment=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Insurance':
-                            print('in insurance')
-                            Expenses.objects.create(v_insuranc=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Inpection':
-                            print('in inspection')
-                            Expenses.objects.create(v_inspection=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Fees':
-                            print('in fees')
-                            Expenses.objects.create(v_fees=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Tires':
-                            print('in tires')
-                            Expenses.objects.create(v_tires=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Oil':
-                            print('in oil')
-                            Expenses.objects.create(v_oil=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Repair':
-                            print('in repair')
-                            Expenses.objects.create(v_repair=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Maintenance':
-                            print('in Maintenance')
-                            Expenses.objects.create(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                        elif expense_desc=='Vehicle Interest':
-                            print('in Maintenance')
-                            Expenses.objects.create(v_interest=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                                       quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
-                    elif building !=-1:
-                        print('in building save')
-                        print('building=',building)
-                        item_name=building
-                        print('item_name=',item_name)
-                        item_desc = building_space
-                        print('item_desc=',item_desc)
-                        b=Business_Space.objects.get(building=building,type=building_space)
-                        print('Business_Space =',b)
-                        if expense_desc=='Building Payment':
-                         Expenses.objects.create(b_payment=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                print('save item')
+                print('vendor=',vendor)
+                ven = Vendor.objects.filter(name=vendor)
+                if ven:
+                    vendor_id = ven[0].id
+                    print('vendor_id=',vendor_id)
+                print('vehicle=',vehicle)
+                if vehicle !=-1:
+                    item_name = vehicle
+                    if item_desc ==-1:
+                        item_desc = vehicle
+                    v=Vehical.objects.get(name=vehicle)
+                    print('vehicle =',v)
+                    if expense_desc=='Gas':
+                        print('in gas')
+                        Expenses.objects.create(v_fuel=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Payment':
+                        print('in payment')
+                        Expenses.objects.create(v_payment=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Insurance':
+                        print('in insurance')
+                        Expenses.objects.create(v_insuranc=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Inpection':
+                        print('in inspection')
+                        Expenses.objects.create(v_inspection=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Fees':
+                        print('in fees')
+                        Expenses.objects.create(v_fees=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Tires':
+                        print('in tires')
+                        Expenses.objects.create(v_tires=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Oil':
+                        print('in oil')
+                        Expenses.objects.create(v_oil=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Repair':
+                        print('in repair')
+                        Expenses.objects.create(v_repair=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Maintenance':
+                        print('in Maintenance')
+                        Expenses.objects.create(v_maintaince=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    elif expense_desc=='Vehicle Interest':
+                        print('in Maintenance')
+                        Expenses.objects.create(v_interest=v, vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                                   quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                elif building !=-1:
+                    print('in building save')
+                    print('building=',building)
+                    item_name=building
+                    print('item_name=',item_name)
+                    item_desc = building_space
+                    print('item_desc=',item_desc)
+                    b=Business_Space.objects.get(building=building,type=building_space)
+                    print('Business_Space =',b)
+                    if expense_desc=='Building Payment':
+                     Expenses.objects.create(b_payment=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Utilities':
+                         Expenses.objects.create(b_utilities=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
                                     quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Utilities':
-                             Expenses.objects.create(b_utilities=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Insurance':
-                             Expenses.objects.create(b_insurance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Internet':
-                             Expenses.objects.create(b_internet=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Tax':
-                             Expenses.objects.create(b_tax=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Maintenance':
-                             Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Maintenance Heating':
-                             Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Maintenance Cooling':
-                             Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Fuel':
-                             Expenses.objects.create(b_fuel=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Phone':
-                             Expenses.objects.create(b_phone=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Repair':
-                             Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Repair Heating':
-                             Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Repair Cooling':
-                             Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                        if expense_desc=='Building Interest':
-                             Expenses.objects.create(b_interest=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
-                                        quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
-                    else:
-                        Expenses.objects.create(vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
-                                          quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
+                    if expense_desc=='Building Insurance':
+                         Expenses.objects.create(b_insurance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Internet':
+                         Expenses.objects.create(b_internet=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Tax':
+                         Expenses.objects.create(b_tax=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Maintenance':
+                         Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Maintenance Heating':
+                         Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Maintenance Cooling':
+                         Expenses.objects.create(b_mantenance=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Fuel':
+                         Expenses.objects.create(b_fuel=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Phone':
+                         Expenses.objects.create(b_phone=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Repair':
+                         Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Repair Heating':
+                         Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Repair Cooling':
+                         Expenses.objects.create(b_repair=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                    if expense_desc=='Building Interest':
+                         Expenses.objects.create(b_interest=b, vendor_id=vendor_id,expense_type=expense_type,expense_description=expense_desc,sale_date=sale_date,item=item_name,item_desc=item_desc,
+                                    quantity=quantity,item_cost=item_cost,total_cost=total_cost,reoccuuring_expenses=interval_save,reoccuring_interval=interval_time,operator=operator,last_update=timestamp)
+                else:
+                    Expenses.objects.create(vendor_id=vendor_id,expense_type=expense_type, expense_description=expense_desc, sale_date=sale_date, item=item_name, item_desc=item_desc,
+                                      quantity=quantity,item_cost=item_cost, total_cost=total_cost, reoccuuring_expenses=interval_save, reoccuring_interval=interval_time, operator=operator, last_update=timestamp)
         except IOError as e:
             print ("Lists load Failure ", e)
             print('error = ',e) 
-        expense_type=-1
-        expense_desc=-1
-        exp=-1
+            expense_type=-1
+            expense_desc=-1
+            exp=-1
         
         return render (self.request,"accounts/save_expenses.html",{'item_type':item_type, 'year':year, 'vehicle':vehicle, 'vehicle_list':vehicle_list, "expense_list": expense_list, 'building_space':building_space,
                                     'building':building, 'expense_desc':expense_desc,'expense_type':expense_type, "id":id, "vendor_list":vendor_list, "desc_list":desc_list, "exp":exp, "vendor":vendor, "operator":operator})

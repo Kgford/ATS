@@ -6,10 +6,12 @@ from django.urls import reverse,  reverse_lazy
 from django.views import View
 from django.contrib.auth import authenticate
 from accounts.models import Expenses, Invoice_Item, Charge_Code, Income, Invoice
+from vendor.models import Vendor
 from dashboard.models import Income_report
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 import datetime
+from scheduler import update_reoccuring_expenses,update_Income_report
 import time
 from re import search
 load_id = 0
@@ -21,7 +23,7 @@ class UserLogin(View):
     def get(self, *args, **kwargs):
         try:
             operator = str(self.request.user.get_short_name())
-        
+            
         except IOError as e:
            print('error = ',e) 
         return render(request, 'client/user_login.html', {})
@@ -60,6 +62,10 @@ class DashboardView(View):
             thisday = dt.day
             print('thismonth=',thismonth)
             print('thisyear=',thisyear)
+            #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
+            #update_reoccuring_expenses()
+            #update_Income_report()
+            #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
             month = months[str(thismonth)]

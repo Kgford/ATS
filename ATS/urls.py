@@ -10,7 +10,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), # new
-    url(r'^', include("background_app.urls")),
     url(r'^$',views.index,name='public'),
     path('staff/', include("users.urls")),
     path('', include("atspublic.urls")),

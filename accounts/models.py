@@ -24,7 +24,7 @@ class Expenses(models.Model):
     id = models.AutoField(primary_key=True)
     vendor_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
     expense_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
-    expense_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
+    expense_description = models.CharField("expense_description",max_length=355,null=True,unique=False,default='N/A') 
     sale_date = models.DateTimeField(default=datetime.now, blank=True)
     item = models.CharField("item",max_length=50,null=True,unique=False,default='N/A') 
     item_desc = models.CharField("item desc",max_length=355,null=True,unique=False,default='N/A') 
