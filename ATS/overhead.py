@@ -244,6 +244,7 @@ class Security:
     def visitor_monitor(self):
         timestamp = date.today()
         visitor =  self.get_visitor()
+        print('visitor-',visitor)
         client_id=self.get_client_id()
         user_agent=self.get_user_agent()
         session_id = self.get_session_id()
@@ -256,27 +257,31 @@ class Security:
         reason = -1
         error_message =-1
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        print('visitor+',visitor)
         if Visitor.objects.filter(Q(client_id=client_id) | Q(visitor=visitor) | Q(user_agent=user_agent) | Q(visitor_ip=visitor_ip)).exists():
             isthere = Visitor.objects.filter(Q(client_id=client_id) | Q(visitor=visitor) | Q(user_agent=user_agent) | Q(visitor_ip=visitor_ip))
-            visitor = isthere[0].visitor
-            email = isthere[0].email
-            reason = isthere[0].blocked_reason
-            isblocked = isthere[0].blocked
-            print('blocked=',isblocked)
-            print('visitor=',visitor)
-            if isblocked:
-                error_message = isthere[0].blocked_reason
-                #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message to staff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                subject = 'Blocked user visiting ATS ' + self.page + ' page'
-                email_body = visitor + ' is attempting re-entry onto this page after being blocked\n\nBlocked Reason: ' + reason + '\n\nvisitor_ip: ' + visitor_ip + '\n\nClient_id: ' + client_id + '\n\nCookie: ' + cookie + '\n\nUser Agent: ' + user_agent
-                email=Email(email_list,subject, email_body)
-                print('email=',email)
-                email.send_email()
-                mes= 'Blocked user visiting  ' + self.page + ' page' + ' Check your email' 
-                com=Comunication(phone_list,mes)
-                print('com=',com)
-                com.send_sms()
-                blocked = True
+            print('isthere=',isthere)
+            if isthere:
+                print('isthere=',isthere)
+                visitor = isthere[0].visitor
+                email = isthere[0].email
+                reason = isthere[0].blocked_reason
+                isblocked = isthere[0].blocked
+                print('blocked=',isblocked)
+                print('visitor=',visitor)
+                if isblocked:
+                    error_message = isthere[0].blocked_reason
+                    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~Send Message to staff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    subject = 'Blocked user visiting ATS ' + self.page + ' page'
+                    email_body = visitor + ' is attempting re-entry onto this page after being blocked\n\nBlocked Reason: ' + reason + '\n\nvisitor_ip: ' + visitor_ip + '\n\nClient_id: ' + client_id + '\n\nCookie: ' + cookie + '\n\nUser Agent: ' + user_agent
+                    email=Email(email_list,subject, email_body)
+                    print('email=',email)
+                    email.send_email()
+                    mes= 'Blocked user visiting  ' + self.page + ' page' + ' Check your email' 
+                    com=Comunication(phone_list,mes)
+                    print('com=',com)
+                    com.send_sms()
+                    blocked = True
         else:
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save New visitor info to Database~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Visitor.objects.create(visitor=visitor,email=email,session_id=session_id,client_id=client_id,
