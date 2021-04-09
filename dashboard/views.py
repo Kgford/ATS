@@ -399,7 +399,9 @@ class DashboardView(View):
             profit = round(float(rev_year)-float(exp_year),2)
             
             #search for income report chart data
+            print('thisyear=',thisyear)
             income_report = Income_report.objects.filter(year=thisyear)
+            print('income_report =',income_report)
             months = []
             expen = []
             incom = []

@@ -22,6 +22,7 @@ from collections import OrderedDict
 from re import search
 from ATS.overhead import Equations, Email
 import os
+from re import search
 
 class UserLogin(View):
     template_name = "user_login.html"
@@ -235,7 +236,100 @@ class ExpensesView(View):
         return render (self.request,"accounts/expense.html",{"expense_list": expense_list, "desc_list":desc_list, "type_list":type_list,"item_name_list":item_name_list, "expense_type":expense_type,
                         "expense_desc":expense_desc, "item_name":item_name, "item_desc":item_desc, "item_desc_list":item_desc_list, "year_list":year_list, "operator":operator, 'total':total, 'year':year})
            
-       
+class ExpenseReportView(View):
+    template_name = "expense_report.html"
+    success_url = reverse_lazy('accounts:expense_report')
+    def get(self, *args, **kwargs):
+        try:
+            operator = str(self.request.user.get_short_name())
+            contSuccess = 0
+            timestamp  = date.today()
+            thisyear = self.request.GET.get('year', -1)
+            print('year=',thisyear)
+            desc_list=-1
+            type_list=-1
+            item_name_list=-1
+            item_desc_list=-1
+            total=0
+            expense_type =-1
+            expense_desc =-1
+            item_name = -1
+            item_desc =-1
+            vehicle=0
+            insurance=0
+            services=0
+            total=0
+            general=0
+            travel = 0
+            building = 0
+            training=0
+            equipment=0
+            software=0
+            vehicle_percentage = 0.2
+            building_percentage = 0.3
+            operator = str(self.request.user.get_short_name())
+            print("in GET")
+            
+            expense_list = Expenses.objects.filter(sale_date__icontains=thisyear).all()
+            for expense in expense_list:
+                print('exp desc=',expense.expense_description)
+                print('item desc=',expense.item_desc)
+                if search('Insurance', expense.expense_description) or search('Liability', expense.item_desc):
+                    insurance=round(insurance+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2)
+                    print('insurance=',insurance)
+                    print('total=',total)
+                elif search('Vehicle', expense.expense_description) or search('Gas', expense.expense_description):
+                    vehicle=round(vehicle+float(expense.total_cost) * vehicle_percentage,2)
+                    total=round(total+float(expense.total_cost) * vehicle_percentage,2)
+                    print('vehicle=',vehicle)
+                    print('total=',total)
+                elif search('Building', expense.expense_description):
+                    building=round(building+float(expense.total_cost) * building_percentage,2)
+                    total=round(total+float(expense.total_cost) * building_percentage,2)
+                    print('building=',building)
+                    print('total=',total)
+                elif search('Travel', expense.expense_description) or search('Travel', expense.item_desc):
+                    travel=round(travel+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2)
+                    print('travel=',travel)
+                    print('total=',total)
+                elif search('Training', expense.expense_description):
+                    training=round(training+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2)
+                    print('training=',training)
+                    print('total=',total)
+                elif search('Fixture', expense.expense_description) or search('Robot', expense.expense_description) or search('Machine', expense.expense_description) or search('Test', expense.expense_description):
+                    equipment=round(equipment+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2) 
+                    print('equipment=',equipment)
+                    print('total=',total)  
+                elif search('Software', expense.expense_description) or search('Software', expense.item_desc):
+                    software=round(software+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2) 
+                    print('software=',software)
+                    print('total=',total) 
+                elif search('Services', expense.expense_description) or search('Database', expense.expense_description) or search('Domain', expense.item):
+                    services=round(services+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2) 
+                    print('software=',software)
+                    print('total=',total) 
+                else:
+                    general=round(general+float(expense.total_cost),2)
+                    total=round(total+float(expense.total_cost),2) 
+                    print('general=',general)
+                    print('total=',total)   
+                    
+                    
+                
+            print(total)
+        except IOError as e:
+            print ("Lists load Failure ", e)
+            print('error = ',e) 
+        return render (self.request,"accounts/expense_report.html",{"expense_list": expense_list,"operator":operator, 'total':total,'services':services,'vehicle':vehicle,'equipment':equipment,'today':timestamp,
+                                                                    'insurance':insurance,'general':general,'travel':travel,'building':building,'training':training,'software':software,'year':thisyear})
+    
+               
 class SaveExpensesView(View):
     template_name = "save_expenses.html"
     success_url = reverse_lazy('accounts:new_expense')
