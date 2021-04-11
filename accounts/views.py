@@ -15,7 +15,6 @@ from accounts.models import Expenses, Invoice_Item, Charge_Code, Invoice, Quote,
 from dashboard.models import Income_report
 from vendor.models import Vendor
 from contractors.models import Contractors
-from assets.models import Vehical
 from django.views import View
 import datetime
 from collections import OrderedDict
@@ -269,6 +268,9 @@ class ExpenseReportView(View):
             building_percentage = 0.3
             operator = str(self.request.user.get_short_name())
             print("in GET")
+            
+            
+            v=Vehical.objects.get(name=vehicle)
             
             expense_list = Expenses.objects.filter(sale_date__icontains=thisyear).all()
             for expense in expense_list:

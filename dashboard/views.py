@@ -63,8 +63,8 @@ class DashboardView(View):
             print('thismonth=',thismonth)
             print('thisyear=',thisyear)
             #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
-            #update_reoccuring_expenses()
-            #update_Income_report()
+            update_reoccuring_expenses()
+            update_Income_report()
             #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}

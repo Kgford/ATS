@@ -34,10 +34,10 @@
 					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'locations:location' %}" aria-disabled="true">Building Locations&nbsp;&nbsp;&nbsp;</a>
 				</li>
-				<li class="nav-item">
+				<!--li class="nav-item">
 					<span data-feather="dollar-sign"></span>
-					<a class="nav-link" href="{% url 'assets:personnel' %}">Personnel&nbsp;&nbsp;</a>
-				</li>
+					<a class="nav-link" href="{% url 'assets:loadpersonnel' %}">Personnel&nbsp;&nbsp;</a>
+				</li-->
 				<li class="nav-item ">
 					<span data-feather="log-out"></span>
 					<a class="nav-link" href="{% url 'users:logout' %}" aria-disabled="true">log out</a>
@@ -149,7 +149,7 @@
 						<div class="form-group">
 							<label for="_power">Power %</label>
 							{% if build_space == -1 %}
-								<input id = "_power" name = "_power" input class="form-control" placeholder="% of Power"  required >
+								<input id = "_power" name = "_power" input class="form-control" placeholder="% Power"  required >
 							{% else %}
 								<input id = "_power" name = "_power" input class="form-control" value = "{{build_space.power_percentage}}"  required >
 							{% endif %}
@@ -159,7 +159,7 @@
 						<div class="form-group">
 							<label for="_internet">Internet %</label>
 							{% if build_space == -1 %}
-								<input id = "_internet" name = "_internet" input class="form-control" placeholder="% of Internet"  required >
+								<input id = "_internet" name = "_internet" input class="form-control" placeholder="% Internet"  required >
 							{% else %}
 								<input id = "_internet" name = "_internet" input class="form-control" value = "{{build_space.internet_percentage}}"  required >
 							{% endif %}
@@ -189,7 +189,7 @@
 			{% else %}
 				<div class="col-sm-1 col-lg-1 grid-col">
 					<div class="form-group">
-						<label for="_space">Square Footage</label>
+						<label for="_space">Sqr Footage</label>
 						{% if build_space == -1 %}
 							<input id = "_sqr_feet" name = "_sqr_feet" input class="form-control" placeholder="Sqr Feet"  required >
 						{% else %}
@@ -221,7 +221,7 @@
 					<div class="form-group">
 						<label for="_space">Internet</label>
 						{% if build_space == -1 %}
-							<input id = "_internet_cost" name = "_internet_cost" input class="form-control" placeholder="Internet costs"  required >
+							<input id = "_internet_cost" name = "_internet_cost" input class="form-control" placeholder="costs"  required >
 						{% else %}
 							<input id = "_internet_cost" name = "_internet_cost" input class="form-control" value = "{{build_space.internet_cost}}"  required >
 						{% endif %}

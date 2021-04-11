@@ -1836,7 +1836,7 @@ class BuildingView(View):
                 form = Business_SpaceForm()
                 space_id = self.request.GET.get('space_id', -1)
                 print('space_id = ',space_id)
-                buildings_list=Location.objects.order_by('name').values_list('name', flat=True).distinct()
+                buildings_list=Location.objects.filter(type__icontains='OFFICE').order_by('name').values_list('name', flat=True).distinct()
                 space_type = self.request.GET.get('space_type', -1)
                 spaces = Business_Space.objects.all()
                 print('space_type=',space_type)
@@ -1923,7 +1923,7 @@ class BuildingView(View):
         print('space_id=',space_id)
         
         uploaded_file_url=-1
-        buildings_list=Location.objects.order_by('name').values_list('name', flat=True).distinct()
+        buildings_list=Location.objects.filter(type__icontains='OFFICE').order_by('name').values_list('name', flat=True).distinct()
         spaces = Business_Space.objects.all()
         form = Business_SpaceForm(self.request.POST, self.request.FILES)
         if save!=-1:	
@@ -2141,7 +2141,6 @@ def loadassests():
         contSuccess += 1
     print(f'{str(contSuccess)} inserted successfully! ')
  
-
 
 def saveasset(request):
     if request.method == 'POST':
