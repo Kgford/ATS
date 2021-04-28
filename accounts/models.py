@@ -10,6 +10,8 @@ class Charge_Code(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True) 
     last_update = models.DateField(null=True)
+    def __str__(self):
+        return "%s %s %s" % (self.charge_desc, self.charge, self.end_date)
 
 
 class ClassCodes(models.Model):
@@ -19,13 +21,15 @@ class ClassCodes(models.Model):
     Client = models.CharField("client",max_length=50,null=True,unique=False,default='N/A') 
     last_update = models.DateField(null=True)
     backup_index = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s %s" % (self.ClassCode, self.InventoryClass, self.Client)
     
 class Expenses(models.Model):
     id = models.AutoField(primary_key=True)
     vendor_id = models.CharField("vendor id",max_length=50,null=True,unique=False,default='N/A') 
     expense_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
     expense_description = models.CharField("expense_description",max_length=355,null=True,unique=False,default='N/A') 
-    sale_date = models.DateTimeField(default=datetime.now, blank=True)
+    sale_date = models.DateField(default=datetime.now, blank=True)
     item = models.CharField("item",max_length=50,null=True,unique=False,default='N/A') 
     item_desc = models.CharField("item desc",max_length=355,null=True,unique=False,default='N/A') 
     quantity = models.CharField("quantity",max_length=50,null=True,unique=False,default='N/A') 
@@ -57,20 +61,24 @@ class Expenses(models.Model):
     b_tax = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_tax')
     b_interest = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='b_interest')
     v_interest = models.ForeignKey('assets.Business_Space',  null=True, on_delete=models.CASCADE, related_name='v_interest')
+    def __str__(self):
+        return "%s %s %s" % (self.expense_type, self.expense_description, self.item_desc)
     
 	
 class Income(models.Model):
-	id = models.AutoField(primary_key=True)
-	client_id = models.IntegerField(null=True,unique=False)
-	invoice_id = models.IntegerField(null=True,unique=False)
-	income_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
-	income_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
-	invoice_date = models.DateTimeField(default=datetime.now, blank=True)
-	payment_date = models.DateTimeField(default=datetime.now, blank=True)
-	total = models.FloatField("total",null=True,unique=False) 
-	operator = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A') 
-	last_update = models.DateField(null=True) 
-	backup_index = models.IntegerField(null=True,unique=False)
+    id = models.AutoField(primary_key=True)
+    client_id = models.IntegerField(null=True,unique=False)
+    invoice_id = models.IntegerField(null=True,unique=False)
+    income_type = models.CharField("expense type",max_length=50,null=True,unique=False,default='N/A') 
+    income_description = models.CharField("expense desc",max_length=355,null=True,unique=False,default='N/A') 
+    invoice_date = models.DateField(default=datetime.now, blank=True)
+    payment_date = models.DateField(default=datetime.now, blank=True)
+    total = models.FloatField("total",null=True,unique=False) 
+    operator = models.CharField("staff id",max_length=50,null=True,unique=False,default='N/A') 
+    last_update = models.DateField(null=True) 
+    backup_index = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s %d%y" % (self.income_type, self.income_description, self.payment_date)
     
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
@@ -84,6 +92,8 @@ class Invoice(models.Model):
     total = models.FloatField("total",null=True,unique=False)
     last_update = models.DateField(null=True)
     backup_index = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s" % (self.invoice_desc, self.payment_date)
 
 class Invoice_Item(models.Model):
     id = models.AutoField(primary_key=True)
@@ -102,6 +112,8 @@ class Invoice_Item(models.Model):
     active = models.BooleanField("active",unique=False,null=True,default=True)
     last_update = models.DateField(null=True)	
     invoice_id = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s" % (self.item_desc, self.item_date)
     
         
 class Quote(models.Model):
@@ -116,6 +128,8 @@ class Quote(models.Model):
     total = models.FloatField("total",null=True,unique=False)
     last_update = models.DateField(null=True)
     backup_index = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s" % (self.invoice_desc, self.payment_date)
 
 class Quote_Item(models.Model):
     id = models.AutoField(primary_key=True)
@@ -134,3 +148,5 @@ class Quote_Item(models.Model):
     active = models.BooleanField("active",unique=False,null=True,default=True)
     last_update = models.DateField(null=True)	
     invoice_id = models.IntegerField(null=True,unique=False)
+    def __str__(self):
+        return "%s %s" % (self.item_desc, self.item_date)

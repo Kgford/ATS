@@ -60,11 +60,12 @@ class DashboardView(View):
             thisyear = dt.year
             thismonth = dt.month
             thisday = dt.day
+            
             print('thismonth=',thismonth)
             print('thisyear=',thisyear)
             #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
-            update_reoccuring_expenses()
-            update_Income_report()
+            #update_reoccuring_expenses()
+            #update_Income_report()
             #~~~~~~~~~~~~~~~Scheduled expenses ~~~~~~~~~~~
             months = {'1': "Jan", '2': "Feb",  '3': "Mar", '4': 'Apr', '5': "May", '6': "Jun", '7': "Jul", '8': "Aug", '9': "Sept", '10': "Oct", '11': "Nov", '12': "Dec"}
             full_months = {'1': "Janurary", '2': "Februay",  '3': "March", '4': 'April', '5': "May", '6': "June", '7': "July", '8': "August", '9': "September", '10': "October", '11': "November", '12': "December"}
@@ -256,10 +257,10 @@ class DashboardView(View):
  
     def post(self, request, *args, **kwargs):
         try:
-            
+            dt = datetime.datetime.today()
+            actualyear = dt.year
+            print('actualyear=',actualyear)
             printnow = request.POST.get('_print', -1)
-            
-                
             thisyear = request.POST.get('_year', -1)
             month = request.POST.get('_month', -1)
             printnow = request.POST.get('_print', -1)
@@ -270,7 +271,7 @@ class DashboardView(View):
             print('timestamp',timestamp)
             month_list = -1
             year_list = -1
-            
+                       
             
             months = {'Jan': "1", 'Feb': "2",  'Mar': "3", 'Apr': '4', 'May': "5", 'Jun': "6", 'Jul': "7", 'Aug': "8", 'Sept': "9", 'Oct': "10", 'Nov': "11", 'Dec': "12"}
             full_months = {'Jan': "January", 'Feb': "February",  'Mar': "March", 'Apr': 'April', 'May': "May", 'Jun': "June", 'Jul': "July", 'Aug': "August", 'Sept': "September", 'Oct': "October", 'Nov': "November", 'Dec': "December"}
@@ -282,6 +283,8 @@ class DashboardView(View):
             avatar = 'dashboard/images/avatars/' + operator + '.jpeg'
             year_list =  Income_report.objects.order_by('year').values_list('year', flat=True).distinct()
             month_list =  Income_report.objects.order_by('month_str').values_list('month_str', flat=True).distinct()
+            print('month_list =',month_list)
+            
             #search for monthly invoices
             invoice_month = Invoice.objects.filter(invoice_date__year=thisyear, invoice_date__month=thismonth)
             
@@ -299,6 +302,8 @@ class DashboardView(View):
                 rev_month = round(rev_month + item.total,2)
                             
             #search for monthly expenses
+            print('thisyear=',thisyear)
+            print('thismonth=',thismonth)
             expense_month = Expenses.objects.filter(sale_date__year=thisyear, sale_date__month=thismonth)
             print('expense_month=',expense_month)
             exp_month=0
@@ -409,7 +414,7 @@ class DashboardView(View):
             for report in income_report:
                 if report.month:
                     months.append(montharray[str(report.month)])
-                    #print('report.month=',report.month)
+                    print('report.month=',report.month)
                 if report.income_paid:
                     expen.append(float(report.income_paid))
                 else:

@@ -268,10 +268,7 @@ class ExpenseReportView(View):
             building_percentage = 0.3
             operator = str(self.request.user.get_short_name())
             print("in GET")
-            
-            
-            v=Vehical.objects.get(name=vehicle)
-            
+           
             expense_list = Expenses.objects.filter(sale_date__icontains=thisyear).all()
             for expense in expense_list:
                 print('exp desc=',expense.expense_description)

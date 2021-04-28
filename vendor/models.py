@@ -23,6 +23,8 @@ class Vendor(models.Model):
     contact_last = models.CharField("name",max_length=100,null=False,unique=False,default='N/A')
     vendor_type = models.CharField("first",max_length=100,null=False,unique=False,default='N/A')
     tax_id = models.CharField("last",max_length=100,null=False,unique=False,default='N/A')
+    def __str__(self):
+        return "%s" % (self.name)
        
     def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
         self.name = name

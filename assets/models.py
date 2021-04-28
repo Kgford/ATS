@@ -104,6 +104,8 @@ class Vehical(models.Model):
     load_limit = models.FloatField("load_limit", null=True,unique=False)
     business_use = models.BooleanField("business_use",unique=False,default=False)
     print('year=',year)
+    def __str__(self):
+        return "%s %s" % (self.name, self.model)
    
  
 class Business_Space(models.Model):#commercial building space  

@@ -15,6 +15,8 @@ class Visitor(models.Model):
     blocked_reason = models.CharField('blocked_reason',max_length=200, blank=True)
     created_on = models.DateField(null=True)
     last_entry = models.DateField(null=True)
+    def __str__(self):
+        return "%s %s" % (self.visitor, self.email)
 
 
 class Blog(models.Model):
@@ -23,7 +25,9 @@ class Blog(models.Model):
    body = models.TextField()
    posted = models.DateTimeField(db_index=True, auto_now_add=True)
    category = models.ForeignKey('Category',on_delete=models.CASCADE,)
- 
+   def __str__(self):
+        return "%s %s" % (self.title, self.category)
+   
    def __unicode__(self):
        return '%s' % self.title
  

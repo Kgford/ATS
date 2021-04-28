@@ -23,7 +23,7 @@ class Inventory(models.Model):
     shelf_id = models.IntegerField(null=True,unique=False)
     
     def __str__(self):
-        return self.id
+        return "%s %s" % (self.modelname, self.description)
 
     def serialize(self):
         return {

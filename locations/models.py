@@ -20,7 +20,9 @@ class Location(models.Model):
     lng = models.FloatField("lng",null=True,unique=False)
     type = models.CharField("type",max_length=25,null=True,unique=False,default='N/A')  
     cost = models.FloatField("cost", null=True,unique=False)
-    Business_Space = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE, null=True,  related_name='Business_Space')   
+    Business_Space = models.ForeignKey('assets.Business_Space', on_delete=models.CASCADE, null=True,  related_name='Business_Space')  
+    def __str__(self):
+        return "%s" % (self.name)
     
     def add_new(self, name, address, city, state, phone, email, website, active, inventory_id, create_date, log_date, lat, lng):
         self.name = name

@@ -12,6 +12,8 @@ class Income_report(models.Model):
     income_total = models.FloatField("income_total", null=True,unique=False)
     expense = models.FloatField("expense",max_length=100,null=True,unique=False) 
     last_update = models.DateField(default=datetime.now,null=True)
+    def __str__(self):
+        return "%s %i" % (self.month_str, self.year)
     
 class IncomeExpense_report(models.Model):
     id = models.AutoField(primary_key=True)
@@ -24,6 +26,8 @@ class IncomeExpense_report(models.Model):
     income_total = models.FloatField("income", null=True,unique=False)
     expense = models.FloatField("expense",max_length=100,null=True,unique=False) 
     last_update = models.DateField(default=datetime.now,null=True)
+    def __str__(self):
+        return "%s %i" % (self.month_str, self.year)
 
 
 
@@ -35,6 +39,8 @@ class Purchased_products(models.Model):
     year = models.IntegerField(null=False,unique=False)
     product = models.CharField("product",max_length=100,null=False,unique=False) 
     income = models.FloatField("income_paid", null=True,unique=False)
+    def __str__(self):
+        return "%s %i" % (self.month_str, self.year)
     
     
     

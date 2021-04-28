@@ -65,7 +65,7 @@ def update_reoccuring_expenses():
         else:
             print('No reoccuring ',desc,' expenses required at this time')
 
-def update_Income_report():
+def update_Income_report( ):
     timestamp = datetime.date.today()
     dt = datetime.datetime.today()
     thisyear = dt.year
